@@ -1,3 +1,4 @@
+% !Mode:: "TeX:UTF-8"
 \chapter{绪论}
 
 语音是人类最自然最便捷的交互方式，语音识别（Automatic Speech Recognition）则是语音交互中最为核心的技术，它将用户语音输入识别为文字，从而让计算机“理解”用户需求，
@@ -18,20 +19,69 @@
 \ucite{hochreiter1997long, graves2012supervised, sak2014long, sak2014long_lvsr}
 为代表的循环神经网络的应用，使得神经网络拥有了记忆功能和时序建模能力，进一步提高了神经网络声学建模的精度。
 
-传统的声学建模基于状态CD-State(Context Dependency State)建模。LSTM和RNN的时序建模能力和记忆功能，使得选择更大的建模单元成为可能。以CD-Phone（Context Dependent Phone）为建模单元，使用循环神经网络的声学建模技术应运而生。传统的神经网络声学建模依赖HMM-GMM系统产生的状态对齐，CTC通过引入Blank，使得深度神经网络具有了end-to-end的建模能力，
-并且可以在建模精度上进一步提升。近来Google、百度的研究表明\ucite{senior2015context, sak2015fast, sak2015learning, hannun2014deep, amodei2015deep}，
-基于CD-Phone和CTC的识别系统，一方面进一步提升了声学建模的精度；另一方面，CD-Phone的引入减小了解码网络，
-而采用CTC的语音识别解码器，具有非常快的解码速度，两者在解码器上的共同作用，大幅度提升的语音识别解码速度。因此，基于CD-Phone和CTC的语音识别技术研究具有非常重要的意义。
+传统的声学建模以HMM状态CD-State(Context Dependency State)作为基本建模单元，HMM-GMM系统中使用GMM拟合状态的概率密度分布；
+HMM-DNN（Hidden Markov Model-Deep Neural Network）系统中使用DNN对状态进行建模，通过状态间的跳转来描述不同音素（Phone）的发音过程。
+基于RNN和LSTM的神经网络通过引入Recurrent层，使得神经网络具有了时序建模能力和记忆功能。
+时序建模和记忆功能的引入，通过RNN直接对音素发音的过程进行建模，使得以更大的单元（Phone）作为基础建模单元成为可能。
+2015年，Google首次\ucite{senior2015context, sak2015fast, sak2015learning}提出以循环神经网络作为基本网络结构，以Phone和CD-Phone（Context Dependent Phone）为建模单元的声学建模技术，
+并且超越了传统的基于CD-State的语音识别系统。
+
+传统的分类任务的神经网络使用交叉熵CE（Cross Entropy）作为基本的训练准则。
+以交叉熵为优化准则，使用神经网络建模的声学模型需要依赖传统的HMM-GMM系统产生训练所需的状态对齐和决策树。
+基于CTC的优化准则通过引入Blank，在整个序列上进行迭代优化，使得深度神经网络具有了end-to-end的建模能力。
+同时，基于CTC优化准则的分类预测具有尖峰（Peak）预测特性，可以使分类更加精准鲁棒，因而可以得到声学建模精度的进一步提升。
+2015年，Google、百度的研究\ucite{senior2015context, sak2015fast, sak2015learning, hannun2014deep, amodei2015deep}表明，
+CTC不仅可以进一步提升声学建模的精度；而且由于尖峰预测的特性，基于CTC的语音识别解码器具有非常快的解码速度。
+
+综上所述，基于CD-Phone和CTC的声学建模技术有如下优点：
+第一，基于CD-Phone和CTC的识别系统，均可进一步提升了声学建模的精度；
+第二，CTC的end-to-end建模能力无需依赖传统HMM-GMM系统，可以大大简化语音识别系统的流程；
+第三，更大的单元CD-Phone的引入减小了解码网络，基于CTC的语音识别解码器具有非常快的解码速度，两者的共同作用，
+可以大幅度提升语音识别系统的响应速度和吞吐量。
+因此，基于CD-Phone和CTC的语音识别技术研究具有非常重要的意义。
 
 \section{研究现状}
 
-语音识别技术起步于上世纪50 年代，1960 年英国Denes等人研究成功了第一个计算机语音识别系统。在70 年代时，使用标准模板匹配的方法，语音识别小词汇量、孤立词的识别上取得重大进展。进入80 年代以后，语音识别研究重点逐渐转向大词汇量、非特定人的连续语音识别，研究方法也由传统的标准模板匹配转向基于统计的隐马尔科夫（HMM）模型，HMM 的提出和应用是语音识别技术的重大突破和转折。HMM因其对音素的有效建模便一直作为语音识别系统中的核心方法之一沿用至今。
+语音识别技术起步于上世纪50 年代，1960 年英国Denes等人研究成功了第一个计算机语音识别系统。
+在70 年代时，使用标准模板匹配的方法，语音识别小词汇量、孤立词的识别上取得重大进展。
+进入80 年代以后，语音识别研究重点逐渐转向大词汇量、非特定人的连续语音识别，
+研究方法也由传统的标准模板匹配转向基于统计的隐马尔科夫（HMM）模型，HMM 的提出和应用是语音识别技术的重大突破和转折。
+HMM因其对音素的有效建模便一直作为语音识别系统中的核心方法之一沿用至今。
 
-经过几十年的发展，HMM-GMM的语音识别系统已经取得了长足进展，HMM-GMM应用于语音识别的理论和实践逐渐完善，并诞生了一系列语音识别的新技术。如基于最大后验概率准则估计（Maximum A-Posteriori Estimation, MAP Estimation）和基于最大似然线性回归（Maximum Likelihood Linear Regression, MLLR）自适应技术；基于状态态绑定的决策树技术；基于最大互信息MMI（Maximum Mutual Information）和MCE（Minimum Classification Error）等准则的区分度训练技术等等。此时，基于HMM-GMM的传统语音识别系统已经能够在特定任务上取得理想的识别精度。
-移动互联网的到来，为语音识别技术带来新的挑战。在移动互联网和智能可穿戴设备应用中，由于不同的环境噪声、不同信道、口音、录音设备等差异性，对语音识别的精度和性能提出更高的要求。
+经过几十年的发展，HMM-GMM的语音识别系统已经取得了长足进展，HMM-GMM应用于语音识别的理论和实践逐渐完善，并诞生了一系列语音识别的新技术。
+如基于最大后验概率准则估计（Maximum A-Posteriori Estimation, MAP Estimation）和
+基于最大似然线性回归（Maximum Likelihood Linear Regression, MLLR）自适应技术；
+基于状态态绑定的决策树技术；基于最大互信息MMI（Maximum Mutual Information）和MCE（Minimum Classification Error）等准则的区分度训练技术等等。
+此时，基于HMM-GMM的传统语音识别系统已经能够在特定任务上取得理想的识别精度。
+移动互联网的到来，为语音识别技术带来新的挑战。
+在移动互联网和智能可穿戴设备应用中，由于不同的环境噪声、不同信道、口音、录音设备等差异性，对语音识别的精度和性能提出更高的要求。
 
-2010年以来，深度神经网络DNN的应用，使得语音识别系统的性能出现质的飞跃。目前，相对于传统HMM-GMM语音识别系统，基于深度神经网络
-的语音识别系统HMM-DNN能够普遍使得语音识别错误率WER（Word Error Rate）得到20\%~30\%的下降，大幅度的提高了声学建模的精度。目前，基于HMM-DNN的语音识别系统日益成熟，并成功在主流的语音识别商业产品中使用。
+20世纪80年代末至90年代初，研究人员已经探索ANN（Artificial Neural Network）和HMM在语音识别中的应用，但由于当时硬件计算能力、数据和训练方法的限制，
+研究者基本均使用两个隐层以下的神经网络，表达能力有限，而深层的神经网络又难以训练，
+所以当时基于ANN-HMM的语音识别系统很难超越经典的HMM-GMM方法，并未获得成功。
+
+2006年， Geoffrey Hinton提出了DBN（Deep Belief Networks），
+在训练之前，DBN使用无监督的受限制的玻尔兹曼机（Unsupervised Restricted Boltzmann Machine）对DNN的进行逐层预训练，
+从而解决深度神经网络的训练收敛性问题。
+
+2010年以来，深度神经网络DNN在语音识别中的成功应用\ucite{dahl2012context, dahl2011large}，使得语音识别系统的性能出现质的飞跃。
+相对于传统HMM-GMM语音识别系统，基于深度神经网络
+的语音识别系统HMM-DNN能够普遍使得语音识别错误率WER（Word Error Rate）得到20\%~30\%的下降，大幅度的提高了声学建模的精度。
+目前，基于HMM-DNN的语音识别系统日益成熟，并成功在主流的语音识别商业产品中使用。
+
+DNN
+
+CNN
+
+LSTM
+
+CTC
+
+CD-State CD-Phone
+
+神经网络的并行训练。
+
+
 
 近年以来，以RNN（Recurrent Neural Network）和LSTM（Long Short Term Memory）为代表的循环神经网络的应用，进一步提高了神经网络声学建模的精度。循环神经具有记忆单元，从而可以对长时序进行建模，进一步可以对更大的建模单元进行建模。研究学者纷纷探索和挖掘循环神经网络更多潜在的能力，以CD-Phone（Context Dependent Phone）新建模单元和CTC（Connectionist  Temporal Classification）新建模技术日益得到广泛关注。
 
