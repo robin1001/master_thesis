@@ -60,60 +60,73 @@ HMM因其对音素的有效建模便一直作为语音识别系统中的核心�
 研究者基本均使用两个隐层以下的神经网络，表达能力有限，而深层的神经网络又难以训练，
 所以当时基于ANN-HMM的语音识别系统很难超越经典的HMM-GMM方法，并未获得成功。
 
-2006年， Geoffrey Hinton提出了DBN（Deep Belief Networks），
-在训练之前，DBN使用无监督的受限制的玻尔兹曼机（Unsupervised Restricted Boltzmann Machine）对DNN的进行逐层预训练，
-从而解决深度神经网络的训练收敛性问题。
+2006年， Geoffrey Hinton提出了DBN\ucite{hinton2006reducing, hinton2007learning}（Deep Belief Networks），
+在训练之前，DBN使用无监督的受限制的玻尔兹曼机（Unsupervised Restricted Boltzmann Machine）对DNN的进行逐层预训练（Layer-wise Pre-training），
+从而解决深度神经网络的训练收敛性问题。逐层预训练的应用，让更大规模更深网络的神经网络训练成为可能。
 
-2010年以来，深度神经网络DNN在语音识别中的成功应用\ucite{dahl2012context, dahl2011large}，使得语音识别系统的性能出现质的飞跃。
-相对于传统HMM-GMM语音识别系统，基于深度神经网络
-的语音识别系统HMM-DNN能够普遍使得语音识别错误率WER（Word Error Rate）得到20\%~30\%的下降，大幅度的提高了声学建模的精度。
+2011年以来，微软研究院的语音识别研究人员首次在语音识别中使用深度神经网络\ucite{dahl2012context, dahl2011large}，
+相对于传统HMM-GMM语音识别系统，基于深度神经网络的HMM-DNN技术降低语音识别错误率WER（Word Error Rate）20\%\~30\%，
+是语音识别领域十多年来最大的突破性进展，语音识别从此出现质的飞跃。
 目前，基于HMM-DNN的语音识别系统日益成熟，并成功在主流的语音识别商业产品中使用。
 
-DNN
 
-CNN
+CNN\ucite{lecun1989backpropagation}（Convolutional Neural Network）最早应用于图像领域，并在图像领域取得巨大成功。
+CNN由卷积层（Convolution Layer）和池化层（Pooling Layer）组成，卷积层使用一系列卷积核对局部输入进行卷积操作，
+池化层通过Pooling操作得到低分辨率、高抽象层次的特征信息。从而卷积层对平移、频率、形变等变化具有更好的鲁棒性。
+2012到2013年，IBM和微软研究人员尝试在语音识别任务上使用CNN\ucite{abdel2012applying, abdel2013exploring, sainath2013improvements}，相对DNN取得进一步的收益。
 
-LSTM
+循环神经网络RNN含有循环层，相对于DNN，其对序列数据建模能力更强，在序列标注和预测任务上效果更好，例如手写体识别，机器翻译，语言模型等。
+近两年，RNN语音识别任务也取得了目前最好的效果。2014年，Google首次成功将LSTM\ucite{sak2014long, sak2014long_lvsr}应用到语音识别任务；
+百度Deep Speech 1\ucite{hannun2014deep}中使用Simple RNN，Deep Speech 2\ucite{amodei2015deep}使用GRU（Gated RNN Unit）进行序列建模。
+相对于DNN，RNN能普遍降低识别错误率10\%\~20\%，是语音识别中的又一个里程碑。
 
-CTC
+CD-State是经典HMM-GMM系统和HMM-DNN识别系统中的基本建模单元。RNN的长时记忆功能和序列建模能力，使用更大的Phone作为基本建模单元，
+直接通过RNN对Phone进行轨迹建模的思路应运而生。2015年，Google的研究工作\ucite{senior2015context, sak2015fast, sak2015learning}表明
+CD-Phone（Context Dependent Phone）结合LSTM能进一步提升声学模型精度。
 
-CD-State CD-Phone
+Alex Graves在2006年使用CTC\ucite{graves2006connectionist}和BLSTM（Bidirectional Long Shot-Term Memory）
+在当时TIMIT的音素识别任务上取得最好的效果。深度神经网络的成功应用，进一步挖掘了CTC的建模能力。
+2015年，Google研究人员成功结合CD-Phone和CTC\ucite{sak2015learning}进行声学建模，并超越基于交叉熵CE的识别系统；
+百度Deep Speech 2\ucite{amodei2015deep}直接以CTC作为训练准则，并结合多种深度学习技术，
+成功将自己系统的语音识别率提升至90\%，并被MIT科技评论评为“2016年十大突破技术“之一。
 
-神经网络的并行训练。
-
-
-
-近年以来，以RNN（Recurrent Neural Network）和LSTM（Long Short Term Memory）为代表的循环神经网络的应用，进一步提高了神经网络声学建模的精度。循环神经具有记忆单元，从而可以对长时序进行建模，进一步可以对更大的建模单元进行建模。研究学者纷纷探索和挖掘循环神经网络更多潜在的能力，以CD-Phone（Context Dependent Phone）新建模单元和CTC（Connectionist  Temporal Classification）新建模技术日益得到广泛关注。
+大数据、计算能力的提高是深度学习获得巨大成功的最主要的原因之一，数据对人工智能公司的重要性不言而喻。
+今天，几乎所有的语音公司Google，微软，百度，搜狗等都拥有数十万小时的语音训练数据。
+一方面，更大的数据造就了更优更鲁棒的模型，另一方便，数十万小时的神经网络的训练又是个极富挑战性的任务。
+目前，各大公司均使用基于多级多卡的GPU（Graphics Processing Unit）集群进行声学模型的训练工作。
+2012年，Google即提出神经网络的分布式解决方案Downpour SGD\ucite{dean2012large}，
+并在新一代深度学习平台TensorFlow\ucite{abadi2015tensorflow}中直接集成了分布式训练；
+开源深度学习工具Mxnet\ucite{chen2015mxnet}提供基于Parameter Server\ucite{li2013parameter}的
+ASGD（Asynchronous Stochastic Gradient Descent）分布式训练方案；
+微软的CNTK\ucite{yu2014introduction}实现了基于1-Bit SGD\ucite{seide20141}和
+BMUF（Blockwise Model-Update Filtering）的训练方法，并在语音识别任务上得到不错的训练效果。
+此外，Facebook的Torch，语音识别工具Kaldi\ucite{povey2011kaldi}等深度学习平台中均实现一定的并行训练功能。
+同深度学习一样，深度学习的并行训练和优化，工业级的大规模的应用，也成为当下研究的热点之一。
 
 
 \section{本文工作}
 
 本文所作的主要工作如下:
 \begin{enumerate}
-\item 设计数据采集节点上的传感器硬件连接图，完成几种传感器驱动在TinyOS操作系统上的实现。
-\item 开发基于Web服务的支持IPv6协议栈的传感器节点，其可以将传感数据汇聚到网关模块。
-\item 设计开发支持4G移动网络的远程网关程序，其可以收集传感数据并通过4G网络将数据上报至数据展示子系统。
-\item 针对采集的传感数据，进行数据库的设计并且开发展示数据的Web网站。
+\item 在声学模型上分别应用DNN，CNN、LSTM和CLDNN（CNN-LSTM-DNN），并进行性能评估。
+\item 研究和开发基于CD-Phone和CTC的声学模型，并与上述基于交叉熵的深度神经网络进行对比。
+\item 开发和研究基于BSP（Bulk Synchronize Parallel）、ASGD、EASGD（Elastic Averaging SGD）、BMUF四种方法的神经网络的分布式训练，
+并在声学模型上进行对比和性能评估。
 \end{enumerate}
 
 % 1.4
 \section{章节安排}
 
-第一章即本章为绪论，总述课题的来源与研究背景与意义，
-确定论文主体工作围绕基于Web服务的支持IPv6的传感节点展开。
+本文共分为六章：
 
-第二章提出了项目的总体需求，并提出了系统的系列功能需求，其中传感器数据的采集与展示为基础功能。
-最后结合总体需求和功能需求提出了系统的总体设计，包括各个子系统结构与功能，以及协议栈与其数据格式表示。
+第一章即本章为绪论，总述课题的来源与研究背景与意义，目前的研究现状，介绍本文的基本工作。
 
-第三章根据项目的传感数据进行传感器的选型与软硬件设计，
-包括各种传感器的引脚的连接图，以及针对具体传感器实现其驱动程序。
+第二章介绍语音识别的基本原理，介绍基于HMM-GMM的经典语音识别系统。
 
-第四章首先介绍传感节点所依赖的IPv6协议栈，分析了教研室移植开发的6LoWPAN协议栈TinyV6，
-包括无线传感器节点之间的适配层与汇聚节点与上位机之间的PPP协议等链路层，
-以及网络层的路由与自动配置与传输层、套接字接口等，结合协议栈特点实现基于Web服务的IPv6的监测节点部分。
+第三章介绍基于深度神经网络（DNN、CNN、LSTM和CLDNN）的声学建模技术。
 
-第五章根据实际部署情况，提出利用4G功能的网关来支持远程部署，并且进一步实现了基于Web服务的网关模块。
+第四章介绍基于CD-Phone和CTC的语音识别技术。
 
-第六章描述了整个监测系统的展示子系统，包括数据库的设计， 网站的交互设计与数据展示。
+第五章介绍神经网络的并行训练。
 
-第七章总结了全文的工作，结合当前监测系统的特点与不足，提出了系统的进一步设计改进的方案。
+第六章总结了全文的工作，自我评价优点与不足，对下一步的工作进行展望。
