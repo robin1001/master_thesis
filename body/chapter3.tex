@@ -1,0 +1,15 @@
+﻿% !Mode:: "TeX:UTF-8"
+
+\chapter{基于深度学习的声学建模}\label{intro_hmm}
+
+在深度学习问世并应用到语音识别系统之前，
+传统语音识别系统的基本原理是隐马尔可夫模型HMM\ucite{rabiner1989tutorial,huang2001spoken,bishop2006pattern, rabiner1993fundamentals}，
+基础系统为HMM-GMM系统。
+
+隐马尔科夫模型（HMM）是一种统计模型，已广泛应用于语音信号处理的各个领域中。
+HMM的理论基础是在二十世纪七十年代由Baum等人建立起来的，在之后的发展
+中被Baker和Jelinek等人应用于语音识别中，并取得了巨大成功。
+混合高斯模型GMM使用多个高斯概率密度函数描述概率分布，可以对连续概率密度分布进行建模。
+HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM表述不同状态的概率密度分布，
+两者结合实现大词汇量连续语音识别。
+
