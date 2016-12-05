@@ -1,0 +1,15 @@
+digraph G {
+
+node [style=filled, shape=circle, fixedsize=true, fontsize=10];
+rank=same {s1 -> s2 -> s3 -> s4 -> s5;}
+
+node [shape=polygon];
+s2 -> o2;
+s3 -> o3;
+s4 -> o4;
+
+s2:n -> s2:n;
+s3:n -> s3:n;
+s4:n -> s4:n;
+}
+

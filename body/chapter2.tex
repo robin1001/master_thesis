@@ -1,23 +1,30 @@
 ﻿% !Mode:: "TeX:UTF-8"
 
-\chapter{经典语音识别HMM-GMM基本原理}\label{intro_hmm}
+\chapter{语音识别的基本原理}\label{intro_hmm}
 
-现今的连续语音识别系统大多采用隐马尔可夫模型HMM\ucite{rabiner1989tutorial,huang2001spoken,bishop2006pattern}。隐马尔科夫模型（HMM）是一种统计模型，
-已广泛应用于语音信号处理的各个领域中。HMM的理论基础是在二十世纪七十年代由Baum等人建立起来的，在之后的发展
-中被Baker和Jelinek等人应用于语音识别中，并取得了巨大成功。目前，其基本理论和各种实用算法是现代语音识别研究
-的重要方向之一。
+在深度学习问世并应用到语音识别系统之前，
+传统语音识别系统的基本原理是隐马尔可夫模型HMM\ucite{rabiner1989tutorial,huang2001spoken,bishop2006pattern, rabiner1993fundamentals}，
+基础系统为HMM-GMM系统。
 
-本章介绍基于隐马尔可夫模型HMM的语音识别的基本原理。
+隐马尔科夫模型（HMM）是一种统计模型，已广泛应用于语音信号处理的各个领域中。
+HMM的理论基础是在二十世纪七十年代由Baum等人建立起来的，在之后的发展
+中被Baker和Jelinek等人应用于语音识别中，并取得了巨大成功。
+混合高斯模型GMM使用多个高斯概率密度函数描述概率分布，可以对连续概率密度分布进行建模。
+HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM表述不同状态的概率密度分布，
+两者结合实现大词汇量连续语音识别。
+
+
+本章介绍基于HMM-GMM的语音识别的基本原理。
 
 \newtheorem{definition}{\hspace{2em}\textbf{定义}}[section]
 %\newtheorem{algorithm}{\hspace{2em}\textbf{算法}}[section]
 %
-\section{隐马尔科夫模型的概念\ucite{lihang2012}}
+\section{隐马尔科夫模型的概念}
 
     \begin{definition}[隐马尔科夫模型]
     隐马尔科夫模型是关于时序的概率模型，描述由一个隐藏的马尔科夫链随机生成不可观测的状态序列，再由各个状态生成
-    一个观测而产生观测序列的过程。隐藏的马尔科夫链随机生成的状态的序列，称为状态序列（state sequence）；每个状态
-    生成一个观测，而由此产生的观测的随机序列，称为观测序列（observation sequence）。
+    一个观测而产生观测序列的过程。隐藏的马尔科夫链随机生成的状态的序列，称为状态序列（State Sequence）；每个状态
+    生成一个观测，而由此产生的观测的随机序列，称为观测序列（Observation Sequence）。
     \end{definition}
 
 
@@ -84,7 +91,7 @@
     \end{enumerate}
     \vspace{-10pt}
 
-\section{HMM的三个基本问题\ucite{lihang2012}}
+\section{HMM的三个基本问题}
     隐马尔科夫模型有3个基本问题：
     \vspace{-10pt}
     \begin{enumerate}
@@ -176,7 +183,7 @@
 
                 \begin{figure}
                 \centering
-                \includegraphics[width=0.7\textwidth]{figures/chapter2/gamma}
+                \includegraphics[width=0.7\textwidth]{figures/chapter2/gamma-crop}
                 \caption{${\gamma _t}(i)$计算示意图}
                 \label{fig:gamma}
                 \end{figure}
@@ -202,24 +209,26 @@
         \end{equation}
         它的学习参数学习可以由EM算法实现。
 
-        EM算法是一种迭代算法，1977年由Dempster等人总结提出，用于含有隐变量的概率模型参数的极大似然估计，或极大后验估计。EM算法每次迭代由两步组成：E步，求期望
-        （expectation）；M步，求极大（maximization）。所以这一算法称为期望极大算法（expectation maximization algorithm），简称EM算法。下面直接给出Baum-Welch算法，由Baum和Welch提出，是EM算法在隐马尔科夫模型学习中的具体实现。
+        EM\ucite{dempster1977maximum}算法是一种迭代算法，1977年由Dempster等人总结提出，用于含有隐变量的概率模型参数的极大似然估计，或极大后验估计。
+        EM算法每次迭代由两步组成：E步，求期望
+        （Expectation）；M步，求极大（Maximization）。
+        所以这一算法称为期望极大算法（Expectation Maximization Algorithm），简称EM算法。
+        Baum-Welch算法由Baum和Welch提出，是EM算法在隐马尔科夫模型学习中的具体实现。
 
+        下面描述Baum-Welch算法的具体过程。
 
-        \begin{algorithm}[Baum-Welch算法]Baum-Welch算法输入为观测数据$O = \{ {o_1},{o_2}, \cdots ,{o_T}\}$，输出为隐马尔科夫模型参数。算法步骤如下：
-            \begin{enumerate}
-                \item 初始化
-
-                    对于$n=0$,选取$a_{ij}^{(0)}$，${b_j}{(k)^{(0)}}$，$\pi _i^{(0)}$，得到模型${\lambda ^{(0)}} = \left( {{A^{(0)}},{B^{(0)}},{\pi ^{(0)}}} \right)$。
-                \item 递推，对于$n = 1,2, \cdots $，
+        Baum-Welch算法输入为观测数据$O = \{ {o_1},{o_2}, \cdots ,{o_T}\}$，输出为隐马尔科夫模型参数。算法步骤如下：
+        \begin{enumerate}
+            \item 初始化，
+                对于$n=0$,选取$a_{ij}^{(0)}$，${b_j}{(k)^{(0)}}$，$\pi _i^{(0)}$，得到模型${\lambda ^{(0)}} = \left( {{A^{(0)}},{B^{(0)}},{\pi ^{(0)}}} \right)$。
+            \item 递推，对于$n = 1,2, \cdots $，
                     \[a_{ij}^{(n + 1)} = \frac{{\sum\limits_{t = 1}^{T - 1} {{\xi _t}(i,j)} }}{{\sum\limits_{t = 1}^{T - 1} {{\gamma _t}(i)} }}\]
                     \[{b_j}{(k)^{(n + 1)}} = \frac{{\sum\limits_{t = 1,{o_t} = {v_k}}^T {{\gamma _t}(j)} }}{{\sum\limits_{t = 1}^T {{\gamma _t}(j)} }}\]
                     \[\pi _i^{(n + 1)} = {\gamma _1}(i)\]
                     右端各值按观测$O = \{ {o_1},{o_2}, \cdots ,{o_T}\}$和模型${\lambda ^{(n)}} = \left( {{A^{(n)}},{B^{(n)}},{\pi ^{(n)}}} \right)$计算。
                     式中${{\gamma _t}(j)}$和${{\xi _t}(i,j)}$由式\ref{equation:gamma}和式\ref{equation:xi}给出。
-               \item 终止。得到模型参数${\lambda ^{(n + 1)}} = \left( {{A^{(n + 1)}},{B^{(n + 1)}},{\pi ^{(n + 1)}}} \right)$。
-            \end{enumerate}
-        \end{algorithm}
+            \item 终止。得到模型参数${\lambda ^{(n + 1)}} = \left( {{A^{(n + 1)}},{B^{(n + 1)}},{\pi ^{(n + 1)}}} \right)$。
+        \end{enumerate}
 
     \subsection{预测问题}\label{section:predict}
     隐马尔科夫模型的预测问题可以由维特比算法（Viterbi算法）解决，下面给出维特比算法。
@@ -251,22 +260,24 @@
             {\psi _t}(i) = arg\mathop {\max }\limits_{1 \le j \le N} [{\delta _{t - 1}}(j){a_{ji}}],i = 1,2, \cdots, N
         \end{equation}
 
-    \begin{algorithm}[Viterbi算法]算法输入为观测数据$O = \{ {o_1},{o_2}, \cdots ,{o_T}\}$和模型参数$\lambda  = \left( {A,B,\pi } \right)$，输出为最优路径${I^*} = ({i_1}^*,{i_2}^*, \cdots ,{i_{T - 1}}^*,{i_T}^*)$。算法步骤如下：
-        \begin{enumerate}
-                \item 初始化
-                    \[{\delta _1}(i) = {\pi _i}{b_i}({o_1}),i = 1,2, \cdots ,N\]
-                    \[{\psi _1}(i) = 0,i = 1,2, \cdots ,N\]
-                \item 递推，对于$t = 1,2, \cdots,T$，
-                    \[{\delta _t}(i) = \mathop {\max }\limits_{1 \le j \le N} \left[ {{\delta _{t - 1}}(j){a_{ji}}} \right]{b_i}({o_t}),i = 1,2, \cdots ,N\]
-                    \[{\psi _t}(i) = arg\mathop {\max }\limits_{1 \le j \le N} [{\delta _{t - 1}}(j){a_{ji}}],i = 1,2, \cdots ,N\]
-                \item 终止
-                    \[{P^*} = \mathop {\max }\limits_{1 \le i \le N} {\delta _T}(i)\]
-                    \[{i_T}^* = arg\mathop {\max }\limits_{1 \le i \le N} \left[ {{\delta _T}(i)} \right]\]
-                \item 最优路径回溯。对于$t = T-1,T-2, \cdots,1$
-                    \[{i_t}^* = {\psi _{t + 1}}({i_{t + 1}}^*)\]
-                    从而求得最优路径${I^*} = ({i_1}^*,{i_2}^*, \cdots ,{i_{T - 1}}^*,{i_T}^*)$
-        \end{enumerate}
-    \end{algorithm}
+    下面描述Viterbi算法的具体过程。
+
+    算法输入为观测数据$O = \{ {o_1},{o_2}, \cdots ,{o_T}\}$和模型参数$\lambda  = \left( {A,B,\pi } \right)$，输出为最优路径${I^*} = ({i_1}^*,{i_2}^*, \cdots ,{i_{T - 1}}^*,{i_T}^*)$。算法步骤如下：
+    \begin{enumerate}
+        \item 初始化
+            \[{\delta _1}(i) = {\pi _i}{b_i}({o_1}),i = 1,2, \cdots ,N\]
+            \[{\psi _1}(i) = 0,i = 1,2, \cdots ,N\]
+        \item 递推，对于$t = 1,2, \cdots,T$，
+            \[{\delta _t}(i) = \mathop {\max }\limits_{1 \le j \le N} \left[ {{\delta _{t - 1}}(j){a_{ji}}} \right]{b_i}({o_t}),i = 1,2, \cdots ,N\]
+            \[{\psi _t}(i) = arg\mathop {\max }\limits_{1 \le j \le N} [{\delta _{t - 1}}(j){a_{ji}}],i = 1,2, \cdots ,N\]
+        \item 终止
+             \[{P^*} = \mathop {\max }\limits_{1 \le i \le N} {\delta _T}(i)\]
+             \[{i_T}^* = arg\mathop {\max }\limits_{1 \le i \le N} \left[ {{\delta _T}(i)} \right]\]
+        \item 最优路径回溯。对于$t = T-1,T-2, \cdots,1$
+            \[{i_t}^* = {\psi _{t + 1}}({i_{t + 1}}^*)\]
+            从而求得最优路径${I^*} = ({i_1}^*,{i_2}^*, \cdots ,{i_{T - 1}}^*,{i_T}^*)$
+    \end{enumerate}
+
 
 
 \section{连续密度的隐马尔科夫模型}
@@ -294,37 +305,34 @@
     结合HMM的三个基本问题和连续密度的HMM，本节介绍HMM在语音识别中的模型建立、训练过程和识别过程的基本应用。
 
     首先，要明确在语音识别任务中观测是什么、状态是什么。观测是人所发出的一段语音信号，人在说不同词时会产生不同的语音信号，不同的语音信号对应不同的信号特征（
-    如幅度、频率、过零率等），我们对语音信号进行特征提取，即可作为HMM模型的观测向量，本毕设中使用39维MFCC特征。人在发出不同音素时对应不同的发音过程，状态即是对
-    不同发音过程的描述。由于人的发音过程不可逆，即状态跳转不可逆，语音识别任务中使用特殊的HMM模型，称为左右模型，如图\ref{fig:left_right}所示，可以看出仅能跳转到
+    如幅度、频率、过零率等），我们对语音信号进行特征提取，即可作为HMM模型的观测向量。人在发出不同音素时对应不同的发音过程，状态即是对不同发音过程的描述。
+    由于人的发音过程不可逆，即状态跳转不可逆，语音识别任务中使用特殊的HMM模型，称为左右模型，如图\ref{fig:left_right}所示，可以看出仅能跳转到
     自身或更高的状态。若以音素为基本单位建立HMM模型，则一般使用3状态的HMM描述，如图\ref{fig:asr_hmm}所示，其中1、5状态为扩展状态，1状态为起始状态，只能跳转到其它
     状态；5状态为结束状态。1、5状态均不产生任何观测输出，只是为了描述的方便，特别在HMM模型连接中非常有用。
 
     \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/chapter2/left_right}
+    \includegraphics[width=0.5\textwidth]{figures/chapter2/left_right-crop}
     \caption{左右模型HMM}
     \label{fig:left_right}
     \end{figure}
 
     \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/chapter2/asr_hmm}
+    \includegraphics[width=0.8\textwidth]{figures/chapter2/asr_hmm-crop}
     \caption{语音识别中的5状态HMM}
     \label{fig:asr_hmm}
     \end{figure}
 
-    模型的训练是一个不断迭代的过程，目的是求得各个HMM模型的参数。准备好数据，包括语音特征文件（39维MFCC特征）和标注后。
-    以音素为基本单位的训练过程如下：
+    模型的训练是一个不断迭代的过程，目的是求得各个HMM模型的参数。以音素为基本单位的训练过程如下：
     首先，对每个音素建立一个HMM模型，并对模型参数$\lambda $进行初始化。
     每一轮的训练过程中，根据HMM模型参数，先使用前向后向算法计算（HMM概率问题\ref{section:probability}）在所有时间$t$上的前向得分和后向得分，随后进行Baum-Welch
     算法（HMM学习问题\ref{section:learn}）对模型参数进行更新，其中E步计算观测下各状态出现、各状态转移、由状态$i$转移到状态$j$的期望，并计算混合高斯分量权重的期望，
     M步对状态转移矩阵，各状态概率密度函数混合高斯的均值、协方差矩阵参数进行更新。
     重复进行训练过程，直至满足预设条件终止。
 
-    在已经得到各个HMM的模型参数后，识别过程就是计算给定观测在不同HMM模型上的概率，选取概率最大HMM模型对应的建模单元（如音素或词）即为识别结果。此时
-    即可以使用前向或者后向算法（HMM概率问题\ref{section:probability}）计算概率，也可使用Viterbi算法（HMM预测问题\ref{section:predict}）。然而，往往
-    还希望得到识别结果所对应的观测序列，因此一般使用Viterbi算法。在大词汇量连续语音识别中，为了提高识别的实时性，会采取措施限制识别任务的搜索空间，如
-    HVite中的Token Passing\cite{young1989token}算法和Beam剪枝策略。
+    在已经得到各个HMM的模型参数后，识别过程就是计算给定观测在不同HMM模型上的概率，选取概率最大HMM模型对应的状态序列即为识别结果，也就是使用Viterbi算法（HMM预测问题\ref{section:predict}）。
+    在大词汇量连续语音识别中，为了提高解码效率，会采取一定的剪枝策略，如Beam Search等。
 
 %\section{基于HTK的连续语音识别系统}
 %    \subsection{HTK工具包介绍}

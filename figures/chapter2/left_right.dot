@@ -1,0 +1,10 @@
+digraph G {
+//nodeseq=0.5
+node [style=filled, shape=circle, fixedsize=true, fontsize=10, height=0.5];
+edge[minlen=0.5]
+rank=same {s1 -> s2 -> s3;}
+s1:n -> s1:n;
+s2:n -> s2:n;
+s3:n -> s3:n;
+}
+
