@@ -11,16 +11,34 @@
 研究这些深度学习网络在语音识别这个特定任务中的使用方式，改进和组合使用（CLDNN）等；
 最后本章给出这几种深度学习方法的相关实验。
 
-\section{HMM-DL系统}
+\section{HMM-DL系统}\label{section:hmmdl}
 
 在经典HMM-GMM的语音识别系统中，为每个状态建立一个GMM模型来描述其概率分布，
 在识别时，通过各自状态的GMM可以直接计算$t$时刻的观测$o_t$在状态$s_i$上的概率
-$p(o_t|s_i)$。
+$p(o_t|s_i)$，$p(o_t|s_i)$HMM系统识别时必须的依赖。
 
 深度学习引入语音识别后，使用深度神经网络来替代GMM对每个状态进行建模，
 在深度神经网络中，这是一个典型的分类任务，即当新的一帧语音到来时，
 通过深度神经网络计算其在每个状态上的概率。
-与GMM系统为每个状态建立独立的GMM模型不同，深度神经网络本身。
+与GMM系统为每个状态建立独立的GMM模型不同，深度神经网络本身为紧凑模型，即所有状态共享一个模型。
+通过深度神经网络直接计算出的是$p(s_i|o_t)$，而非$p(o_t|s_i)$，
+这是基于GMM和神经网络对声学模型进行建模的一个本质上的不同。
+
+通过贝叶斯公式有：
+\begin{equation}
+p(o_t|s_i) = \frac{p(s_i|o_t)p(o_t)}{p(s_i)}
+\end{equation}
+在识别的解码过程中，为防止概率连乘导致下溢，概率计算一般转到$log$域，取$log$有：
+\begin{equation} \label{equation:hmmdnn}
+\log{p(o_t|s_i)} = \mathop {\log{p(s_i|o_t)} + \log{p(o_t)} - \log{p(s_i)}} \\
+\;\;\;\;\;\;\;\;\; = \mathop {\log{p(s_i|o_t)} - \log{p(s_i)}}
+\end{equation}
+其中$p(o_t)$为$o_t$发生的概率，对所有的状态相同，因此可以忽略。
+$p(s_i)$为状态$s_i$出现的概率，称之为状态先验，一般可以通过对训练数据集作状态统计得到。
+通过公式\ref{equation:hmmdnn}，便可以计算得到$p(o_t|s_i)$，这便是基于HMM-DL系统进行语音
+识别的基本原理。
+
+
 
 \section{全连接神经网络DNN}
 
@@ -38,7 +56,7 @@ $p(o_t|s_i)$。
 
 对于任意隐层$l$的任意节点$j$，有:
 \[\begin{array}{l}
-a_j^l = \sum\limits_{i = 1}^N {w_{ji}^l + b_j^l} \\
+a_j^l = \sum\limits_{i = 1}^N {w_{ji}^l {x_i}^{l-1}+ b_j^l} \\
 z_j^l = h(a_j^l)
 \end{array}\]
 
@@ -97,6 +115,9 @@ E({\rm{w}}) = \frac{1}{2}\sum\limits_{n = 1}^N {\{ {y_n}}  - {t_n}{\} ^2}
 \begin{equation}
 E(w) =  - \sum\limits_{n = 1}^N {\sum\limits_{k = 1}^K {{t_{kn}}\ln {y_k}} }
 \end{equation}
+
+根据\ref{section:hmmdl}，基于深度神经网络的声学建模为典型的分类任务，
+在输出层使用$softmax$函数做概率归一，使用交叉熵作为损失函数。
 
 \section{卷积神经网络CNN}
 
