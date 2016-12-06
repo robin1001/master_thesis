@@ -1,0 +1,71 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass{article}
+\usepackage[BoldFont,SlantFont,CJKchecksingle]{xeCJK}
+\setCJKfamilyfont{song}{SimSun}      % 宋体
+\setCJKmonofont{SimSun}% 设置缺省中文字体
+
+\usepackage{tikz}
+\begin{document}
+\pagestyle{empty}
+
+\def\layersep{2.0cm}
+\def\numnode{5}
+\def\scalefactor{1.5}
+
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=3.0]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=green!50];
+    \tikzstyle{output neuron}=[neuron, fill=red!50];
+    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,4}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron, pin=below:$x_\y$] (I-\name) at (\y*\scalefactor, 0) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,\numnode}
+        \path[xshift=-0.75cm]
+            node[hidden neuron] (H1-\name) at (\y*\scalefactor, 1.5) {};
+
+    \foreach \name / \y in {1,...,\numnode}
+        \path[xshift=-0.75cm]
+            node[hidden neuron] (H2-\name) at (\y*\scalefactor, 3.0) {};
+
+    \foreach \name / \y in {1,...,\numnode}
+        \path[xshift=-0.75cm]
+            node[hidden neuron] (H3-\name) at (\y*\scalefactor, 4.5) {};
+
+    % Draw the output layer node
+    \foreach \name / \y in {1,...,4}
+        \node[output neuron,pin={[pin edge={->}]above:$y_\y$}] (O-\name) at (\y*\scalefactor, 6.0) {};
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer 1.
+    \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,\numnode}
+            \path (I-\source) edge (H1-\dest);
+
+    % hidden layer 2.
+    \foreach \source in {1,...,\numnode}
+        \foreach \dest in {1,...,\numnode}
+            \path (H1-\source) edge (H2-\dest);
+    \foreach \source in {1,...,\numnode}
+        \foreach \dest in {1,...,\numnode}
+            \path (H2-\source) edge (H3-\dest);
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,\numnode}
+        \foreach \dest in {1,...,4}
+            \path (H3-\source) edge (O-\dest);
+
+    % Annotate the layers
+    \node[annot,left of=H1-1, node distance=1cm] (hl) {隐层1};
+    \node[annot,left of=H2-1, node distance=1cm] (hl) {隐层2};
+    \node[annot,left of=H3-1, node distance=1cm] (hl) {隐层3};
+    \node[annot,left of=I-1, node distance=1.5cm] {输入层};
+    \node[annot,left of=O-1, node distance=1.5cm] {输出层};
+\end{tikzpicture}
+% End of code
+\end{document}

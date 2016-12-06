@@ -1,0 +1,22 @@
+\documentclass{article}
+\usepackage{tikz}
+\begin{document}
+\pagestyle{empty}
+
+\def\fansize{3.0}
+
+\begin{tikzpicture}[domain=-\fansize:\fansize]
+%\draw[very thin,color=gray] (-\fansize,-\fansize) grid (\fansize, \fansize);
+\draw[-,very thin,color=gray] (-\fansize-0.5,1) -- (\fansize+0.5,1);
+\draw[-,very thin,color=gray] (-\fansize-0.5,-1) -- (\fansize+0.5,-1);
+\node at (0.1, 1) {1};
+\node at (0.1, -1) {-1};
+
+\draw[->] (-\fansize-0.5,0) -- (\fansize+0.5,0) node[right] {$x$};
+\draw[->] (0,-1.5) -- (0,\fansize+0.5) node[above] {$f(x)$};
+\draw[color=red]    plot (\x, {1.0 / (1+exp(-\x))}) node[right] {$f(x)=sigmoid(x)$};
+% \x r 表示弧度
+\draw[color=blue] node[below] {$f(x) = tanh(x)$} plot (\x,{(exp(\x)-exp(-\x))/(exp(\x)+exp(-\x))}) ;
+\draw[color=green] plot (\x,{max(0, \x)}) node[right] {$f(x) = ReLU(x)$};
+\end{tikzpicture}
+\end{document}
