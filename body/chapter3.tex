@@ -168,7 +168,7 @@ $\textbf{p}_m$ = $[p_{m,1}, q_{m,2}, ..., q_{m, J}]$，则有：
 {p_{m,j}} = \mathop {\max }\limits_{k = 1}^r ({q_{m \times n + k,j}})
 \end{equation}
 其中，$r$是pooling的大小，$n$是pooling的步长，一般小于$r$（这样允许临近的pooling操作可以有重叠），
-图ref{fig:cnn}中，pooling的大小为3，步长为2.
+图\ref{fig:cnn}中，pooling的大小为3，步长为2.
 
 基于CNN的语音识别网络如图\ref{fig:cnnasr}所示。如上分析，CNN的输入为频域特征，
 Fbank（Filter bank）特征是目前最为常用的频谱特征。
@@ -187,6 +187,128 @@ Fbank（Filter bank）特征是目前最为常用的频谱特征。
 
 \section{循环神经网络RNN}
 
+循环神经网络RNN是一种带有Recurrent层的神经网络，循环Recurrent层中的神经元通过连接组成了一个有向环，
+有向环使得循环神经网络有了内部状态和记忆单元的结构，从而赋予了循环神经网络记忆功能和对时序动态建模的能力。
+如图\ref{fig:rnn}所示，循环神经网络RNN中循环层与全连接层的不同之处在于RNN的输出不仅是当前时刻下一层的输入，
+同时还有上一时刻该循环层的输出，通过这样的结构，RNN能够在内部表示和学习序列中的历史信息。
+
+RNN有许多变种的结构，这里我们介绍简单循环神经网络（记为RNN）和当前最为流行的长短时记忆（LSTM）的循环神经网络。
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/chapter3/rnn-crop}
+\caption{循环神经网络RNN的基本结构}
+\label{fig:rnn}
+\end{figure}
+
+\subsection{简单循环神经网络RNN}
+
+简单循环神经网络RNN的结构和图\ref{fig:rnn}所示相同。
+在任意时刻$t$，使用$\textbf{x}_t$表示前一层的$M$维输出，$\textbf{h}_t$是$N$维的隐状态向量，
+则循环层RNN的输出可以表示为：
+\begin{equation}
+\textbf{h}_t = f({\textbf{W}_{xh}}{\textbf{x}_t} + {\textbf{W}_{hh}}{\textbf{h}_{t-1}})
+\end{equation}
+其中$f(.)$表示激活函数, $\textbf{W}_{xh}$是$N \times M$的连接前一层的权值矩阵，
+$\textbf{W}_{hh}$是$N \times N$的连接$t-1$时刻该循环层输出$\textbf{h}_{t-1}$的权值矩阵，
+$\textbf{h}_{t-1}$即是RNN的内部状态。
+
+\subsection{LSTM}
+
+RNN的结构相对简单，具有一定的对序列、时间轨迹建模能力，但在序列长度更大、问题更为复杂的任务中，
+其建模能力则十分有限；此外，简单RNN的训练容易出现梯度爆炸或者弥散的问题，训练不够稳定。
+
+为了解决上述问题，1997年，Hochreiter等人提出了LSTM\ucite{hochreiter1997long}，
+LSTM通过引入门结构复杂化RNN的基本结构，强化了建模能力；通过引入CEC（Constant Error Carousel）单元解决RNN训练中的不稳定问题。
+
+
+LSTM的基本结构如图\ref{fig:lstm}左图所示，它的基本思想是利用不同类型的门来控制网络中的信息流。
+LSTM结构中含有输入门、输出门、遗忘门三种基本门结构，门的基本输入为网络上一层的输出和该Recurrent层上一时刻的输出；
+同时LSTM结构中引入cell单元，cell单元和隐层输出一起作用强化RNN的记忆功能。
+LSTM的数据流向如下：
+\begin{equation}
+\begin{array}{l}
+{{\rm{i}}_t} = \sigma ({W_{ix}}{x_t} + {W_{ih}}{h_{t - 1}}{\rm{ + }}{b_i})\\
+{f_t} = \sigma ({W_{fx}}{x_t} + {W_{fh}}{h_{t - 1}}{\rm{ + }}{b_f})\\
+{o_t} = \sigma ({W_{ox}}{x_t} + {W_{oh}}{h_{t - 1}}{\rm{ + }}{b_o})\\
+{c_t} = {f_t} \odot {c_{t - 1}} + {i_t} \odot \tanh ({W_{cx}}{x_t} + {W_{ch}}{h_{t - 1}}{\rm{ + }}{b_c})\\
+{h_t} = {o_t} \odot \tanh ({c_t})
+\end{array}
+\end{equation}
+其中$i_t$表示输入门，$f_t$表示遗忘门，$o_t$表示输出门；$c_t$表示cell的内部值；
+$\sigma$表示sigmoid激活函数；
+$W$均为权值矩阵。
+
+\begin{figure}
+\centering
+\subfigure[LSTM]{
+\begin{minipage}[b]{0.4\textwidth}
+\includegraphics[width=1\textwidth]{figures/chapter3/lstm-crop}
+\end{minipage}
+}
+\subfigure[LSTMP]{
+\begin{minipage}[b]{0.45\textwidth}
+\includegraphics[width=1\textwidth]{figures/chapter3/lstmp-crop}
+\end{minipage}
+}
+ \caption{LSTM的基本结构示意} \label{fig:lstm}
+\end{figure}
+
+标准的LSTM中，循环的连接直接从Memory Block的输出连接至Memory Block的输入和各个控制门。
+2014年，Google首次将LSTM应用于大词汇量连续语音识别\ucite{sak2014long, sak2014long_lvsr}，
+Google研究人员将标准LSTM的输出连接到一个Projection层，然后将Projection的输出作为循环连接
+到Memory Block的输入和控制门，这种结构成为LSTMP（LSTM with Projection），如图\ref{fig:lstm}
+右图所示。在一般的设置中，LSTMP中的Projection层的节点数小于LSTMP中Memory Block的个数（比如Memory Block数量为1024，Projection可设为512），
+这样有效减小了循环连接矩阵的大小。
+通过Projection层，一方面减小了网络的参数数量，另一方面这种改进在声学模型上比标准LSTM取得更好的效果。
+LSTMP的数据流向如下：
+\begin{equation}
+\label{equation:lstmp}
+\begin{array}{l}
+{{\rm{i}}_t} = \sigma ({W_{ix}}{x_t} + {W_{ih}}{h_{t - 1}}{\rm{ + }}{b_i})\\
+{f_t} = \sigma ({W_{fx}}{x_t} + {W_{fh}}{h_{t - 1}}{\rm{ + }}{b_f})\\
+{o_t} = \sigma ({W_{ox}}{x_t} + {W_{oh}}{h_{t - 1}}{\rm{ + }}{b_o})\\
+{c_t} = {f_t} \odot {c_{t - 1}} + {i_t} \odot \tanh ({W_{cx}}{x_t} + {W_{ch}}{h_{t - 1}}{\rm{ + }}{b_c})\\
+{{\rm{m}}_t} = {o_t} \odot \tanh ({c_t})\\
+{h_t} = {W_m}{m_t}
+\end{array}
+\end{equation}
+其中，$W_m$为Projection层的变换矩阵。由式\ref{equation:lstmp}可以看出，在LSTMP中Memory Block的输出$m_t$并不直接回连到自身，
+而是先通过Projection层的$W_m$做矩阵变化后，再回连到Memory Block。
+
 \section{混合神经网络CLDNN}
+
+目前，在大多数语音识别任务上，基于CNN和LSTM的声学模型均能取得比基于DNN的声学模型更好的效果。
+那么一个很自然的想法就是，能否将三者结合使用，各取所长，相互补充。
+CNN对频率各种变化具有较好的不变性，长于提取局部特性和特征；
+LSTM有记忆功能，长于对时序序列建模；
+DNN长于特征抽象和映射。
+2015年，Google的工作\ucite{sainath2015convolutional}表明，通过三种网络结合的混合结构CLDNN（CNN，LSTM，DNN），
+在大词汇量连续语音识别任务上，均能比LSTM取得4\~6\%的收益。
+
+Google提出的CLDNN的基本结构如图\ref{fig:cldnn}左图所示，
+首先，为了对频率变化更好的建模，在网络底层使用1层或多层的卷积层CNN，使用卷积和池化操作； 
+网络中间是多层的LSTM结构，对CNN的输出进行时序建模；
+LSTM层之后紧接多层的DNN，用于深化网络结构，提供更强大的建模能力。
+
+在实际的应用过程中，我们发现可以做一些顺序上的调整。
+声学模型的输入是频谱特征，所以长于频谱建模的CNN必须置于网络最下层。
+DNN和LSTM层的位置是可调的，LSTM层也可以放在CNN和DNN之后，如图\ref{fig:cldnn}右图所示，
+目前证明两种结构均能取得不错的效果。LSTM层放在CNN之后一个潜在的优点是相对DNN，
+LSTM的梯度更不稳定，根据误差反向传播原理，深度神经网络梯度传递到低层时容易出现梯度爆炸或弥散的问题，
+LSTM位置越靠近顶层，反馈回来的梯度稳定性能更好一点，从而整个网络的稳定性更好；
+另一个潜在的优点是，基于已有DNN和CNN的识别网络（相当于已经预训练好的深层结构），
+可以直接在其输出层之前插入多层的LSTM，快速得到CLDNN的结构训练并部署，
+并与之前的系统进行比较。
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{figures/chapter3/cldnn-crop}
+\caption{CLDNN的基本结构}
+\label{fig:cldnn}
+\end{figure}
+
 
 \section{实验} 

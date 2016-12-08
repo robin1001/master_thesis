@@ -168,26 +168,32 @@
 
 % Modified By Lei Wang BaconChina
 % THU Version
-\titleformat{\chapter}[hang]
-    {\normalfont\sanhao\filcenter\hei\sf}
-    {\sanhao{\chaptertitlename}}
-    {20pt}{\sanhao}
+%\titleformat{\chapter}[hang]
+%    {\normalfont\sanhao\filcenter\hei\sf}
+%    {\sanhao{\chaptertitlename}}
+%    {20pt}{\sanhao}
+    
+\titleformat{\chapter}{\center\hei\fontsize{16pt}{11pt}\selectfont}{\chaptertitlename}{0.5em}{}[\vspace*{-5.5pt}]
+
 %\titlespacing{\chapter}{0pt}{-3ex  plus .1ex minus .2ex}{2.5ex plus .1ex minus .2ex}
 \titlespacing{\chapter}{0pt}{-3ex  plus .1ex minus .2ex}{0.25em}
 
-\titleformat{\section}[hang]{\hei \sf \sihao}
-    {\sihao \thesection}{0.5em}{}{}
+\titleformat{\section}{\xiaosan\hei}{\thesection}{0.5em}{}
+%\titleformat{\section}[hang]{\hei \sf \sihao}
+%    {\sihao \thesection}{0.5em}{}{}
 %\titlespacing{\section}{0pt}{1.5ex plus .1ex minus .2ex}{\wordsep}
 \titlespacing{\section}{0pt}{0.5em}{0em}
 
-\titleformat{\subsection}[hang]{\hei \sf \banxiaosi}
-    {\banxiaosi \thesubsection}{0.5em}{}{}
-%    {\banxiaosi \thesubsection}{0pt}{}{}
+\titleformat{\subsection}{\sihao\hei}{\thesubsection}{0.5em}{}
+%\titleformat{\subsection}[hang]{\hei \sf \banxiaosi}
+%    {\banxiaosi \thesubsection}{0.5em}{}{}
+    
 %\titlespacing{\subsection}{0pt}{1.5ex plus .1ex minus .2ex}{\wordsep}
 \titlespacing{\subsection}{0pt}{0.25em}{0em}
 
-\titleformat{\subsubsection}[hang]{\hei \sf}
-    {\thesubsubsection }{0.5em}{}{}
+\titleformat{\subsubsection}{\xiaosi\hei}{\thesubsubsection}{0.5em}{}
+%\titleformat{\subsubsection}[hang]{\hei \sf}
+%    {\thesubsubsection }{0.5em}{}{}
 %\titlespacing{\subsubsection}{0pt}{1.2ex plus .1ex minus .2ex}{\wordsep}
 \titlespacing{\subsubsection}{0pt}{0.25em}{0pt}
 
@@ -301,8 +307,8 @@
 \renewcommand{\figurename}{图}
 % 图 1.1 -> 图 1-1
 \renewcommand\thefigure{\arabic{chapter}-\arabic{figure}}
-\renewcommand{\captionfont}{\CJKfamily{song}\rmfamily}
-\renewcommand{\captionlabelfont}{\CJKfamily{song}\rmfamily}
+\renewcommand{\captionfont}{\wuhao\hei}
+\renewcommand{\captionlabelfont}{\wuhao\hei}
 
 % xx comment: subfigure capture
 %\renewcommand{\thesubfigure}{\alph{subfigure}}
@@ -313,7 +319,7 @@
 \renewcommand{\captionlabeldelim}{\hspace{0.5em}}
 
 % 按清华标准, 图表标题字体为11pt, 这里写作大五号
-\renewcommand{\captionfont}{\wuhao}
+\renewcommand{\captionfont}{\wuhao\hei}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 定义题头格言的格式
