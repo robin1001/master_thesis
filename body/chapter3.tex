@@ -30,14 +30,25 @@ p(o_t|s_i) = \frac{p(s_i|o_t)p(o_t)}{p(s_i)}
 \end{equation}
 在识别的解码过程中，为防止概率连乘导致下溢，概率计算一般转到$log$域，取$log$有：
 \begin{equation} \label{equation:hmmdnn}
+\begin{array}{l}
 \log{p(o_t|s_i)} = \mathop {\log{p(s_i|o_t)} + \log{p(o_t)} - \log{p(s_i)}} \\
-\;\;\;\;\;\;\;\;\; = \mathop {\log{p(s_i|o_t)} - \log{p(s_i)}}
+\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; = \mathop {\log{p(s_i|o_t)} - \log{p(s_i)}}
+\end{array}
 \end{equation}
 其中$p(o_t)$为$o_t$发生的概率，对所有的状态相同，因此可以忽略。
 $p(s_i)$为状态$s_i$出现的概率，称之为状态先验，一般可以通过对训练数据集作状态统计得到。
-通过公式\ref{equation:hmmdnn}，便可以计算得到$p(o_t|s_i)$，这便是基于HMM-DL系统进行语音
+通过公式\ref{equation:hmmdnn}，便可以计算得到$p(o_t|s_i)$，这是基于HMM-DL系统进行语音
 识别的基本原理。
+如图\ref{fig:hmmdnn}所示，原始语音信号经过特征提取，输入到神经网络，
+计算当前信号在每个状态上的概率，然后结合该概率在HMM系统中进行语音识别解码。
 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{figures/chapter3/hmmdnn-crop}
+\caption{HMM-DL系统的基本原理}
+\label{fig:hmmdnn}
+\end{figure}
 
 
 \section{全连接神经网络DNN}
@@ -120,6 +131,59 @@ E(w) =  - \sum\limits_{n = 1}^N {\sum\limits_{k = 1}^K {{t_{kn}}\ln {y_k}} }
 在输出层使用$softmax$函数做概率归一，使用交叉熵作为损失函数。
 
 \section{卷积神经网络CNN}
+
+CNN最早应用在图像领域，在基础DNN的结构上，CNN引进了局部滤波器，池化层和权值共享三个新思想。
+深度学习在语音识别领域获得成功后，研究人员开始探索CNN在语音识别任务上的应用。
+
+语音信号在频域上具有一定的局部特性，不同的音素在不同的局部频带上能量比较集中。
+例如，非静音的音素在不同频带上有一定的共振峰。
+在这些频带上应用局部滤波器或许能够提供对这些局部特征结构的更有效的表示，
+这个特点是CNN能够应用在识别任务上的基础。
+
+在语音识别中，CNN中使用卷积层能够对局部频域特征建模。
+将输入语音信号分频带规整好之后，卷积层中每个卷积核的输入都为一定频段的语音信号。
+假设输入信号$\textbf{x}$被分为$N$个频带$\textbf{x}= [\textbf{x}_1, \textbf{x}_2, ..., \textbf{x}_N]$，
+其中向量$\textbf{x}_n$代表频段$n$。如图\ref{fig:cnn}所示，这个$\textbf{x}_n$可以包含原始频谱，一阶差分和二阶差分。
+卷积层的激励被分为$K$个子带，每个频带包含$J$个滤波器的激励。
+将每个子带的激励记作$\textbf{q}_k$ = $[q_{k,1}, q_{k,2}, ..., q_{k, J}]$，则有：
+\begin{equation}
+{{\rm{q}}_{k,j}} = h(\sum\limits_{n = 1}^{s - 1} {{\textbf{w}_{n,j}}\textbf{x}_{n{\rm{ + k}}}^T + {b_j})}
+\end{equation}
+其中，$h(.)$表示激活函数，$s$表示局部滤波器的宽度，$\textbf{w}_{n,j}$表示第$j$个滤波器的的第$n$维权重向量。
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{figures/chapter3/cnn-crop}
+\caption{CNN基本结构示意}
+\label{fig:cnn}
+\end{figure}
+
+在CNN中，使用max-pooling（最大池化层）来保证局部不变性，max-pooling层一般位于卷积层之后，
+作用在卷积层的激励输出上。max-pooling通过对局部激励取最大（max）操作，从而得到低分辨率的卷积层的输出，
+这种表示更为抽象，更为鲁棒，随后作为高层神经网络的输入处理。
+假设max-pooling操作共产生$M$个子带，将第$m$个子带的激励记作
+$\textbf{p}_m$ = $[p_{m,1}, q_{m,2}, ..., q_{m, J}]$，则有：
+\begin{equation}
+{p_{m,j}} = \mathop {\max }\limits_{k = 1}^r ({q_{m \times n + k,j}})
+\end{equation}
+其中，$r$是pooling的大小，$n$是pooling的步长，一般小于$r$（这样允许临近的pooling操作可以有重叠），
+图ref{fig:cnn}中，pooling的大小为3，步长为2.
+
+基于CNN的语音识别网络如图\ref{fig:cnnasr}所示。如上分析，CNN的输入为频域特征，
+Fbank（Filter bank）特征是目前最为常用的频谱特征。
+神经网络的底层为一层或者多层的CNN，用作频谱特征的抽取，之后会连接普通的DNN神经网络。
+基于CNN的语音识别也是目前识别领域的研究热点之一，
+一种趋势是直接CNN直接对原始音频Raw进行建模\ucite{palaz2015convolutional, sainath2016factored}，
+另一种趋势应用已经在图像上应用获得成功的Deep CNN\ucite{yu2016deep, xiong2016microsoft, sercu2016very, saon2015ibm}的结构到语音识别任务中。
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{figures/chapter3/cnnasr-crop}
+\caption{基于CNN的声学模型}
+\label{fig:cnnasr}
+\end{figure}
 
 \section{循环神经网络RNN}
 
