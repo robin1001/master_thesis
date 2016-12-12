@@ -118,8 +118,9 @@ E({\rm{w}}) = \frac{1}{2}\sum\limits_{n = 1}^N {\{ {y_n}}  - {t_n}{\} ^2}
 \end{equation}
 其中$y_n$为网络输出，$t_n$为标注，$N$为样本总数。
 
-对于分类任务，首先应用$softmax$函数：
+对于分类任务，首先应用softmax函数：
 \begin{equation}
+\label{equation:softmax}
 {y_k} = \frac{{\exp ({a_k})}}{{\sum\limits_j {\exp ({a_{\rm{j}}})} }}
 \end{equation}
 计算在每个类别上的归一化后的概率，然后使用交叉熵CE（Cross Entropy）准则计算损失：

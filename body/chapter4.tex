@@ -190,6 +190,7 @@ CTC（Connectionist Temporal Classificatio）\ucite{graves2006connectionist, gra
 $y_k^t$表示在$t$时刻观测到字符$k$的概率，其中$k<=L$; $k=0$表示输出blank单元的概率。
 则序列$\textbf{x}$的任意一个等价序列$\pi$出现的概率可以表示为：
 \begin{equation}
+\label{euqation:ctcpath}
 {\rm{p}}(\pi |\bf{x},S) = \prod\limits_{t = 1}^T {{\rm{y}}_{{\pi _t}}^t}
 \end{equation}
 其中$\pi  \in {L^{'T}}$，$L^{'T}$表示在输入序列$\textbf{x}$的标注中任意位置插入任意长度的blank，直至其总长度为$T$。
@@ -203,6 +204,7 @@ $y_k^t$表示在$t$时刻观测到字符$k$的概率，其中$k<=L$; $k=0$表示
 
 根据序列等价性，$\bf{l}$的条件概率可以表示为：
 \begin{equation}
+\label{euqation:ctcallpath}
 p({\bf{l}}|{\bf{x}}) = \sum\limits_{\pi  \in {{\rm B}^{ - 1}}({\bf{l}})}^{} {p(\pi |{\bf{x}})}
 \end{equation}
 
@@ -218,12 +220,143 @@ p({\bf{l}}|{\bf{x}}) = \sum\limits_{\pi  \in {{\rm B}^{ - 1}}({\bf{l}})}^{} {p(\
 首先，定义${{\bf{l'}}}$表示在$\bf{l}$的开始，结束和相邻两个字符之间插入blank后的序列，则${{\bf{l'}}}$的长度为$2|{\bf{l}}| + 1$。
 在计算过程中，我们允许从当前一个字符直接跳到下一个字符；或者从当前字符跳到自身；或者从当前字符跳到blank。
 
-\subsection{目标函数}
+定义${\alpha _{\rm{t}}}(s)$表示$t$时刻到达第$s$个字符的前向概率和，则
+\begin{equation}
+{\alpha _{\rm{t}}}(s) = P({\pi _{1:t}}:B({\pi _{1:t}}) = {{\bf{l}}_{1:s/2}},{\pi _t} = {{l'}_s}{\rm{|}}{\bf{x}}{\rm{) = }}\sum\limits_{\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} \pi :\hfill\atop
+\scriptstyle\beta ({\pi _{1:t}}) = {{\bf{l}}_{1:s/2}}\hfill} {\prod\limits_{t' = 1}^t {y_{{\pi _{t'}}}^{t'}} }
+\end{equation}
+$s/2$表示去掉blank的标注。
+
+由以上定义，标注序列$\bf{l}$的概率可以表示为$t$时刻处在最后一个字符或者其后blank上的概率和，表明允许以最终字符或者blank结束：
+\begin{equation}
+p({\bf{l}}|{\bf{x}}) = {\alpha _T}(|{\bf{l'}}|) + {\alpha _T}(|{\bf{l'}}| - 1)
+\end{equation}
+同理，允许序列可以以第一个字符或者blank起始，则可以得到${\alpha _{\rm{t}}}(s)$的初始值：
+\begin{equation}
+\begin{array}{l}
+{\alpha _1}(1) = y_b^1\\
+{\alpha _1}(2) = y_{{l_1}}^1\\
+{\alpha _1}(s) = 0,\forall s > 2
+\end{array}
+\end{equation}
+${\alpha _{\rm{t}}}(s)$可以由${\alpha _{\rm{t-1}}}(s)$，${\alpha _{\rm{t-1}}}(s-1)$，${\alpha _{\rm{t-1}}}(s-2)$递推计算：
+\begin{equation}
+\label{equation:alpha}
+{\alpha _{\rm{t}}}(s) = y_{{{l'}_s}}^t\left\{ \begin{array}{l}
+\sum\nolimits_{i = s - 1}^s {{\alpha _{{\rm{t - 1}}}}(i){\kern 1pt} ;} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {{l'}_s} = b{\kern 1pt} {\kern 1pt} {\rm{or}}{\kern 1pt} {\kern 1pt} {{l'}_{s - 2}} = {{l'}_s}\\
+\sum\nolimits_{i = s - 2}^s {{\alpha _{{\rm{t - 1}}}}(i){\kern 1pt} ;} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\rm{otherwise}}
+\end{array} \right\}
+\end{equation}
+CTC前向跳转的一个示意如图\ref{fig:ctcforback}所示，图中给出DOG的CTC状态跳转图。
+其中空心圈表示blank，实心圈表示字符，横向为时间轴，纵向为字符轴。
+从左上角到右下角即为一个可能的路径。
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{figures/chapter4/forback-crop}
+\caption{CTC前向状态跳转}
+\label{fig:ctcforback}
+\end{figure}
+
+定义${\beta _{\rm{t}}}(s)$表示$t$时刻到达第$s$个字符的后向概率和，则
+\begin{equation}
+{\beta _{\rm{t}}}(s) = P({\pi _{{\rm{t}} + 1:T}}:B({\pi _{t:T}}) = {{\bf{l}}_{s/2:{\rm{|}}{\bf{l}}|}},{\pi _t} = {{l'}_s}{\rm{|}}{\bf{x}}{\rm{) = }}\sum\limits_{\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} \pi :\hfill\atop
+\scriptstyle\beta ({\pi _{t:T}}) = {{\bf{l}}_{s/2:{\rm{|}}{\bf{l}}|}}\hfill} {\prod\limits_{t' = t + 1}^T {y_{{\pi _{t'}}}^{t'}} }
+\end{equation}
+同理，允许序列可以以最后一个字符或者其后的blank结束，则可以得到${\beta _{\rm{t}}}(s)$的初始值：
+\begin{equation}
+\begin{array}{l}
+{\beta _T}(|{\bf{l'}}|) = 1\\
+{\beta _T}(|{\bf{l'}}| - 1) = 1\\
+{\beta _T}(s) = 0,\forall s < |{\bf{l'}}| - 1
+\end{array}
+\end{equation}
+${\beta _{\rm{t}}}(s)$的递推计算公式为：
+\begin{equation}
+\label{equation:beta}
+{\beta _{\rm{t}}}(s) = y_{{{l'}_s}}^t\left\{ \begin{array}{l}
+\sum\nolimits_{i = s}^{s + 1} {{\beta _{{\rm{t + 1}}}}(i){\kern 1pt} y_{{{l'}_s}}^{t + 1};} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {{l'}_s} = b{\kern 1pt} {\kern 1pt} {\rm{or}}{\kern 1pt} {\kern 1pt} {{l'}_{s + 2}} = {{l'}_s}\\
+\sum\nolimits_{i = s}^{s + 2} {{\beta _{{\rm{t + 1}}}}(i){\kern 1pt} y_{{{l'}_s}}^{t + 1};} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\rm{otherwise}}
+\end{array} \right\}
+\end{equation}
+
+
+实际应用中，由于计算机字长限制，上述概率的连乘运算会很快下溢。
+所以该概率计算一般转到$log$域，上述递推公式\ref{equation:alpha}~\ref{equation:beta}中也存在加法，
+$log$域中加法的一个有用等式是：
+\begin{equation}
+\ln (a + b) = \ln (a + \ln (1 + {e^{\ln b - \ln a}}))
+\end{equation}
+这样即解决了前向后向算法中的数值问题。
+
+\subsection{CTC目标函数}
+
+如上文所述，CTC的目标函数由最大似然的方法得到。并且，CTC的目标函数可导，
+因此可以通过梯度的方法对CTC进行优化。
+CTC的下层网络结构为RNN，同样可以通过梯度方法优化。
+因此CTC在计算得到梯度后，通过反向传播的方法回传给网络，
+进一步进行基于CTC损失函数的RNN网络的优化。
+
+定义目标函数$O$表示整个训练集的负log域的概率和，则$O$可以表示为：
+\begin{equation}
+{\rm{O}} =  - \ln (\prod\limits_{({\bf{x}},{\bf{z}}) \in S} {p({\bf{z}}|{\bf{x}})} ) =  - \sum\limits_{({\bf{x}},{\bf{z}}) \in S}^{} {\ln p({\bf{z}}|{\bf{x}})} 
+\end{equation}
+首先，计算$O$对网络输出的梯度:
+\begin{equation}
+\label{equation:o}
+\frac{{\partial O}}{{\partial y_k^t}} =  - \frac{{\partial \ln p({\bf{z}}|{\bf{x}})}}{{\partial y_k^t}} =  - \frac{1}{{p({\bf{z}}|{\bf{x}})}}\frac{{\partial p({\bf{z}}|{\bf{x}})}}{{\partial y_k^t}}
+\end{equation}
+使用前向后向算法有：
+\begin{equation}
+{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s) = \sum\limits_{\scriptstyle\pi  \in {{\rm B}^{ - 1}}({\bf{z}})\hfill\atop
+\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\pi _t} = {{z'}_s}\hfill} {\prod\limits_{t = 1}^T {y_{{\pi _t}}^t} } 
+\end{equation}
+由\ref{euqation:ctcpath}有：
+\begin{equation}
+{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s) = \sum\limits_{\scriptstyle\pi  \in {{\rm B}^{ - 1}}({\bf{z}})\hfill\atop
+\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\pi _t} = {{z'}_s}\hfill} {p(} \pi |{\bf{x}})
+\end{equation}
+由\ref{euqation:ctcallpath}，通过全概率公式（在$t$时刻可以输出${\bf{z}}$序列中的任意字符），所以：
+\begin{equation}
+\label{equation:alls}
+p({\bf{z}}|{\bf{x}}) = \sum\limits_{s = 1}^{|{\bf{z'}}|} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+\end{equation}
+
+为了计算对$y_k^t$的梯度，需要考虑在$t$时刻通过字符$k$的所有路径。
+由于相同的字符或者blank可以在一个序列中出现多次，
+因此定义$lab({\bf{z}},k) = \{ s:{{z'}_s}{\rm{ = k\} }}$表示序列$\bf{z}$中出现字符$k$的集合：
+\begin{equation}
+\frac{{\partial {\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}}{{\partial y_k^t}} = \left\{ \begin{array}{l}
+\frac{{{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}}{{y_k^t}},if{\kern 1pt} k{\kern 1pt} {\kern 1pt} in{\kern 1pt} {\kern 1pt} {\bf{z'}}\\
+0,{\kern 1pt} {\kern 1pt} {\kern 1pt} otherwise
+\end{array} \right\}
+\end{equation}
+对\ref{equation:alls}求导得：
+\begin{equation}
+\frac{{\partial p({\bf{z}}|{\bf{x}})}}{{\partial y_k^t}} = \frac{1}{{y_k^t}}\sum\limits_{s \in lab({\bf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+\end{equation}
+代入\ref{equation:o}得：
+\begin{equation}
+\label{equation:ctcloss}
+\frac{{\partial O}}{{\partial y_k^t}} =  - \frac{1}{{p({\bf{z}}|{\bf{x}})y_k^t}}\sum\limits_{s \in lab({\bf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+\end{equation}
+最后，计算对输出层$a_k^t$的梯度，$a_k^t$为softmax函数之前$t$时刻第$k$个字符单元的激励，
+\begin{equation}
+\label{equation:alldiff}
+\frac{{\partial O}}{{\partial a_k^t}} = \sum\limits_{k'} {\frac{{\partial O}}{{\partial y_{k'}^t}}} \frac{{\partial y_{k'}^t}}{{\partial a_k^t}}
+\end{equation}
+根据softmax\ref{equation:softmax}函数,有
+\begin{equation}
+\label{equation:softmaxdiff}
+\frac{{\partial y_{k'}^t}}{{\partial a_k^t}} = y_{k'}^t({\delta _{kk'}} - y_k^t)
+\end{equation}
+将\ref{equation:ctcloss}和\ref{equation:softmaxdiff}代入\label{equation:alldiff}得：
+\begin{equation}
+\frac{{\partial O}}{{\partial a_k^t}} = y_k^t - \frac{1}{{p({\bf{z}}|{\bf{x}})}}\sum\limits_{s \in lab({\bf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+\end{equation}
+
+\subsection{CTC的性质}
+
 
 \subsection{语音识别中的应用}
-
-
-
-
-
-
