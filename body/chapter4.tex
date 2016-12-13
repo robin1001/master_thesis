@@ -15,7 +15,7 @@ HMM框架经过几十年的发展，已经非常的完善，
 Phone和CD-Phone建模打破了经典的基于HMM状态CD-State建模的方法；
 CTC的end-to-end的建模能力可以使基于深度学习的语音识别系统无需依赖经典的HMM-GMM框架，可以大幅度简化现有识别系统的流程。
 
-本章分别介绍基于CD-Phone和CTC的语音识别，以及二者结合在声学建模中的应用。
+本章分别介绍基于CD-Phone和CTC的语音识别，及其在声学建模中的应用。
 
 \section{CD-Phone}
 
@@ -300,7 +300,7 @@ CTC的下层网络结构为RNN，同样可以通过梯度方法优化。
 
 定义目标函数$O$表示整个训练集的负log域的概率和，则$O$可以表示为：
 \begin{equation}
-{\rm{O}} =  - \ln (\prod\limits_{({\bf{x}},{\bf{z}}) \in S} {p({\bf{z}}|{\bf{x}})} ) =  - \sum\limits_{({\bf{x}},{\bf{z}}) \in S}^{} {\ln p({\bf{z}}|{\bf{x}})} 
+{\rm{O}} =  - \ln (\prod\limits_{({\bf{x}},{\bf{z}}) \in S} {p({\bf{z}}|{\bf{x}})} ) =  - \sum\limits_{({\bf{x}},{\bf{z}}) \in S}^{} {\ln p({\bf{z}}|{\bf{x}})}
 \end{equation}
 首先，计算$O$对网络输出的梯度:
 \begin{equation}
@@ -310,7 +310,7 @@ CTC的下层网络结构为RNN，同样可以通过梯度方法优化。
 使用前向后向算法有：
 \begin{equation}
 {\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s) = \sum\limits_{\scriptstyle\pi  \in {{\rm B}^{ - 1}}({\bf{z}})\hfill\atop
-\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\pi _t} = {{z'}_s}\hfill} {\prod\limits_{t = 1}^T {y_{{\pi _t}}^t} } 
+\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\pi _t} = {{z'}_s}\hfill} {\prod\limits_{t = 1}^T {y_{{\pi _t}}^t} }
 \end{equation}
 由\ref{euqation:ctcpath}有：
 \begin{equation}
@@ -356,7 +356,71 @@ p({\bf{z}}|{\bf{x}}) = \sum\limits_{s = 1}^{|{\bf{z'}}|} {{\alpha _{\rm{t}}}(s){
 \frac{{\partial O}}{{\partial a_k^t}} = y_k^t - \frac{1}{{p({\bf{z}}|{\bf{x}})}}\sum\limits_{s \in lab({\bf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
 \end{equation}
 
-\subsection{CTC的性质}
+\subsection{CTC的特性}
 
+经过上面的讨论，可以总结出CTC的三点特性：
+\begin{enumerate}
+\item blank，CTC在建模中引入辅助建模单元blank，表示不作任何输出；
+\item 序列等价性，连续的相同的字符可以归约为单个字符，归约后blank被消除；
+\item 尖峰（Peak）预测特性，这是CTC在预测时的现象，其在大多数时刻上输出为blank，并且预测时输出呈尖峰状，如图\ref{fig:peak}。
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{figures/chapter4/peak-crop}
+\caption{CTC Peak预测}
+\label{fig:peak}
+\end{figure}
 
 \subsection{语音识别中的应用}
+
+语音识别任务是个天然的序列标注任务，因此可以使用CTC预测声学模型中的建模单元。
+Alex Graves在2008年已经将CTC应用在TIMIT的音素识别任务上\ucite{graves2012neural}。
+2015年，Miao的EESEN\ucite{miao2015eesen}在WSJ数据集上应用CTC。
+同年，Google\ucite{sak2015fast}和百度\ucite{amodei2015deep}也均成功将CTC应用在大词汇量连续语音识别任务中。
+
+在这些任务中，建模单元各有不同。
+EESEN中使用Phone或者Character作为建模单元，
+Google的工作中使用Phone或CD-Phone作为作为建模单元，
+百度的Deep Speech 2系统在中文中使用字，英文中使用Character作为建模单元。
+本文主要研究使用Phone和CD-Phone作为建模单元的CTC。
+
+在传统的HMM语音系统中，一般使用基于WFST\ucite{mohri2004weighted}的解码器。
+基于WSFT的解码器中，将HMM（H），上下文（C，Context）、词典（L，Lexicon）、语言模型（G，Grammar）通过
+WFST的组合（Compose）操作构成解码图HCLG\ucite{mohri2002weighted}，然后在HCLG的WFST图上进行语音识别的解码算法。
+
+在基于CTC的语音识别中，已经摒弃了HMM，因此需要重新构图。
+将CTC的基本单元构图记为T，则T的结构如图\ref{fig:t}所示：
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/chapter4/t-crop}
+\caption{CTC基本单元的WFST图}
+\label{fig:t}
+\end{figure}
+由图中的跳转可以看出，解码时在一个CTC的基本单元内，
+起始状态0可以经过任意个个blank；
+从状态0输入a并输出a到达状态1，状态1上可以输入任意个a，输出为空；
+状态1也可以经过空跳转<eps>到达状态2；
+状态2为终结点，类似状态1，可以输入任意个blank。
+通过该WFST，即可以保证CTC的一个建模单元中，前后均可以有任意个blank，
+中间有任意个单元a，并且整个单元的输出为1个a，满足序列等价归约的性质。
+
+在得到T的结构后，与HCLG类似。我们可以使用WFST的组合操作使T和更高层次的
+上下文C（可选），词典L和语言模型G进行组合。
+假设T中含上下文，则最终解码图WFST图S可以表示为：
+\begin{equation}
+{\rm{S = T}} \circ {\rm{min(det(L}} \circ {\rm{G))}}
+\end{equation}
+若不含上下文，S可以表示为：
+\begin{equation}
+{\rm{S = T}} \circ {\rm{min(det(C}} \circ {\rm{L}} \circ {\rm{G))}}
+\end{equation}
+其中det表示WFST的确定化操作，min表示WFST的最小化操作。
+
+近来，Google、百度的研究\ucite{senior2015context, sak2015fast, sak2015learning, hannun2014deep, amodei2015deep}表明，
+CTC不仅可以进一步提升声学建模的精度；
+并且由于CTC尖峰预测的特性，CTC在主路径上的打分很强，可以远远超过竞争路径。
+语音识别的解码中一般使用Beam Search\ucite{young1989token}的方法进行剪枝，
+在同样的beam阈值条件下，相对于交叉熵CE的模型，
+CTC解码中的竞争路径会被更快的裁剪，因此基于CTC的语音识别解码具有非常快的解码速度。
+这对大幅度提升语音识别系统的响应速度和提供线上系统的吞吐量均具有重要意义。
