@@ -44,7 +44,7 @@ z-z+z等。
 最终，将决策树和状态绑定形成的三音素状态称为CD-State（Context Dependent State），以表明基本的聚类单元是状态，
 并且状态是上下文相关的。
 
-\begin{figure}
+\begin{figure}[htb]
 \centering
 \includegraphics[width=1.0\textwidth]{figures/chapter4/cdstate-crop}
 \caption{CD-State构建过程}
@@ -423,4 +423,4 @@ CTC不仅可以进一步提升声学建模的精度；
 语音识别的解码中一般使用Beam Search\ucite{young1989token}的方法进行剪枝，
 在同样的beam阈值条件下，相对于交叉熵CE的模型，
 CTC解码中的竞争路径会被更快的裁剪，因此基于CTC的语音识别解码具有非常快的解码速度。
-这对大幅度提升语音识别系统的响应速度和提供线上系统的吞吐量均具有重要意义。
+这对大幅度提升语音识别系统的响应速度和提供线上系统的吞吐量均具有重要意义。 

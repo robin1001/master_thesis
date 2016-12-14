@@ -1,4 +1,3 @@
-% !Mode:: "TeX:UTF-8"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %   LaTeX File for Doctor (Master) Thesis of Tsinghua University
@@ -25,9 +24,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 按清华标准, 将版芯控制在240mm以内, 正文范围控制在220mm以内
-%\addtolength{\headsep}{-0.1cm}          %页眉位置
-%\addtolength{\footskip}{-0.1cm}         %页脚位置
-\addtolength{\topmargin}{0.5cm}
+\addtolength{\headsep}{-1.2mm}       %页眉位置
+\addtolength{\footskip}{4.2mm}         %页脚位置
+%\addtolength{\topmargin}{0.5cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 公式的精调
@@ -110,11 +109,11 @@
 \newcommand{\xiaosan}{\fontsize{15pt}{22pt}\selectfont}    % 小三, 1.5倍行距
 \newcommand{\sihao}{\fontsize{14pt}{21pt}\selectfont}    % 四号, 1.5倍行距
 \newcommand{\banxiaosi}{\fontsize{13pt}{16.25pt}\selectfont}    % 半小四, 1.25倍行距
-\newcommand{\xiaosi}{\fontsize{12pt}{12pt}\selectfont}    % 小四, 1.2倍行距
+\newcommand{\xiaosi}{\fontsize{12pt}{13.5pt}\selectfont}    % 小四, 1.?倍行距
+%\newcommand{\xiaosi}{\fontsize{12pt}{12pt}\selectfont}    % 小四, 1.0倍行距
 \newcommand{\dawuhao}{\fontsize{11pt}{11pt}\selectfont}    % 大五号, 单倍行距
 \newcommand{\wuhao}{\fontsize{10.5pt}{10.5pt}\selectfont}    % 五号, 单倍行距
-\newcommand{\xiaowu}{\fontsize{9pt}{9pt}\selectfont}		% 小五号
-
+\newcommand{\xiaowu}{\fontsize{9pt}{14pt}\selectfont}		% 小五号
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,7 +153,6 @@
     \parindent\CJKtwospaces
 }
 
-
 %\CJKtilde  \CJKindent
 
 \renewcommand\contentsname{目~~~~录}
@@ -168,32 +166,26 @@
 
 % Modified By Lei Wang BaconChina
 % THU Version
-%\titleformat{\chapter}[hang]
-%    {\normalfont\sanhao\filcenter\hei\sf}
-%    {\sanhao{\chaptertitlename}}
-%    {20pt}{\sanhao}
-    
-\titleformat{\chapter}{\center\hei\fontsize{16pt}{11pt}\selectfont}{\chaptertitlename}{0.5em}{}[\vspace*{-5.5pt}]
-
+\titleformat{\chapter}[hang]
+    {\normalfont\sanhao\filcenter\hei\sf}
+    {\sanhao{\chaptertitlename}}
+    {20pt}{\sanhao}
 %\titlespacing{\chapter}{0pt}{-3ex  plus .1ex minus .2ex}{2.5ex plus .1ex minus .2ex}
-\titlespacing{\chapter}{0pt}{-3ex  plus .1ex minus .2ex}{0.25em}
+\titlespacing{\chapter}{0pt}{-6mm}{1.6em}
 
-\titleformat{\section}{\xiaosan\hei}{\thesection}{0.5em}{}
-%\titleformat{\section}[hang]{\hei \sf \sihao}
-%    {\sihao \thesection}{0.5em}{}{}
+\titleformat{\section}[hang]{\hei \sf \sihao}
+    {\sihao \thesection}{0.5em}{}{}
 %\titlespacing{\section}{0pt}{1.5ex plus .1ex minus .2ex}{\wordsep}
-\titlespacing{\section}{0pt}{0.5em}{0em}
+\titlespacing{\section}{0pt}{-0.5em}{0em}
 
-\titleformat{\subsection}{\sihao\hei}{\thesubsection}{0.5em}{}
-%\titleformat{\subsection}[hang]{\hei \sf \banxiaosi}
-%    {\banxiaosi \thesubsection}{0.5em}{}{}
-    
+\titleformat{\subsection}[hang]{\hei \sf \banxiaosi}
+    {\banxiaosi \thesubsection}{0.5em}{}{}
+%    {\banxiaosi \thesubsection}{0pt}{}{}
 %\titlespacing{\subsection}{0pt}{1.5ex plus .1ex minus .2ex}{\wordsep}
-\titlespacing{\subsection}{0pt}{0.25em}{0em}
+\titlespacing{\subsection}{0pt}{0.3em}{0em}
 
-\titleformat{\subsubsection}{\xiaosi\hei}{\thesubsubsection}{0.5em}{}
-%\titleformat{\subsubsection}[hang]{\hei \sf}
-%    {\thesubsubsection }{0.5em}{}{}
+\titleformat{\subsubsection}[hang]{\hei \sf}
+    {\thesubsubsection }{0.5em}{}{}
 %\titlespacing{\subsubsection}{0pt}{1.2ex plus .1ex minus .2ex}{\wordsep}
 \titlespacing{\subsubsection}{0pt}{0.25em}{0pt}
 
@@ -211,14 +203,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\makeheadrule}{%
-    \makebox[0pt][l]{\rule[.73\baselineskip]{\headwidth}{0.5pt}}%
-% 1 Line Modified by Lei Wang BaconChina
-% XJTU Version
-    \rule[.85\baselineskip]{\headwidth}{2.5pt}\vskip-.8\baselineskip}
-% THU Version
-%    \vskip-.8\baselineskip}
-
-
+	\makebox[0pt][l]{\rule[.73\baselineskip]{\headwidth}{0.5pt}}%
+	\rule[.85\baselineskip]{\headwidth}{2.5pt}\vskip-.8\baselineskip}
 
 \makeatletter
 \renewcommand{\headrule}{%
@@ -230,56 +216,30 @@
 %去掉章节标题中的数字
 \renewcommand{\chaptermark}[1]{\markboth{\chaptername \ #1}{}}
 
- \fancyhf{}
-% \fancyfoot[C,C]{\thepage}
-
-%在book文件类别下,\leftmark自动存录各章之章名,\rightmark记录节标题
-
-% Modified by Lei Wang BaconChina
-% XJTU Version
-% \fancyhead[RO]{\CJKfamily{song}\leftmark}
-% \fancyhead[LE]{\CJKfamily{song}西安交通大学博士学位论文}
-% \fancyfoot[C,C]{--~\thepage~--}
-% THU Version
-%\fancyhead[CO]{\CJKfamily{song}\wuhao\leftmark}
-%\fancyhead[CE]{\nwpulogo\fontsize{8pt}{6pt} 西北工业大学~~~ \sanhao\song 本科毕业设计论文}
-%\chead{\song 西北工业大学硕士研究生学位论文}
-\fancyhead[CO]{\xiaowu\textbf \leftmark}
-\fancyhead[CE]{\xiaowu\textbf{西北工业大学硕士学位论文}}
+\fancyhf{}
+\fancyhead[CO]{\xiaowu\leftmark}
+\fancyhead[CE]{\xiaowu{西北工业大学硕士学位论文}}
 \fancyfoot[C,C]{\xiaowu\thepage}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 设置行距和段落间垂直距离
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % 段落之间的竖直距离
-\setlength{\parskip}{3pt plus1pt minus1pt}
+\setlength{\parskip}{0pt}
+%\setlength{\parskip}{3pt plus1pt minus1pt}
 
 % 定义行距
-\renewcommand{\baselinestretch}{1.25}
+\renewcommand{\baselinestretch}{1.2}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 调整列表环境的垂直间距
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\let\orig@Itemize =\itemize
-\let\orig@Enumerate =\enumerate
-\let\orig@Description =\description
+% xx comment: item & enumerate
+\setitemize{leftmargin=3em,itemsep=0em,partopsep=0em,parsep=0em,topsep=-0em}
+\setenumerate{leftmargin=3.3em,itemsep=0em,partopsep=0em,parsep=0em,topsep=0em}
 
-\def\Myspacing{\itemsep=5pt \topsep=0pt \partopsep=0pt \parskip=0pt \parsep=0pt}
-
-\def\newitemsep{
-\renewenvironment{itemize}{\orig@Itemize\Myspacing}{\endlist}
-\renewenvironment{enumerate}{\orig@Enumerate\Myspacing}{\endlist}
-\renewenvironment{description}{\orig@Description\Myspacing}{\endlist}
-}
-
-\def\olditemsep{
-\renewenvironment{itemize}{\orig@Itemize}{\endlist}
-\renewenvironment{enumerate}{\orig@Enumerate}{\endlist}
-\renewenvironment{description}{\orig@Description}{\endlist}
-}
-
-\newitemsep
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 修改引用的格式，
@@ -294,21 +254,19 @@
 
 % 增加 \ucite 命令使显示的引用为上标形式
 \renewcommand\bibname{参考文献}
-
 \newcommand{\ucite}[1]{$^{\mbox{\scriptsize \cite{#1}}}$}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 % 定制浮动图形和表格标题样式
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % figure 1.1 -> 图 1.1
 \renewcommand{\figurename}{图}
 % 图 1.1 -> 图 1-1
 \renewcommand\thefigure{\arabic{chapter}-\arabic{figure}}
-\renewcommand{\captionfont}{\wuhao\hei}
-\renewcommand{\captionlabelfont}{\wuhao\hei}
+\renewcommand{\captionfont}{\CJKfamily{song}\rmfamily}
+\renewcommand{\captionlabelfont}{\CJKfamily{song}\rmfamily}
 
 % xx comment: subfigure capture
 %\renewcommand{\thesubfigure}{\alph{subfigure}}
@@ -319,7 +277,12 @@
 \renewcommand{\captionlabeldelim}{\hspace{0.5em}}
 
 % 按清华标准, 图表标题字体为11pt, 这里写作大五号
-\renewcommand{\captionfont}{\wuhao\hei}
+\renewcommand{\captionfont}{\wuhao}
+
+% xx comments about table
+\renewcommand{\tablename}{表}
+\setlength\heavyrulewidth{1pt}
+\renewcommand\thetable{\arabic{chapter}-\arabic{table}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 定义题头格言的格式
@@ -379,18 +342,73 @@
 
 \setlength{\parindent}{2em}
 \renewcommand{\lstlistingname}{\wuhao 源码}
+% xx comment
+\renewcommand\thelstlisting{\arabic{chapter}-\arabic{lstlisting}}
 
 \setlength{\headheight}{24pt}
 
-%\newfontfamily\pagella{TeX Gyre Pagella}
-%\newfontfamily\monaco{Monaco}
-%\newfontfamily\droidmono{Droid Sans Mono}
-%\newfontfamily\dejavumono{DejaVu Sans Mono}
+\newfontfamily\droidmono{Droid Sans Mono}
+\newfontfamily\dejavumono{DejaVu Sans Mono}
 
-\lstdefinelanguage{nesc}
-  {morekeywords={components, configuration, event, generic, implementation, includes, interface, module,new, norace, post, provides, signal, task, uses,nx\_struct, nx\_union,command,uint16\_t,uint8\_t,uint32\_t,as,void},sensitive=false,morecomment=[l]{//},morecomment=[s]{/*}{*/},morestring=[b]",}
+\lstdefinelanguage{nesc} {
+	morekeywords= {
+		components, configuration, event, generic,
+		implementation, includes, interface, module,
+		new, norace, post, provides, signal, task,
+		uses, nx\_struct, nx\_union, command,
+		uint16\_t, uint8\_t, uint32\_t, as, void,
+		i2c\_flags\_t, error\_t, val\_t,
+	},
+	sensitive=false,
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]",
+}
 
-\lstset{basicstyle=\dejavumono\scriptsize,keywordstyle=\color{blue},commentstyle=\color{green},stringstyle=\color{red},tabsize=2,frameround=ffff,escapeinside=``,lineskip=1pt,framerule=0.5pt,xleftmargin=20pt,xrightmargin=10pt,language=nesc,frame=single,numbers=left,framexleftmargin=6mm}
-%\lstset{basicstyle=\droidmono\footnotesize,tabsize=4,frameround=ffff,escapeinside=``,lineskip=1pt,framerule=0.5pt,xleftmargin=20pt,xrightmargin=10pt,language=nesc,frame=tb,captionpos=b,abovecaptionskip=10pt,numbers=left, framexleftmargin=5mm}
+\lstset {
+	basicstyle=\ttfamily\wuhao,
+	commentstyle=\ttfamily\wuhao,
+	%basicstyle=\droidmono\footnotesize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!40!black},
+	stringstyle=\color{red},
+	tabsize=4,
+	frameround=ffff,
+	escapeinside=``,
+	lineskip=1pt,
+	framerule=1pt,
+	xleftmargin=15pt,
+	xrightmargin=10pt,
+	language=nesc,
+	frame=tb, % 'single' for box
+	numbers=left,
+	breaklines,
+	belowcaptionskip=10.5pt, % caption line space
+	%framexleftmargin=4mm
+}
+% black white style
+% \lstset {
+% 	basicstyle=\droidmono\footnotesize,
+% 	tabsize=4,
+% 	frameround=ffff,
+% 	escapeinside=``,
+% 	lineskip=1pt,
+% 	framerule=0.5pt,
+% 	xleftmargin=20pt,
+% 	xrightmargin=10pt,
+% 	language=nesc,
+% 	frame=tb,
+% 	captionpos=b,
+% 	abovecaptionskip=10pt,
+% 	numbers=left,
+% 	framexleftmargin=5mm
+% }
 
 \renewcommand\arraystretch{1.25}
+
+
+\renewcommand{\ALG@name}{算法}
+\renewcommand\thealgorithm{\arabic{chapter}-\arabic{algorithm}}
+%\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}} 

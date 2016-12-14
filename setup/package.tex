@@ -1,4 +1,3 @@
-% !Mode:: "TeX:UTF-8"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %   LaTeX File for Doctor (Master) Thesis of Tsinghua University
@@ -42,13 +41,14 @@
 \usepackage{indentfirst}
 
 % 版面控制宏包，定义规定的版面尺寸
-\usepackage[top=0.8in,
-	    bottom=1.6in,
-	    left=1.2in,
-	    right=1.2in,
-            %twosideshift=0 pt,
-            %headheight=1.0true cm
-            ]{geometry}
+\usepackage[
+	top=23.5mm,
+	bottom=36mm,
+	left=25.0mm,
+	right=25.0mm,
+	%twosideshift=0 pt,
+	%headheight=1.0true cm
+]{geometry}
 
 % 脚注控制
 \usepackage[perpage,symbol]{footmisc}
@@ -59,7 +59,7 @@
 \usepackage{amsthm}
 
 % 不同于\mathcal or \mathfrak 之类的英文花体字体
-%\usepackage{mathrsfs}
+\usepackage{mathrsfs}
 
 % 定理类环境宏包，其中 amsmath 选项用来兼容 AMS LaTeX 的宏包
 %\usepackage[amsmath,thmmarks]{ntheorem}
@@ -125,6 +125,11 @@
 \usepackage{natbib}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+
+% xx comment:
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
 
 % 生成带书签的pdf
 \usepackage[%dvipdfmx,
