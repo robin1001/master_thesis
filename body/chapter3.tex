@@ -350,4 +350,83 @@ CLDNN结合了两者的优点，跳帧预测能力则更强。
 跳帧训练能有效的减小序列长度，提高训练速度，并加倍减少识别时神经网络的计算量。
 在CTC的训练任务中，通过跳帧训练减小输入序列的长度，能有效提高CTC的训练的稳定性。
 
+\section{Batch Normalization}
+
+一般在准备深度神经网络的训练数据时，需要对训练数据进行归一化预处理。
+最常用的的归一化操作使均值方差归一化MVN（Mean Variance Normalization），
+即将训练数据通过减均值除以标准差的操作归一化到标准的正态分布。
+通过归一化MVN操作，将输入映射到标准的高斯空间，利于训练的收敛性和模型效果。
+
+2015年，Google的工作\ucite{ioffe2015batch}表明，同样可以在神经网络的中间层的输入上进行类似的MVN操作。
+训练深度神经网络是个复杂多变的过程，神经网络中每一层的输入的分布都会随着训练逐渐改变，
+这导致了神经网络的收敛速度慢，并且需要设置较小的学习率和更精细的初始化来保证神经网络的收敛性。
+所以，类似输入层的归一化，可以通过归一化网络每一层的输入来解决该问题。
+
+在训练中，对每一层的输入进行归一化时，由于计算全局的归一化代价很高，并且不可导，即不能使用梯度方法进行优化。
+神经网络在训练过程中，使用mini-batch训练方法，mini-batch中含有多个训练样本。
+所以，在归一化时，对归一化进行如下简化：
+\begin{enumerate}
+\item 使用mini-batch的归一化，即使用mini-batch的均值和方差替代全局的均值和方差。
+\item 假设各维输入独立不相关，对每一层输入的每一维进行独立的归一化。
+\end{enumerate}
+
+假设mini-batch~${\rm B}$的大小为N，假设$x_k$表示${\rm B}$中任意一维输入的第$k$个样本，即
+\begin{equation}
+{\rm B}{\rm{ = }}\{ {x_1},{x_2},...,{x_N}\}
+\end{equation}
+计算每一维的均值和方差：
+\begin{equation}
+\begin{array}{l}
+{\mu _{\rm B}} = \frac{1}{N}\sum\limits_{i = 1}^N {{x_i}} \\
+\sigma _{\rm B}^2 = \frac{1}{N}\sum\limits_{i = 1}^N {({x_i} - } {\mu _{\rm B}}{)^2}
+\end{array}
+\end{equation}
+则归一化的输出${\hat x}_i$可以表示为：
+\begin{equation}
+{{\hat x}_i} = \frac{{{x_i} - {\mu _{\rm B}}}}{{\sqrt {\sigma _{\rm B}^2 + \varepsilon } }}
+\end{equation}
+其中，$\varepsilon$是为防止除0引入的常量加项。
+
+注意到仅仅使用这种简单的归一化可能会改变神经网络层的表征能力。
+例如，tanh的输入通过这种简单归一化后，其激励会集中在坐标轴附近，
+如图\ref{fig:activation}，在坐标轴附近，tanh函数为近似的线性函数，
+所以简单归一化必然降低了tanh的非线性映射能力。
+为了解决该问题，使得变化满足镜像变换的能力，即从自身映射到自身，
+对于每一维输入$x_i$引入一对参数$\gamma _i$和$\beta _i$，并且：
+\begin{equation}
+{y_i}{\rm{ = }}{\gamma _i}{{\hat x}_i} + {\beta _i}
+\end{equation}
+$y_i$是最终Batch Normalization的输出，当
+${\gamma _i} = \sqrt {\sigma _{\rm B}^2 + \varepsilon }$
+并且${\beta _i} = {\mu _{\rm B}}$时：
+\begin{equation}
+{y_i} = {x_i}
+\end{equation}
+即实现了镜像变换。$\gamma _i$和$\beta _i$是可以训练的参数，并且可导，
+可以通过神经网络的优化同步训练。
+
+在训练过程中，可以统计所有训练数据在神经网络每一层输入做前向时产生的均值和方差。
+因此，在测试时，可以直接使用由训练数据统计的均值和方差。
+假设训练过程中统计的任意一维输入$x_i$的全局均值为$E\left[ {{x_i}} \right]$，
+全局方差为$Var[{x_i}]$，则在预测时：
+\begin{equation}
+\begin{array}{l}
+{{\hat x}_i} = \frac{{{x_i} - E\left[ {{x_i}} \right]}}{{\sqrt {Var[{x_i}] + \varepsilon } }}\\
+{y_i}{\rm{ = }}{\gamma _i}{{\hat x}_i} + {\beta _i}
+\end{array}
+\end{equation}
+
+在深度神经网络中，对于普通的全连接层，Batch Normalization的位置在线性变换之后，激活函数之前，即：
+\begin{equation}
+y = f(BN(Wx + b))
+\end{equation}
+在卷积神经网络CNN中，对卷积后的每维输出均进行归一化，所以Batch Normalization的位置在卷积层和Max Pooling层
+之间。对于LSTM，研究\ucite{laurent2015batch}表明，在多个位置做归一化并不有效，而仅对输入做Batch Normalization
+证明有效。
+
+众多的实验\ucite{ioffe2015batch, laurent2015batch, amodei2015deep, }表明，使用Batch Normalization不仅可以设置更大的学习率，而且可以加快网络的收敛速度，
+并进一步提高模型的效果。因此，在神经网络的训练过程中如若遇到收敛速度慢或者梯度问题导致无法
+收敛时，可以尝试使用Batch Normalizaiton来解决。目前，Batch Normalization已作为深度神经网络
+优化的标配之一。
+
 \section{实验} 
