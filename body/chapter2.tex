@@ -130,7 +130,7 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
                 \end{equation}
         \end{enumerate}
 
-        \begin{figure}
+        \begin{figure}[htbp]
         \centering
         \includegraphics[width=0.9\textwidth]{figures/chapter2/forback-crop}
         \caption{前向后向概率计算示意图}
@@ -181,9 +181,9 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
                 {\gamma _t}(i) = \frac{{{\alpha _t}(i){\beta _t}(i)}}{{P(O|\lambda )}} = \frac{{{\alpha _t}(i){\beta _t}(i)}}{{\sum\limits_{j = 1}^N {{\alpha _t}(j){\beta _t}(j)} }}
                 \end{equation}
 
-                \begin{figure}
+                \begin{figure}[htbp]
                 \centering
-                \includegraphics[width=0.7\textwidth]{figures/chapter2/gamma-crop}
+                \includegraphics[width=0.5\textwidth]{figures/chapter2/gamma-crop}
                 \caption{${\gamma _t}(i)$计算示意图}
                 \label{fig:gamma}
                 \end{figure}
@@ -310,14 +310,14 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
     自身或更高的状态。若以音素为基本单位建立HMM模型，则一般使用3状态的HMM描述，如图\ref{fig:asr_hmm}所示，其中1、5状态为扩展状态，1状态为起始状态，只能跳转到其它
     状态；5状态为结束状态。1、5状态均不产生任何观测输出，只是为了描述的方便，特别在HMM模型连接中非常有用。
 
-    \begin{figure}
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\textwidth]{figures/chapter2/left_right-crop}
     \caption{左右模型HMM}
     \label{fig:left_right}
     \end{figure}
 
-    \begin{figure}
+    \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/chapter2/asr_hmm-crop}
     \caption{语音识别中的5状态HMM}

@@ -44,7 +44,7 @@ z-z+z等。
 最终，将决策树和状态绑定形成的三音素状态称为CD-State（Context Dependent State），以表明基本的聚类单元是状态，
 并且状态是上下文相关的。
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=1.0\textwidth]{figures/chapter4/cdstate-crop}
 \caption{CD-State构建过程}
@@ -68,7 +68,7 @@ HMM系统中CD-Stae的建立过程如图\ref{fig:cdstate}所示：
 即该节点上的三音素共享相同的状态号。
 对于任意一个三音素的给定HMM状态，通过该决策树就能查找到其最终的聚类结果。
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/chapter4/tree-crop}
 \caption{决策树示例}
@@ -138,7 +138,7 @@ HMM建模的一个前提假设是状态的独立假设。在GMM和DNN中，当�
 在解码时，HMM中的三状态约束使一个Phone至少持续三帧数据，基于Phone的解码时也要类似限制Phone的最小持续时间，
 来保证解码出来的Phone的具有明确的时长持续变化，如图\ref{fig:duration}所示。
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/chapter4/duration-crop}
 \caption{基于Phone的解码}
@@ -154,7 +154,7 @@ CD-State聚类时，直接使用帧级状态对齐特征进行聚类。然而，
 使用HMM-GMM系统中Phone的三个状态来描述Phone特征，使用三状态对齐的中值（均值）作为该Phone的特征，
 如图\ref{fig:3middle}使用三状态的中值来表示Phone的聚类特征。
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/chapter4/3middle-crop}
 \caption{CD-Phone聚类中Phone的特征表示}
@@ -252,7 +252,7 @@ CTC前向跳转的一个示意如图\ref{fig:ctcforback}所示，图中给出DOG
 从左上角到右下角即为一个可能的路径。
 
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/chapter4/forback-crop}
 \caption{CTC前向状态跳转}
@@ -391,7 +391,7 @@ WFST的组合（Compose）操作构成解码图HCLG\ucite{mohri2002weighted}，�
 
 在基于CTC的语音识别中，已经摒弃了HMM，因此需要重新构图。
 将CTC的基本单元构图记为T，则T的结构如图\ref{fig:t}所示：
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/chapter4/t-crop}
 \caption{CTC基本单元的WFST图}

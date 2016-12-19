@@ -43,7 +43,7 @@ $p(s_i)$为状态$s_i$出现的概率，称之为状态先验，一般可以通�
 计算当前信号在每个状态上的概率，然后结合该概率在HMM系统中进行语音识别解码。
 
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/chapter3/hmmdnn-crop}
 \caption{HMM-DL系统的基本原理}
@@ -58,7 +58,7 @@ $p(s_i)$为状态$s_i$出现的概率，称之为状态先验，一般可以通�
 如图\ref{fig:dnn}所示DNN，含有3个隐层，每个隐层有5个节点。
 在一个$L+1$层的DNN中，我们定义输入层为第$0$层，输出层为第$L$层。
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/chapter3/dnn-crop}
 \caption{DNN示例（该DNN由输入层、3个隐层和输出层组成）}
@@ -96,7 +96,7 @@ $ReLU$激活函数预测具有稀疏性，这中预测特性提高了网络的�
 训练中的梯度弥散问题；而且$ReLU$激活函数的计算更加简单，速度更快。
 三种激活函数如图\ref{fig:activation}所示。
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/chapter3/activation-crop}
 \caption{激活函数$sigmoid$,$tanh$,$ReLU$对比}
@@ -153,7 +153,7 @@ CNN最早应用在图像领域，在基础DNN的结构上，CNN引进了局部�
 其中，$h(.)$表示激活函数，$s$表示局部滤波器的宽度，$\textbf{w}_{n,j}$表示第$j$个滤波器的的第$n$维权重向量。
 
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.6\textwidth]{figures/chapter3/cnn-crop}
 \caption{CNN基本结构示意}
@@ -179,7 +179,7 @@ Fbank（Filter bank）特征是目前最为常用的频谱特征。
 另一种趋势应用已经在图像上应用获得成功的Deep CNN\ucite{yu2016deep, xiong2016microsoft, sercu2016very, saon2015ibm}的结构到语音识别任务中。
 
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/chapter3/cnnasr-crop}
 \caption{基于CNN的声学模型}
@@ -196,7 +196,7 @@ Fbank（Filter bank）特征是目前最为常用的频谱特征。
 RNN有许多变种的结构，这里我们介绍简单循环神经网络（记为RNN）和当前最为流行的长短时记忆（LSTM）的循环神经网络。
 
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/chapter3/rnn-crop}
 \caption{循环神经网络RNN的基本结构}
@@ -241,7 +241,7 @@ LSTM的数据流向如下：
 $\sigma$表示sigmoid激活函数；
 $W$均为权值矩阵。
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \subfigure[LSTM]{
 \begin{minipage}[b]{0.4\textwidth}
@@ -295,8 +295,7 @@ Google提出的CLDNN的基本结构如图\ref{fig:cldnn}左图所示，
 网络中间是多层的LSTM结构，对CNN的输出进行时序建模；
 LSTM层之后紧接多层的DNN，用于深化网络结构，提供更强大的建模能力。
 
-
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/chapter3/cldnn-crop}
 \caption{CLDNN的基本结构}
@@ -330,7 +329,7 @@ CLDNN结合了两者的优点，跳帧预测能力则更强。
 且通过拼帧后，相邻帧之间还会有特征重叠。
 近来的研究\ucite{sak2015fast, amodei2015deep, miao2016simplifying}表明，这样的高帧率和重叠实际上是有冗余的。
 
-\begin{figure}
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/chapter3/skip-crop}
 \caption{跳帧训练（跳1帧，虚线表示被跳过的训练数据）}
@@ -424,9 +423,146 @@ y = f(BN(Wx + b))
 之间。对于LSTM，研究\ucite{laurent2015batch}表明，在多个位置做归一化并不有效，而仅对输入做Batch Normalization
 证明有效。
 
-众多的实验\ucite{ioffe2015batch, laurent2015batch, amodei2015deep, }表明，使用Batch Normalization不仅可以设置更大的学习率，而且可以加快网络的收敛速度，
+众多的实验\ucite{ioffe2015batch, laurent2015batch, amodei2015deep}表明，使用Batch Normalization不仅可以设置更大的学习率，而且可以加快网络的收敛速度，
 并进一步提高模型的效果。因此，在神经网络的训练过程中如若遇到收敛速度慢或者梯度问题导致无法
 收敛时，可以尝试使用Batch Normalizaiton来解决。目前，Batch Normalization已作为深度神经网络
 优化的标配之一。
 
-\section{实验} 
+\section{实验}
+
+\subsection{数据和模型}
+
+本实验使用的数据集为西北工业大学音频语音与语言处理研究组ASLP（Audio Speech and Language Processing, ASLP）标准数据集aslp128。
+aslp128为中文普通话朗读数据，共128小时，共69689句，平均时长为6.61s，其中66205句作为训练，剩余3484句作为交叉验证集。
+测试集使用西北工业大学音频语音与语言处理研究组ASLP标准测试集test3000，共3063句。
+
+本实验使用语音识别工具Kaldi\ucite{povey2011kaldi}，深度神经网络使用的对齐由aslp128数据集的GMM-HMM系统产生，共有CD-State状态5365个。
+GMM-HMM系统使用39维的MFCC特征，所有深度神经网络均使用40维FBank（Filter Bank）特征。
+
+实验中，使用5隐层的DNN，DNN隐层节点为1024，DNN使用特征为40维Fbank特征，左右各拼5帧以更好的利用上下文信息，所以输入特征共440维。
+
+CNN中在网络输入层使用1层的CNN，上面叠加4层的DNN，DNN的隐层节点数同样为1024。CNN中同样使用40维Fbank特征，
+不使用一阶差分特征和，左右各拼5帧，共440维输入特征。CNN中的卷积层的滤波器数量，滤波器的大小、步长和步移为可调参数；
+Max Pooling层的Pooling的宽度和步移为可调参数。
+
+LSTM可以自动学习到上下文信息，因此输入特征不使用拼帧，直接使用40维FBank特征。
+由于LSTMP\ref{equation:lstmp}在语音识别任务中优于LSTM，本文中使用的LSTM均为LSTMP结构。
+其中LSTMP的Cell为1024，Projection为512。
+
+在CLDNN中，使用（CNN+DNN+LSTM）的结构，即CNN在网络最下层，DNN在中间，LSTM在上层的CLDNN结构。
+所以，CLDNN中的输入特征配置与CNN相同，即40维FBank特征，左右各拼5帧，共440维输入特征。
+
+本实验中，CNN、LSTM、CLDNN均存在多个可调参数，以下直接给出最优的参数配置。
+CNN中卷积层使用128个滤波器，其中滤波器大小为$11×9$，滤波器步移为1;
+Max Pooling层的步长为4，步移为4，CNN的输出为1024维。
+根据Google\ucite{sak2014long, sak2014long_lvsr}，LSTM中使用2层的LSTMP，Cell为1024，Projection为512。
+CLDNN使用1层的CNN，1层的DNN和2层的LSTM，其中CNN配置与CNN网络类似，DNN节点数位1024，
+LSTM同样使用Cell1024，Projection512。
+
+实验中，CNN和DNN所用激活函数为Simoid激活函数。相邻层之间，使用Batch Normalization做输入的归一化。
+
+\subsection{实验现象}
+
+基于交叉熵CE的声学模型训练中，评价声学模型性能的一个重要指标是帧识别率Frame Accuracy，即对单帧的语音特征进行状态分类的正确率。
+一般来说，帧识别率越高，单帧语音特征分类正确率越高，最终语音识别率也会越准确。
+当然，最终的语音识别率是声学模型、语言模型、解码算法共同作用的结果。
+图\ref{fig:acc}给在aslp128数据集的训练过程中，DNN、CNN、LSTM和CLDNN在交叉验证集（Cross Validition）的帧识别率。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/chapter3/acc-crop}
+\caption{aslp128数据集DNN、CNN、LSTM和CLDNN训练中的帧识别率}
+\label{fig:acc}
+\end{figure}
+
+由图\ref{fig:acc}可以看出，在训练中，CNN的帧识别率略好于DNN。
+在LSTM中，得益于其出色的时间序列建模能力，LSTM的帧识别率远远高于DNN和CNN，LSTM的帧识别率相对于DNN提升近20个百分点。
+CLDNN结合了CNN、DNN和LSTM的优点，帧识别率比LSTM的效果更好。
+
+\subsection{实验结果和分析}
+
+表\ref{table:aslp128-cldnn}给出aslp128数据集上aslp128数据集DNN、CNN、LSTM和CLDNN识别结果，
+其中CER为中文语音识别字错误率（Character Error Rate），CER列中括号内的数值表示错误率相对DNN的下降百分比。
+参数量为该深度神经网络所含参数量，以M（百万）为单位。
+
+\begin{table}[htbp]
+\centering
+\caption{aslp128数据集DNN、CNN、LSTM和CLDNN识别结果}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+%\begin{tabularx}{\textwidth}{*4{>{\centering\arraybackslash}X}@{}}
+\begin{tabularx}{\textwidth}{cYcc}
+\toprule
+编号 & 模型结构         & 参数量(M) & CER  \\ \midrule
+1  & DNN(5DNN)              & 9.12   & 11.25         \\
+2  & CNN(1CNN\_4DNN)    & 8.68   & 10.81(3.39\%) \\
+3  & LSTM(2LSTMP)         & 10.27  & 11.05(1.78\%) \\
+4  & 2DNN+2LSTM   & 12.78  & 10.63(5.51\%) \\
+\textbf{5}  & \textbf{CLDNN(1CNN\_1DNN\_2LSTMP)} & \textbf{12.75}  & \textbf{10.23(9.07\%)} \\ \bottomrule
+\end{tabularx}
+\label{table:aslp128-cldnn}
+\end{table} 
+
+由表\ref{table:aslp128-cldnn}可以看出，在aslp128数据集上，CNN相对基线系统DNN提升3.39\%；
+直接使用2层LSTM在该数据集上作用不明显，分析可能是网络仅有2层、参数也有限导致，
+因此在2层LSTM基础上结合DNN使用，同时增加了网络的深度和参数量，CER获得明显提升；
+CLDNN在该数据集上取得最好效果，相对基线系统提升9.07\%。
+
+\subsection{跳帧}
+
+在CLDNN基础上，进一步在aslp128数据集上研究跳帧对CLDNN的影响。
+在该实验中，使用\ref{table:aslp128-cldnn}中CLDNN的基本配置，即1CNN\_1DNN\_2LSTMP的网络结构，参数量为12.75M。
+解码时分别使用Copy和Split模式解码，
+通过设置不同的跳帧宽度，得到表\ref{table:aslp128-skip}实验结果。
+
+\begin{table}[htbp]
+\centering
+\caption{aslp128 CLDNN跳帧实验}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{YYYY}
+\toprule
+编号 & Skip Width & CER(Copy) & CER(Split)     \\ \midrule
+1  & no skip    & \multicolumn{2}{c}{10.23}  \\
+2  & skip 2     & 10.32     & \textbf{10.13} \\
+3  & skip 3     & 11.08     & 10.56          \\
+4  & skip 4     & 11.79     & 11.05          \\ \bottomrule
+\end{tabularx}
+\label{table:aslp128-skip}
+\end{table} 
+
+通过分析表\ref{table:aslp128-skip}可以得出以下结论，
+\begin{enumerate}
+\item 跳帧训练通过合适的配置在同一数据集上能达到与不跳帧相当的模型精度，甚至可能更好的模型效果，
+    例如表中通过2帧跳1帧的训练方式和Split解码，最终识别结果优于不跳帧的CLDNN。
+\item 通过比较解码模式，解码使用Split模式要优于简单的Copy模式。
+\end{enumerate}
+如前文所述，使用Skip能减少句子序列长度，有效提高训练速度和训练稳定性。
+此外，Copy模式的解码可以有效的成倍减少解码时神经网络的计算量。
+
+\subsection{更大的数据}
+
+更进一步，我们在更大的数据集上进行CLDNN的实验，进一步验证CLDNN和跳帧的效果。
+本节实验使用（地平线实习期间用）hr400朗读数据集，训练集共400小时，测试集为9000句。
+并且在该数据集训练中，CLDNN直接使用跳帧训练，跳帧宽度为3，以提高训练速度。
+实验中模型配置我们在模型结构中注明，实验结果如表\ref{table:hr400-cldnn}
+
+\begin{table}[htbp]
+\centering
+\caption{hr400数据集DNN、CNN、LSTM和CLDNN（跳帧）识别结果}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{cYcc}
+\toprule
+编号         & 模型结构                                                       & 参数量(M)           & CER                     \\ \midrule
+1          & 5DNN(hidden1024)                                           & 5.43          & 18.31                   \\
+2          & CNN(1CNN\_4DNN\_128filter)                                 & 4.12          & 17.27(5.68\%)           \\
+3          & 2LSTM(Cell760\_Projection380)                              & 5.49          & 14.52(20.69\%)          \\
+\textbf{4} & \textbf{CLDNN(1CNN\_1DNN\_2LSTMP\_Cell700\_Projection350)} & \textbf{5.81} & \textbf{14.12(22.88\%)} \\ \bottomrule
+\end{tabularx}
+\label{table:hr400-cldnn}
+\end{table} 
+
+比较aslp128数据集上的结果，
+在hr400数据集中，网络改进所带来的收益更大。
+2层LSTM单独使用就能取得20.69\%的CER的收益，这与公开的LSTM声学模型的收益相当。
+通过跳帧后的CLDNN更取得了22.88\%的收益，跳帧的效果进一步得到验证。
+
+尽管两个数据集带来的收益大小不同，但我们看到，通过CLDNN，通过适应数据集的模型调试和参数调试，最终均能得到稳定的收益。

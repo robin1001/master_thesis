@@ -47,7 +47,7 @@ MPI有多种实现，例如MPICH，OpenMPI\ucite{gabriel2004open}等。
 %    \end{tabular}
 %\end{table}
 
-\begin{table}[th]
+\begin{table}[htbp]
 	\centering
 	\caption{本文使用的MPI的基本接口及其作用}
 	\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
@@ -85,7 +85,7 @@ $\tilde w $表示同步后的模型，$N$为Worker总数。则：
 \label{alg:bsp}
 \caption{BSP模型平均}
 \begin{algorithmic}
-\REQUIRE 同步周期$\tau$，学习率$\eta$ 
+\REQUIRE 同步周期$\tau$，学习率$\eta$
 %\ENSURE
 
 \textbf{Initial：} $\tilde w$随机初始化，$t_i=0, w_i=\tilde w$，$w_i$表示第$i$个Worker上的模型。
@@ -105,7 +105,7 @@ $\tilde w $表示同步后的模型，$N$为Worker总数。则：
 当到达同步周期时，所有Worker将模型从GPU卡显存复制到CPU的内存中，并除以N，
 然后同时调用MPI\_Allreduce函数的SUM操作即可。
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.5\textwidth]{figures/chapter5/bsp-crop}
 \caption{基于MPI的BSP实现}
@@ -124,7 +124,7 @@ $\tilde w $表示同步后的模型，$N$为Worker总数。则：
              并从参数服务器接收最新的模型。
     \end{enumerate}
 
-\begin{figure}[htb]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=1.0\textwidth]{figures/chapter5/asgd-crop}
 \caption{异步梯度下降ASGD}
@@ -212,7 +212,7 @@ $\alpha$控制模型的更新步长。
 \end{algorithmic}
 \end{algorithm}
 
-\section{BMUF} 
+\section{BMUF}
 
 2016年，微软在语音识别任务上提出BMUF\ucite{chen2016scalable}（Block Momentum Update Filtering）并行算法，
 并在语音识别任务上取得不错的加速比和更优的模型精度。
@@ -271,4 +271,4 @@ BSP中直接取模型平均作为新的模型，而BMUF中则根据梯度进行�
 \begin{enumerate}
 \item BMUF是全局同步的方法，每一次更新之后，所有的Worker均使用相同的初始模型；
 \item BMUF的差分中引入类似SGD学习中的冲量，而冲量可以加速模型的收敛。
-\end{enumerate}
+\end{enumerate} 
