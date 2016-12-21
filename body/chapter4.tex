@@ -145,6 +145,9 @@ HMM建模的一个前提假设是状态的独立假设。在GMM和DNN中，当�
 \label{fig:duration}
 \end{figure}
 
+在中文中，音节Syllable是发音的基本单元，中文汉字发音为声韵母的组合。
+因此在中文数据集中，可以使用Syllable作为基本建模单元。
+
 但是，直接使用Mono Phone建模存在着与Mono Phone HMM状态建模相似的问题，即建模单元太少，建模不够精细。
 使用与CD-State相似的概念，我们使用CD-Phone（Context Dependent Phone），给Phone加入上下文，
 再通过聚类来结解决该问题。
@@ -423,4 +426,267 @@ CTC不仅可以进一步提升声学建模的精度；
 语音识别的解码中一般使用Beam Search\ucite{young1989token}的方法进行剪枝，
 在同样的beam阈值条件下，相对于交叉熵CE的模型，
 CTC解码中的竞争路径会被更快的裁剪，因此基于CTC的语音识别解码具有非常快的解码速度。
-这对大幅度提升语音识别系统的响应速度和提供线上系统的吞吐量均具有重要意义。 
+这对大幅度提升语音识别系统的响应速度和提供线上系统的吞吐量均具有重要意义。
+
+\section{实验}
+
+本节介绍基于Phone、CD-Phone和Syllable的声学建模实验，
+并给出在这三种建模单元基础上结合CTC在中文语音识别任务上的实验结果。
+
+\subsection{数据和模型}
+
+以Phone、Syllable和CD-Phone为建模单元的声学模型和CTC都依赖于大量的数据。所以
+本实验使用数据量更大的数据集aslp688。
+aslp688数据集为西北工业大学音频语音与语言处理研究组ASLP（Audio Speech and Language Processing, ASLP）标准数据集，
+共688小时，语料类型为中文普通话朗读数据，共402838句，平均时长为6.20s，其中3484句作为交叉验证集，剩余部分全部作为训练集。
+测试集使用西北工业大学音频语音与语言处理研究组ASLP标准测试集test3000，共3063句。
+
+本实验使用语音识别工具Kaldi\ucite{povey2011kaldi}，深度神经网络使用的对齐由aslp688数据集的GMM-HMM系统产生，共有CD-State状态5389个。
+GMM-HMM系统使用39维的MFCC特征，所有深度神经网络均使用40维FBank（Filter Bank）特征。
+
+本节中，使用的网络基本结构均为CLDNN结构，含有1层CNN，2层的DNN和2层的LSTM。
+其中CNN中使用40维Fbank特征，不使用差分特征，左右各拼5帧，共440维输入特征，
+CNN的卷积层使用128个滤波器，其中滤波器大小为$11×9$，滤波器步移为1，Max Pooling层的步长为4，步移为4，CNN的输出为1024维；
+DNN隐层节点为1024；LSTM同样使用LSTMP结构，其中Cell 1024，Projection 512。
+
+同样，CNN和DNN所用激活函数为Simoid激活函数。相邻层之间，使用Batch Normalization做输入的归一化。
+
+本节使用的中文Phone为带调的Phone，共216个。
+使用的Syllable为带调音节，音节中同样存在稀疏问题，采用绑定策略对稀疏音节绑定后共1310个音节。
+CD-Phone的个数可以通过阈值调整，本节中最终的CD-Phone的聚类数为2384个。
+
+\subsection{Phone、Syllable和CD-Phone交叉熵训练实验}
+
+使用Phone、Syllable和CD-Phone 交叉熵训练的实验结果如表\ref{table:unit-ce}所示，
+为方便性能比较，表中同样给出CD-States的DNN和CLDNN实验结果。
+
+\begin{table}[htbp]
+\centering
+\caption{aslp688 Phone、Syllable和CD-Phone交叉熵训练}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{cYcc}
+\toprule
+编号         & 模型结构                                          & 参数量(M)           & CER           \\ \midrule
+1          & DNN\_CDState5389(6DNN)                        & 7.95          & 9.23          \\
+\textbf{2} & \textbf{CLDNN\_CdState5389(1CNN+2DNN+2LSTMP)} & \textbf{13.81} & \textbf{8.31} \\
+3          & CLDNN\_Phone216(1CNN+2DNN+2LSTMP)             & 11.15          & 8.95          \\
+4          & CLDNN\_CdPhone2384(1CNN+2DNN+2LSTMP)          & 12.26          & 11.03         \\
+5          & CLDNN\_Syllable1310(1CNN+2DNN+2LSTMP)         & 11.71          & 10.66         \\ \bottomrule
+\end{tabularx}
+\label{table:unit-ce}
+\end{table}
+
+从表\ref{table:unit-ce}可以看出，以Phone为建模单元的交叉熵训练效果已经超过CD-States DNN的效果，
+并且接近CD-States CLDNN的效果。而以Syllable和CD-Phone为建模单元的效果要略差，总体效果上Phone优于Syllable，再优于CD-Phone。
+
+\subsection{CTC实验}
+
+以表\ref{table:unit-ce}中的交叉熵CE模型为初始模型，使用CTC准则迭代训练，
+得到表\ref{table:ctc}的实验结果，表中直接给出最优的实验结果。
+
+\begin{table}[htbp]
+\centering
+\caption{aslp688 Phone、Syllable和CD-Phone CTC训练}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{cYcc}
+\toprule
+编号         & 模型结构                                                 & 参数量(M)           & CER           \\ \midrule
+1          & 6DNN\_CDState5389(6DNN)                              & 7.95          & 9.23          \\
+\textbf{2} & \textbf{CLDNN\_CdState5389(1CNN+2DNN+2LSTMP)}        & \textbf{13.81} & \textbf{8.31} \\
+\textbf{3} & \textbf{CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)} & \textbf{11.15} & \textbf{8.53} \\
+4          & CLDNN\_CTC\_CdPhone2384(1CNN+2DNN+2LSTMP)           & 12.26          & 12.01         \\
+5          & CLDNN\_CTC\_Syllable1310(1CNN+2DNN+2LSTMP)           & 11.71          & 10.34         \\ \bottomrule
+\end{tabularx}
+\label{table:ctc}
+\end{table}
+
+分析表\ref{table:ctc}的结果可以得到，以Phone和Syllable为建模单元的CTC训练的模型性能进一步得到提升。
+基于Phone的CTC的效果已经与CD-States CLDNN的效果相当（相差0.1个百分点即认为是模型浮动），并且基于Phone的模型中由于输出层更小，
+其参数比CD-State的CLDNN模型也要小一些。
+
+ \begin{figure}
+  \centering
+  \subfigure[CE预测]{
+    \label{fig:ce-predict} %% label for first subfigure
+    \includegraphics[width=1.0\textwidth]{figures/chapter4/ce-crop}}
+  \hspace{1in}
+  \subfigure[CTC Peak预测]{
+    \label{fig:ctc-predict} %% label for second subfigure
+    \includegraphics[width=1.0\textwidth]{figures/chapter4/ctc-crop}}
+  \caption{CE和CTC预测比较}
+  \label{fig:predict} %% label for entire figure
+\end{figure}
+
+图\ref{fig:predict}中给出交叉熵CE和CTC预测对比图。
+可以看出，CE预测比较平滑，它在字符对应的特征区间（即对齐）内预测都趋向于1，
+某些区间内还会存在混叠即竞争，表明该区间内在这些竞争字符上的概率都很高。
+CTC的预测呈尖峰状，并且在大部分时刻上均输出blank，
+在字符区间对应的特征上仅输出一个尖峰或者类尖峰，
+在该区间上竞争字符的概率也要远远低于主字符。
+即是说，CTC的Peak预测更鲁棒，区分性更好。
+
+
+\subsection{CTC声学模型权重}
+
+基于CTC的语音识别解码中，需要对语言模型和声学模型的权重进行调节，以期更好的识别结果。
+使用表\ref{table:ctc}以Phone为建模单元的CTC模型CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)为基础模型进行声学模型权重调节，
+得到表\ref{table:ctc}结果。
+
+\begin{table}[htbp]
+\centering
+\caption{CTC声学模型权重调节}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{YY}
+\toprule
+声学模型权重        & CER           \\ \midrule
+0.50          & 9.20          \\
+0.55          & 8.82          \\
+0.58          & 8.71          \\
+0.60          & 8.60          \\
+0.63          & 8.54          \\
+\textbf{0.65} & \textbf{8.53} \\
+0.70          & 8.68          \\ \bottomrule
+\end{tabularx}
+\label{table:ctc}
+\end{table}
+
+在\ref{table:ctc}中，当声学模型权重为0.65时，基于Phone的CTC声学模型取得最佳识别结果。
+而在CD-State的语音识别解码中，最佳模型的声学模型权重仅为0.06667。
+可以看出，基于Phone和CTC的声学模型权重相比CD-State的模型提高了近10倍。
+这得益于CTC的Peak预测特性，提高了声学模型在识别系统中的比重。
+
+\subsection{blank打分调节}
+
+基于CTC的声学模型在预测时，blank的打分很强，所以要对blank打分进行预处理，然后进一步进行识别解码。
+本实验中先统计插入blank后的训练数据标注的先验，在得到CTC的打分之后，先减去各个字符的先验（log域），
+然后再对blank打分进行调整（同样是减去某个值）。
+同样使用表\ref{table:ctc}以Phone为建模单元的CTC模型CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)为基础模型，
+经过该处理，得到表\ref{table:blank}的结果。
+
+\begin{table}[htbp]
+\centering
+\caption{CTC blank打分调节}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{YY}
+\toprule
+blank scale & CER           \\ \midrule
+-2.0        & 8.79          \\
+-1.0        & 8.54          \\
+-0.5        & 8.56          \\
+\textbf{0}  & \textbf{8.53} \\
+0.5         & 8.62          \\
+1.0         & 8.73          \\
+2.0         & 9.26          \\ \bottomrule
+\end{tabularx}
+\label{table:blank}
+\end{table}
+
+可以看出，对blank打分进行scale操作对最终识别结果影响很大。
+在该处理中，blank的先验很高，减先验相当于已经进行过scale。
+所以再scale效果不是很明显，scale为0时效果最好。
+如若不进行减先验处理，则scale效果会比较明显。
+
+\subsection{CTC解码效率}
+
+本节研究CTC的解码效率，研究CTC的Peak预测特性在语音识别解码中的作用。
+本实验中，同样使用表\ref{table:ctc}的CD-States的CLDNN模型
+和以Phone为建模单元的CE和CTC模型。
+
+本实验中，使用CLDNN基础模型采用Copy模式解码。
+在测试中，使用预先提好特征的测试集test3000。
+对整个测试集进行解码，并统计解码的实时率RTF（Real Time Factor，解码时间与语音时长的比值）。
+实验所用环境为Dell刀片式服务器，64位Ubuntu系统，24核CPU（4801MIPS），128G内存。
+解码使用基于WFST的单线程解码（即每次仅解码一个测试语句）。
+测试结果如表\ref{table:ctcrtf}所示。
+
+\begin{table}[htbp]
+\centering
+\caption{CTC解码实时率}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{cYcc}
+\toprule
+编号         & 模型结构                                            & 参数量(M)           & RTF               \\ \midrule
+1          & CLDNN\_CdState5389(1CNN+2DNN+2LSTMP)            & 13.81          & 0.88          \\
+2          & CLDNN\_CE\_Phone216(1CNN+2DNN+2LSTMP)               & 11.15          & 1.50           \\
+\textbf{3} & \textbf{CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)} & \textbf{11.1567} & \textbf{0.25} \\ \bottomrule
+\end{tabularx}
+\label{table:ctcrtf}
+\end{table}
+
+基于深度神经网络的语音识别解码中的主要计算量有两部分，第一部分为深度神经网络的前向计算；
+第二部分为识别中的Viterbi Search和Beam Search的时间。
+如表\label{table:ctcrtf}所示，基于CTC的解码仅为CE模型CLDNN\_CdState5389的三分之一左右，解码速度非常快。
+表中同样列出CLDNN\_CE\_Phone216模型的解码时间，其与CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)模型的前向计算时间相同，
+但其解码速度更慢（可能原因是其输出单元少，预测更为平滑，区分性不强）。
+对比该项，即可说明CTC在解码中的优势，其Peak预测特性可以更早的裁剪竞争路径，在更早的时间减小了搜索空间，
+这是CTC解码相对于CE解码的核心优势。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/chapter4/beam-crop}
+\caption{CTC和CE Beam对RTF影响}
+\label{fig:beam}
+\end{figure}
+
+更进一步，本节给出语音识别解码Beam Search的Beam设定对CE和CTC解码的影响。
+Beam是一个阈值，在语音识别解码中，
+假设某条竞争路径与目前最优路径的打分之差大于该阈值，则该竞争路径即被裁剪，以及时的减小搜索空间。
+所以Beam越大，搜索空间越大，语音识别的结果越好，但同时搜索时间也越久，识别时间越长。
+最终结果如表\ref{table:ctcbeam}所示，进一步表示为图\ref{fig:beam}。
+
+
+\begin{table}[htbp]
+\centering
+\caption{CTC和CE Beam对RTF影响}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{Ycccc}
+\toprule
+System                                                       & 参数量(M)                   & Beam & CER   & RTF      \\ \midrule
+\multirow{5}{*}{CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)} & \multirow{5}{*}{11.1567} & 8.0  & 11.34 & 0.29 \\
+                                                             &                          & 10.0 & 10.41 & 0.34  \\
+                                                             &                          & 12.0 & 10.22 & 0.38 \\
+                                                             &                          & 13.0 & 9.99  & 0.35  \\
+                                                             &                          & 15.0 & 9.75  & 0.34 \\ \midrule
+\multirow{5}{*}{CLDNN\_CdState5389(1CNN+2DNN+2LSTMP)}        & \multirow{5}{*}{13.8104} & 8.0  & 9.34  & 0.29 \\
+                                                             &                          & 10.0 & 8.76  & 0.47 \\
+                                                             &                          & 12.0 & 8.63  & 0.82 \\
+                                                             &                          & 13.0 & 8.63  & 1.01   \\
+                                                             &                          & 15.0 & 8.64  & 1.29  \\ \bottomrule
+\end{tabularx}
+\label{table:ctcbeam}
+\end{table}
+
+分析可知，CTC解码实时率受Beam影响较小，而普通CE模型解码实时率RTF则严重依赖于beam大小。
+因此，在CTC解码时，在保证RTF在可接受范围内的情况下，可以通过进一步放大Beam来提升模型精度。
+
+\subsection{更大的数据}
+
+在上述实验中，以CD-Phone为建模单元的声学模型并未取得理想的效果，期望的CD-Phone的模型效果应该优于Phone。
+根据CD-Phone的聚类原理，经分析可能的原因是数据量少CD-Phone聚类不够准确导致的。
+
+\begin{table}
+\centering
+\caption{CTC解码实时率}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{Ycc}
+\toprule
+模型                                & 建模单元数          & WER                      \\ \midrule
+1CNN+9DNN(CD-State)               & 21046          & 34.9                     \\
+1CNN+3LSTM(CD-Phone)              & 12167          & 32.04(8.18\%)          \\
+\textbf{1CNN+3LSTM+CTC(CD-Phone)} & \textbf{12167} & \textbf{27.20(22.06\%)} \\ \bottomrule
+\end{tabularx}
+\label{table:bdctc}
+\end{table}
+
+因此在更大的数据集上，进行以CD-Phone为建模单元的实验。
+本实验中使用百度（实习工作）2700小时的口语数据集，测试集为1500句。
+其中CD-States共21046个，CD-Phone共12167个。
+CD-State和CD-Phone均使用近万小时的数据聚类得到。
+在该数据集上，得到表\ref{table:bdctc}的结果。
+
+
+在该口语数据集上，CD-State的CLDNN效果并没有CNN基线系统的效果好，因此表\ref{table:bdctc}中没有给出CD-State的CLDNN的结果。
+分析可知，基于CD-Phone的CE建模比基线CNN系统提升8.18\%，之后继续CTC训练，
+最终比基线系统提升22.06\%，一方面说明了以CD-Phone作为基本建模单元的有效性，
+另一方面说明CTC训练可以带来进一步的模型提升。
+

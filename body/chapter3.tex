@@ -430,6 +430,8 @@ y = f(BN(Wx + b))
 
 \section{实验}
 
+本节给出基于DNN、CNN、LSTM和CLDNN的声学建模实验，并在CLDNN基础上给出跳帧实验，并进行实验分析。
+
 \subsection{数据和模型}
 
 本实验使用的数据集为西北工业大学音频语音与语言处理研究组ASLP（Audio Speech and Language Processing, ASLP）标准数据集aslp128。
@@ -442,7 +444,7 @@ GMM-HMM系统使用39维的MFCC特征，所有深度神经网络均使用40维FB
 实验中，使用5隐层的DNN，DNN隐层节点为1024，DNN使用特征为40维Fbank特征，左右各拼5帧以更好的利用上下文信息，所以输入特征共440维。
 
 CNN中在网络输入层使用1层的CNN，上面叠加4层的DNN，DNN的隐层节点数同样为1024。CNN中同样使用40维Fbank特征，
-不使用一阶差分特征和，左右各拼5帧，共440维输入特征。CNN中的卷积层的滤波器数量，滤波器的大小、步长和步移为可调参数；
+不使用差分特征，左右各拼5帧，共440维输入特征。CNN中的卷积层的滤波器数量，滤波器的大小、步长和步移为可调参数；
 Max Pooling层的Pooling的宽度和步移为可调参数。
 
 LSTM可以自动学习到上下文信息，因此输入特征不使用拼帧，直接使用40维FBank特征。
@@ -500,7 +502,7 @@ CLDNN结合了CNN、DNN和LSTM的优点，帧识别率比LSTM的效果更好。
 \textbf{5}  & \textbf{CLDNN(1CNN\_1DNN\_2LSTMP)} & \textbf{12.75}  & \textbf{10.23(9.07\%)} \\ \bottomrule
 \end{tabularx}
 \label{table:aslp128-cldnn}
-\end{table} 
+\end{table}
 
 由表\ref{table:aslp128-cldnn}可以看出，在aslp128数据集上，CNN相对基线系统DNN提升3.39\%；
 直接使用2层LSTM在该数据集上作用不明显，分析可能是网络仅有2层、参数也有限导致，
@@ -527,7 +529,7 @@ CLDNN在该数据集上取得最好效果，相对基线系统提升9.07\%。
 4  & skip 4     & 11.79     & 11.05          \\ \bottomrule
 \end{tabularx}
 \label{table:aslp128-skip}
-\end{table} 
+\end{table}
 
 通过分析表\ref{table:aslp128-skip}可以得出以下结论，
 \begin{enumerate}
@@ -541,7 +543,7 @@ CLDNN在该数据集上取得最好效果，相对基线系统提升9.07\%。
 \subsection{更大的数据}
 
 更进一步，我们在更大的数据集上进行CLDNN的实验，进一步验证CLDNN和跳帧的效果。
-本节实验使用（地平线实习期间用）hr400朗读数据集，训练集共400小时，测试集为9000句。
+本节实验使用（地平线实习期间使用公司数据集）hr400朗读数据集，训练集共400小时，测试集为9000句。
 并且在该数据集训练中，CLDNN直接使用跳帧训练，跳帧宽度为3，以提高训练速度。
 实验中模型配置我们在模型结构中注明，实验结果如表\ref{table:hr400-cldnn}
 
@@ -558,7 +560,7 @@ CLDNN在该数据集上取得最好效果，相对基线系统提升9.07\%。
 \textbf{4} & \textbf{CLDNN(1CNN\_1DNN\_2LSTMP\_Cell700\_Projection350)} & \textbf{5.81} & \textbf{14.12(22.88\%)} \\ \bottomrule
 \end{tabularx}
 \label{table:hr400-cldnn}
-\end{table} 
+\end{table}
 
 比较aslp128数据集上的结果，
 在hr400数据集中，网络改进所带来的收益更大。
