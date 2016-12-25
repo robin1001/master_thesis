@@ -6,7 +6,7 @@ main.pdf: $(TEX)
 
 all:
 	xelatex main.tex
-	bibtex main
+	-bibtex main
 	xelatex main.tex
 	xelatex main.tex
 
