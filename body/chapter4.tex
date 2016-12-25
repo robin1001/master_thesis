@@ -437,7 +437,7 @@ CTC解码中的竞争路径会被更快的裁剪，因此基于CTC的语音识�
 
 以Phone、Syllable和CD-Phone为建模单元的声学模型和CTC都依赖于大量的数据。所以
 本实验使用数据量更大的数据集aslp688。
-aslp688数据集为西北工业大学音频语音与语言处理研究组ASLP（Audio Speech and Language Processing, ASLP）标准数据集，
+aslp688\label{data:aslp688}数据集为西北工业大学音频语音与语言处理研究组ASLP（Audio Speech and Language Processing, ASLP）标准数据集，
 共688小时，语料类型为中文普通话朗读数据，共402838句，平均时长为6.20s，其中3484句作为交叉验证集，剩余部分全部作为训练集。
 测试集使用西北工业大学音频语音与语言处理研究组ASLP标准测试集test3000，共3063句。
 
@@ -467,7 +467,7 @@ CD-Phone的个数可以通过阈值调整，本节中最终的CD-Phone的聚类�
 \begin{tabularx}{\textwidth}{cYcc}
 \toprule
 编号         & 模型结构                                          & 参数量(M)           & CER           \\ \midrule
-1          & DNN\_CDState5389(6DNN)                        & 7.95          & 9.23          \\
+1          & DNN\_CDState5389(7DNN)                        & 7.95          & 9.23          \\
 \textbf{2} & \textbf{CLDNN\_CdState5389(1CNN+2DNN+2LSTMP)} & \textbf{13.81} & \textbf{8.31} \\
 3          & CLDNN\_Phone216(1CNN+2DNN+2LSTMP)             & 11.15          & 8.95          \\
 4          & CLDNN\_CdPhone2384(1CNN+2DNN+2LSTMP)          & 12.26          & 11.03         \\
@@ -491,7 +491,7 @@ CD-Phone的个数可以通过阈值调整，本节中最终的CD-Phone的聚类�
 \begin{tabularx}{\textwidth}{cYcc}
 \toprule
 编号         & 模型结构                                                 & 参数量(M)           & CER           \\ \midrule
-1          & 6DNN\_CDState5389(6DNN)                              & 7.95          & 9.23          \\
+1          & 6DNN\_CDState5389(7DNN)                              & 7.95          & 9.23          \\
 \textbf{2} & \textbf{CLDNN\_CdState5389(1CNN+2DNN+2LSTMP)}        & \textbf{13.81} & \textbf{8.31} \\
 \textbf{3} & \textbf{CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)} & \textbf{11.15} & \textbf{8.53} \\
 4          & CLDNN\_CTC\_CdPhone2384(1CNN+2DNN+2LSTMP)           & 12.26          & 12.01         \\
