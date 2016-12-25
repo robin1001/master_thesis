@@ -45,7 +45,7 @@ $p(s_i)$为状态$s_i$出现的概率，称之为状态先验，一般可以通�
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.6\textwidth]{figures/chapter3/hmmdnn-crop}
+\includegraphics[width=0.5\textwidth]{figures/chapter3/hmmdnn-crop}
 \caption{HMM-DL系统的基本原理}
 \label{fig:hmmdnn}
 \end{figure}
@@ -455,7 +455,7 @@ LSTM可以自动学习到上下文信息，因此输入特征不使用拼帧，�
 所以，CLDNN中的输入特征配置与CNN相同，即40维FBank特征，左右各拼5帧，共440维输入特征。
 
 本实验中，CNN、LSTM、CLDNN均存在多个可调参数，以下直接给出最优的参数配置。
-CNN中卷积层使用128个滤波器，其中滤波器大小为$11×9$，滤波器步移为1;
+CNN中卷积层使用128个滤波器，其中滤波器大小为$11 \times 9$，滤波器步移为1;
 Max Pooling层的步长为4，步移为4，CNN的输出为1024维。
 根据Google\ucite{sak2014long, sak2014long_lvsr}，LSTM中使用2层的LSTMP，Cell为1024，Projection为512。
 CLDNN使用1层的CNN，1层的DNN和2层的LSTM，其中CNN配置与CNN网络类似，DNN节点数位1024，

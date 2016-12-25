@@ -194,10 +194,10 @@ $y_k^t$表示在$t$时刻观测到字符$k$的概率，其中$k<=L$; $k=0$表示
 则序列$\textbf{x}$的任意一个等价序列$\pi$出现的概率可以表示为：
 \begin{equation}
 \label{euqation:ctcpath}
-{\rm{p}}(\pi |\bf{x},S) = \prod\limits_{t = 1}^T {{\rm{y}}_{{\pi _t}}^t}
+{\rm{p}}(\pi | \textbf{x},S) = \prod\limits_{t = 1}^T {{\rm{y}}_{{\pi _t}}^t}
 \end{equation}
 其中$\pi  \in {L^{'T}}$，$L^{'T}$表示在输入序列$\textbf{x}$的标注中任意位置插入任意长度的blank，直至其总长度为$T$。
-在后面介绍中，省略训练数据$S$，将$\rm{p}(\pi |\bf{x},S)$简记为$\rm{p}(\pi|\bf{x})$。
+在后面介绍中，省略训练数据$S$，将$\rm{p}(\pi |\textbf{x},S)$简记为$\rm{p}(\pi|\textbf{x})$。
 
 定义映射函数{\rm B}，表示将CTC的预测序列经过消除连续出现的字符和去除blank之后的序列。
 例如${\rm B}(a - ab - ) = {\rm B}( - aa -  - abb) = abb$。
@@ -205,10 +205,10 @@ $y_k^t$表示在$t$时刻观测到字符$k$的概率，其中$k<=L$; $k=0$表示
 我们称之为序列等价性。这个性质使CTC可以使用未分段的数据，因为该性质无需预先知道字符出现的时刻。
 这里可以看出blank的另一个作用，即允许预测序列出现两个连续相同的字符，只要这两个字符之间存在blank即可。
 
-根据序列等价性，$\bf{l}$的条件概率可以表示为：
+根据序列等价性，$\textbf{l}$的条件概率可以表示为：
 \begin{equation}
 \label{euqation:ctcallpath}
-p({\bf{l}}|{\bf{x}}) = \sum\limits_{\pi  \in {{\rm B}^{ - 1}}({\bf{l}})}^{} {p(\pi |{\bf{x}})}
+p({\textbf{l}}|{\textbf{x}}) = \sum\limits_{\pi  \in {{\rm B}^{ - 1}}({\textbf{l}})}^{} {p(\pi |{\textbf{x}})}
 \end{equation}
 
 理论上，CTC可以使用任意结构的RNN，但为了对当前字符做更精准的预测，一般使用双向的RNN，
@@ -216,23 +216,23 @@ p({\bf{l}}|{\bf{x}}) = \sum\limits_{\pi  \in {{\rm B}^{ - 1}}({\bf{l}})}^{} {p(\
 
 \subsection{前向后向算法}
 
-在给出$p({\bf{l}}|{\bf{x}})$ 的形式之后，
-我们可以使用与HMM的前向后向算法\ref{section:probability}类似的动态规划思想来计算$p({\bf{l}}|{\bf{x}})$的概率。
+在给出$p({\textbf{l}}|{\textbf{x}})$ 的形式之后，
+我们可以使用与HMM的前向后向算法\ref{section:probability}类似的动态规划思想来计算$p({\textbf{l}}|{\textbf{x}})$的概率。
 即该问题具有最优子结构，可以通过迭代填表的方式求得。
 
-首先，定义${{\bf{l'}}}$表示在$\bf{l}$的开始，结束和相邻两个字符之间插入blank后的序列，则${{\bf{l'}}}$的长度为$2|{\bf{l}}| + 1$。
+首先，定义${{\textbf{l'}}}$表示在$\textbf{l}$的开始，结束和相邻两个字符之间插入blank后的序列，则${{\textbf{l'}}}$的长度为$2|{\textbf{l}}| + 1$。
 在计算过程中，我们允许从当前一个字符直接跳到下一个字符；或者从当前字符跳到自身；或者从当前字符跳到blank。
 
 定义${\alpha _{\rm{t}}}(s)$表示$t$时刻到达第$s$个字符的前向概率和，则
 \begin{equation}
-{\alpha _{\rm{t}}}(s) = P({\pi _{1:t}}:B({\pi _{1:t}}) = {{\bf{l}}_{1:s/2}},{\pi _t} = {{l'}_s}{\rm{|}}{\bf{x}}{\rm{) = }}\sum\limits_{\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} \pi :\hfill\atop
-\scriptstyle\beta ({\pi _{1:t}}) = {{\bf{l}}_{1:s/2}}\hfill} {\prod\limits_{t' = 1}^t {y_{{\pi _{t'}}}^{t'}} }
+{\alpha _{\rm{t}}}(s) = P({\pi _{1:t}}:B({\pi _{1:t}}) = {{\textbf{l}}_{1:s/2}},{\pi _t} = {{l'}_s}{\rm{|}}{\textbf{x}}{\rm{) = }}\sum\limits_{\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} \pi :\hfill\atop
+\scriptstyle\beta ({\pi _{1:t}}) = {{\textbf{l}}_{1:s/2}}\hfill} {\prod\limits_{t' = 1}^t {y_{{\pi _{t'}}}^{t'}} }
 \end{equation}
 $s/2$表示去掉blank的标注。
 
-由以上定义，标注序列$\bf{l}$的概率可以表示为$t$时刻处在最后一个字符或者其后blank上的概率和，表明允许以最终字符或者blank结束：
+由以上定义，标注序列$\textbf{l}$的概率可以表示为$t$时刻处在最后一个字符或者其后blank上的概率和，表明允许以最终字符或者blank结束：
 \begin{equation}
-p({\bf{l}}|{\bf{x}}) = {\alpha _T}(|{\bf{l'}}|) + {\alpha _T}(|{\bf{l'}}| - 1)
+p({\textbf{l}}|{\textbf{x}}) = {\alpha _T}(|{\textbf{l'}}|) + {\alpha _T}(|{\textbf{l'}}| - 1)
 \end{equation}
 同理，允许序列可以以第一个字符或者blank起始，则可以得到${\alpha _{\rm{t}}}(s)$的初始值：
 \begin{equation}
@@ -264,15 +264,15 @@ CTC前向跳转的一个示意如图\ref{fig:ctcforback}所示，图中给出DOG
 
 定义${\beta _{\rm{t}}}(s)$表示$t$时刻到达第$s$个字符的后向概率和，则
 \begin{equation}
-{\beta _{\rm{t}}}(s) = P({\pi _{{\rm{t}} + 1:T}}:B({\pi _{t:T}}) = {{\bf{l}}_{s/2:{\rm{|}}{\bf{l}}|}},{\pi _t} = {{l'}_s}{\rm{|}}{\bf{x}}{\rm{) = }}\sum\limits_{\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} \pi :\hfill\atop
-\scriptstyle\beta ({\pi _{t:T}}) = {{\bf{l}}_{s/2:{\rm{|}}{\bf{l}}|}}\hfill} {\prod\limits_{t' = t + 1}^T {y_{{\pi _{t'}}}^{t'}} }
+{\beta _{\rm{t}}}(s) = P({\pi _{{\rm{t}} + 1:T}}:B({\pi _{t:T}}) = {{\textbf{l}}_{s/2:{\rm{|}}{\textbf{l}}|}},{\pi _t} = {{l'}_s}{\rm{|}}{\textbf{x}}{\rm{) = }}\sum\limits_{\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} \pi :\hfill\atop
+\scriptstyle\beta ({\pi _{t:T}}) = {{\textbf{l}}_{s/2:{\rm{|}}{\textbf{l}}|}}\hfill} {\prod\limits_{t' = t + 1}^T {y_{{\pi _{t'}}}^{t'}} }
 \end{equation}
 同理，允许序列可以以最后一个字符或者其后的blank结束，则可以得到${\beta _{\rm{t}}}(s)$的初始值：
 \begin{equation}
 \begin{array}{l}
-{\beta _T}(|{\bf{l'}}|) = 1\\
-{\beta _T}(|{\bf{l'}}| - 1) = 1\\
-{\beta _T}(s) = 0,\forall s < |{\bf{l'}}| - 1
+{\beta _T}(|{\textbf{l'}}|) = 1\\
+{\beta _T}(|{\textbf{l'}}| - 1) = 1\\
+{\beta _T}(s) = 0,\forall s < |{\textbf{l'}}| - 1
 \end{array}
 \end{equation}
 ${\beta _{\rm{t}}}(s)$的递推计算公式为：
@@ -303,46 +303,46 @@ CTC的下层网络结构为RNN，同样可以通过梯度方法优化。
 
 定义目标函数$O$表示整个训练集的负log域的概率和，则$O$可以表示为：
 \begin{equation}
-{\rm{O}} =  - \ln (\prod\limits_{({\bf{x}},{\bf{z}}) \in S} {p({\bf{z}}|{\bf{x}})} ) =  - \sum\limits_{({\bf{x}},{\bf{z}}) \in S}^{} {\ln p({\bf{z}}|{\bf{x}})}
+{\rm{O}} =  - \ln (\prod\limits_{({\textbf{x}},{\textbf{z}}) \in S} {p({\textbf{z}}|{\textbf{x}})} ) =  - \sum\limits_{({\textbf{x}},{\textbf{z}}) \in S}^{} {\ln p({\textbf{z}}|{\textbf{x}})}
 \end{equation}
 首先，计算$O$对网络输出的梯度:
 \begin{equation}
 \label{equation:o}
-\frac{{\partial O}}{{\partial y_k^t}} =  - \frac{{\partial \ln p({\bf{z}}|{\bf{x}})}}{{\partial y_k^t}} =  - \frac{1}{{p({\bf{z}}|{\bf{x}})}}\frac{{\partial p({\bf{z}}|{\bf{x}})}}{{\partial y_k^t}}
+\frac{{\partial O}}{{\partial y_k^t}} =  - \frac{{\partial \ln p({\textbf{z}}|{\textbf{x}})}}{{\partial y_k^t}} =  - \frac{1}{{p({\textbf{z}}|{\textbf{x}})}}\frac{{\partial p({\textbf{z}}|{\textbf{x}})}}{{\partial y_k^t}}
 \end{equation}
 使用前向后向算法有：
 \begin{equation}
-{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s) = \sum\limits_{\scriptstyle\pi  \in {{\rm B}^{ - 1}}({\bf{z}})\hfill\atop
+{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s) = \sum\limits_{\scriptstyle\pi  \in {{\rm B}^{ - 1}}({\textbf{z}})\hfill\atop
 \scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\pi _t} = {{z'}_s}\hfill} {\prod\limits_{t = 1}^T {y_{{\pi _t}}^t} }
 \end{equation}
 由\ref{euqation:ctcpath}有：
 \begin{equation}
-{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s) = \sum\limits_{\scriptstyle\pi  \in {{\rm B}^{ - 1}}({\bf{z}})\hfill\atop
-\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\pi _t} = {{z'}_s}\hfill} {p(} \pi |{\bf{x}})
+{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s) = \sum\limits_{\scriptstyle\pi  \in {{\rm B}^{ - 1}}({\textbf{z}})\hfill\atop
+\scriptstyle{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\pi _t} = {{z'}_s}\hfill} {p(} \pi |{\textbf{x}})
 \end{equation}
-由\ref{euqation:ctcallpath}，通过全概率公式（在$t$时刻可以输出${\bf{z}}$序列中的任意字符），所以：
+由\ref{euqation:ctcallpath}，通过全概率公式（在$t$时刻可以输出${\textbf{z}}$序列中的任意字符），所以：
 \begin{equation}
 \label{equation:alls}
-p({\bf{z}}|{\bf{x}}) = \sum\limits_{s = 1}^{|{\bf{z'}}|} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+p({\textbf{z}}|{\textbf{x}}) = \sum\limits_{s = 1}^{|{\textbf{z'}}|} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
 \end{equation}
 
 为了计算对$y_k^t$的梯度，需要考虑在$t$时刻通过字符$k$的所有路径。
 由于相同的字符或者blank可以在一个序列中出现多次，
-因此定义$lab({\bf{z}},k) = \{ s:{{z'}_s}{\rm{ = k\} }}$表示序列$\bf{z}$中出现字符$k$的集合：
+因此定义$lab({\textbf{z}},k) = \{ s:{{z'}_s}{\rm{ = k\} }}$表示序列$\textbf{z}$中出现字符$k$的集合：
 \begin{equation}
 \frac{{\partial {\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}}{{\partial y_k^t}} = \left\{ \begin{array}{l}
-\frac{{{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}}{{y_k^t}},if{\kern 1pt} k{\kern 1pt} {\kern 1pt} in{\kern 1pt} {\kern 1pt} {\bf{z'}}\\
+\frac{{{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}}{{y_k^t}},if{\kern 1pt} k{\kern 1pt} {\kern 1pt} in{\kern 1pt} {\kern 1pt} {\textbf{z'}}\\
 0,{\kern 1pt} {\kern 1pt} {\kern 1pt} otherwise
 \end{array} \right\}
 \end{equation}
 对\ref{equation:alls}求导得：
 \begin{equation}
-\frac{{\partial p({\bf{z}}|{\bf{x}})}}{{\partial y_k^t}} = \frac{1}{{y_k^t}}\sum\limits_{s \in lab({\bf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+\frac{{\partial p({\textbf{z}}|{\textbf{x}})}}{{\partial y_k^t}} = \frac{1}{{y_k^t}}\sum\limits_{s \in lab({\textbf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
 \end{equation}
 代入\ref{equation:o}得：
 \begin{equation}
 \label{equation:ctcloss}
-\frac{{\partial O}}{{\partial y_k^t}} =  - \frac{1}{{p({\bf{z}}|{\bf{x}})y_k^t}}\sum\limits_{s \in lab({\bf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+\frac{{\partial O}}{{\partial y_k^t}} =  - \frac{1}{{p({\textbf{z}}|{\textbf{x}})y_k^t}}\sum\limits_{s \in lab({\textbf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
 \end{equation}
 最后，计算对输出层$a_k^t$的梯度，$a_k^t$为softmax函数之前$t$时刻第$k$个字符单元的激励，
 \begin{equation}
@@ -356,7 +356,7 @@ p({\bf{z}}|{\bf{x}}) = \sum\limits_{s = 1}^{|{\bf{z'}}|} {{\alpha _{\rm{t}}}(s){
 \end{equation}
 将\ref{equation:ctcloss}和\ref{equation:softmaxdiff}代入\label{equation:alldiff}得：
 \begin{equation}
-\frac{{\partial O}}{{\partial a_k^t}} = y_k^t - \frac{1}{{p({\bf{z}}|{\bf{x}})}}\sum\limits_{s \in lab({\bf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
+\frac{{\partial O}}{{\partial a_k^t}} = y_k^t - \frac{1}{{p({\textbf{z}}|{\textbf{x}})}}\sum\limits_{s \in lab({\textbf{z}},k)}^{} {{\alpha _{\rm{t}}}(s){\beta _{\rm{t}}}(s)}
 \end{equation}
 
 \subsection{CTC的特性}
@@ -446,7 +446,7 @@ GMM-HMM系统使用39维的MFCC特征，所有深度神经网络均使用40维FB
 
 本节中，使用的网络基本结构均为CLDNN结构，含有1层CNN，2层的DNN和2层的LSTM。
 其中CNN中使用40维Fbank特征，不使用差分特征，左右各拼5帧，共440维输入特征，
-CNN的卷积层使用128个滤波器，其中滤波器大小为$11×9$，滤波器步移为1，Max Pooling层的步长为4，步移为4，CNN的输出为1024维；
+CNN的卷积层使用128个滤波器，其中滤波器大小为$11 \times 9$，滤波器步移为1，Max Pooling层的步长为4，步移为4，CNN的输出为1024维；
 DNN隐层节点为1024；LSTM同样使用LSTMP结构，其中Cell 1024，Projection 512。
 
 同样，CNN和DNN所用激活函数为Simoid激活函数。相邻层之间，使用Batch Normalization做输入的归一化。
@@ -504,15 +504,15 @@ CD-Phone的个数可以通过阈值调整，本节中最终的CD-Phone的聚类�
 基于Phone的CTC的效果已经与CD-States CLDNN的效果相当（相差0.1个百分点即认为是模型浮动），并且基于Phone的模型中由于输出层更小，
 其参数比CD-State的CLDNN模型也要小一些。
 
- \begin{figure}
+ \begin{figure}[htbp]
   \centering
   \subfigure[CE预测]{
     \label{fig:ce-predict} %% label for first subfigure
-    \includegraphics[width=1.0\textwidth]{figures/chapter4/ce-crop}}
+    \includegraphics[width=0.9\textwidth]{figures/chapter4/ce-crop}}
   \hspace{1in}
   \subfigure[CTC Peak预测]{
     \label{fig:ctc-predict} %% label for second subfigure
-    \includegraphics[width=1.0\textwidth]{figures/chapter4/ctc-crop}}
+    \includegraphics[width=0.9\textwidth]{figures/chapter4/ctc-crop}}
   \caption{CE和CTC预测比较}
   \label{fig:predict} %% label for entire figure
 \end{figure}

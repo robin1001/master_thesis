@@ -65,7 +65,7 @@ HMM因其对音素的有效建模便一直作为语音识别系统中的核心�
 从而解决深度神经网络的训练收敛性问题。逐层预训练的应用，让更大规模更深网络的神经网络训练成为可能。
 
 2011年以来，微软研究院的语音识别研究人员首次在语音识别中使用深度神经网络\ucite{dahl2012context, dahl2011large}，
-相对于传统HMM-GMM语音识别系统，基于深度神经网络的HMM-DNN技术降低语音识别错误率WER（Word Error Rate）20\%\~30\%，
+相对于传统HMM-GMM语音识别系统，基于深度神经网络的HMM-DNN技术降低语音识别错误率WER（Word Error Rate）20\% \textasciitilde 30\%，
 是语音识别领域十多年来最大的突破性进展，语音识别从此出现质的飞跃。
 目前，基于HMM-DNN的语音识别系统日益成熟，并成功在主流的语音识别商业产品中使用。
 
@@ -78,7 +78,7 @@ CNN由卷积层（Convolution Layer）和池化层（Pooling Layer）组成，�
 循环神经网络RNN含有循环层，相对于DNN，其对序列数据建模能力更强，在序列标注和预测任务上效果更好，例如手写体识别，机器翻译，语言模型等。
 近两年，RNN语音识别任务也取得了目前最好的效果。2014年，Google首次成功将LSTM\ucite{sak2014long, sak2014long_lvsr}应用到语音识别任务；
 百度Deep Speech 1\ucite{hannun2014deep}中使用Simple RNN，Deep Speech 2\ucite{amodei2015deep}使用GRU（Gated RNN Unit）进行序列建模。
-相对于DNN，RNN能普遍降低识别错误率10\%\~20\%，是语音识别中的又一个里程碑。
+相对于DNN，RNN能普遍降低识别错误率10\% \textasciitilde 20\%，是语音识别中的又一个里程碑。
 
 CD-State是经典HMM-GMM系统和HMM-DNN识别系统中的基本建模单元。RNN的长时记忆功能和序列建模能力，使用更大的Phone作为基本建模单元，
 直接通过RNN对Phone进行轨迹建模的思路应运而生。2015年，Google的研究工作\ucite{senior2015context, sak2015fast, sak2015learning}表明

@@ -29,7 +29,7 @@ MPI是一个标准化的、可移植的消息传递协议。
 并且，MPI是跨语言的通讯协议，支持多种语言用于编写并行计算机。支持点对点和广播。
 MPI协议包括协议和和语义说明，指明其如何在各种实现中发挥其特性。
 MPI的目标是高性能，大规模性，和可移植性。MPI在今天仍为高性能计算的主要模型。
-MPI有多种实现，例如MPICH，OpenMPI\ucite{gabriel2004open}等。
+MPI有多种实现，例如MPICH，OpenMPI等。
 
 深度学习的并行实现需要在多机多卡之间进行通信。
 本文选用MPI作为底层通信协议，本文使用OpenMPI的MPI实现。
@@ -81,7 +81,7 @@ $\tilde w $表示同步后的模型，$N$为Worker总数。则：
 \end{equation}
 基于BSP的并行训练的算法描述如算法\ref{alg:bsp}所示。
 
-\begin{algorithm}
+\begin{algorithm} \song
 \label{alg:bsp}
 \caption{BSP模型平均}
 \begin{algorithmic}
@@ -192,7 +192,7 @@ $\lambda$比较小时，正则因子越小，Worker倾向于在当前Server模�
 $\alpha$控制模型的更新步长。
 
 本文实现并使用异步的EASGD，该算法描述如算法\ref{alg:easgd}所示：
-\begin{algorithm}
+\begin{algorithm} \song
 \label{alg:easgd}
 \caption{异步EASGD}
 \begin{algorithmic}
@@ -240,7 +240,7 @@ w_i = \tilde w
 \tilde w = \tilde w - \eta \nabla {{\tilde w}_t}
 \end{equation}
 
-\begin{algorithm}
+\begin{algorithm} \song
 \label{alg:bmuf}
 \caption{BMUF}
 \begin{algorithmic}
@@ -271,7 +271,7 @@ BSP中直接取模型平均作为新的模型，而BMUF中则根据梯度进行�
 \begin{enumerate}
 \item BMUF是全局同步的方法，每一次更新之后，所有的Worker均使用相同的初始模型；
 \item BMUF的差分中引入类似SGD学习中的冲量，而冲量可以加速模型的收敛。
-\end{enumerate} 
+\end{enumerate}
 
 \section{实验}
 
@@ -292,12 +292,12 @@ GMM-HMM系统使用39维的MFCC特征，所有深度神经网络均使用40维FB
 
 使用的CLDNN基本结构中含有1层CNN，2层的DNN和2层的LSTM。
 其中CNN中使用40维Fbank特征，不使用差分特征，左右各拼5帧，共440维输入特征，
-CNN的卷积层使用128个滤波器，其中滤波器大小为$11×9$，滤波器步移为1，Max Pooling层的步长为4，步移为4，CNN的输出为1024维；
+CNN的卷积层使用128个滤波器，其中滤波器大小为$11 \times 9$，滤波器步移为1，Max Pooling层的步长为4，步移为4，CNN的输出为1024维；
 DNN隐层节点为1024；LSTM同样使用LSTMP结构，其中Cell 1024，Projection 512。
 CLDNN中的CNN和DNN中使用Sigmoid作为激活函数，同样，CLDNN的相邻层之间使用Batch Normalization做输入归一化。
 CLDNN采用跳帧训练，跳帧设置为3帧跳1帧。
 CLDNN采用多流训练（即多句话同时训练），每个batch中含有128个流，LSTM的BPTT（Back Propagation Through Time）误差仅往后传20个时刻，所以
-batchsize为$128×20 = 2560$。
+batchsize为$128 \times 20 = 2560$。
 
 在DNN和CLDNN的并行训练中，起始训练时均使用单卡第一轮训练的模型作为初始模型，以防止随机初始化造成并行训练难以收敛的问题。
 
@@ -313,7 +313,7 @@ BMUF中学习率$\eta=1.0$，冲量$\varepsilon=0.75$。
 
 \subsection{同步周期}
 
-5600 12800 
+5600 12800
 
 \subsection{GPU数目}
 

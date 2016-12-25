@@ -1,7 +1,5 @@
-% !Mode:: "TeX:UTF-8"
-
-
-
+% !Mode:: "TeX:UTF-8" 
+ 
 \theoremstyle{plain}
 \theorembodyfont{\song\rmfamily}
 \theoremheaderfont{\hei\rmfamily}
@@ -35,7 +33,7 @@
   \fi
   }
 
-\CJKcaption{gb_452}
+\CJKcaption{gb_452} 
 %!%\CJKtilde
 \setlength{\parindent}{2em}
 
@@ -90,11 +88,11 @@
 \ifxueweidoctor
   \fancyhead[CO]{\song \xiaowu\leftmark}
   \fancyhead[CE]{\song \xiaowu 西北工业大学\cxueke\cxuewei 学位论文 }%
-  \fancyfoot[C,C]{\xiaowu ~\thepage~}
+  \fancyfoot[C,C]{\xiaowu -~\thepage~-}
 \else
-  \fancyhead[CO]{\song \xiaowu\leftmark}
+  \fancyhead[CO]{\song \xiaowu 西北工业大学\cxueke\cxuewei 学位论文}
   \fancyhead[CE]{\song \xiaowu 西北工业大学\cxueke\cxuewei 学位论文}%
-  \fancyfoot[C,C]{\xiaowu ~\thepage~}
+  \fancyfoot[C,C]{\xiaowu -~\thepage~-}
 \fi
 
 \renewcommand\frontmatter{\cleardoublepage
@@ -106,20 +104,15 @@
 \setenumerate{leftmargin=3em,itemsep=0em,partopsep=0em,parsep=0em,topsep=0em}
 
 \newcommand{\citeup}[1]{\textsuperscript{\cite{#1}}}
-\newcommand{\ucite}[1]{\textsuperscript{\cite{#1}}}
 
 % 定制浮动图形和表格标题样式
-\captionnamefont{\wuhao\song}
-\captiontitlefont{\wuhao\song}
+\captionnamefont{\wuhao}
+\captiontitlefont{\wuhao}
 \captiondelim{~~}
 \captionstyle{\centering}
 \renewcommand{\subcapsize}{\wuhao}
-\renewcommand{\subcapfont}{\song}
-\renewcommand{\small}{\wuhao\song}
 \setlength{\abovecaptionskip}{0pt}
 \setlength{\belowcaptionskip}{0pt}
-
-
 
 % 自定义项目列表标签及格式 \begin{publist} 列表项 \end{publist}
 \newcounter{pubctr} %自定义新计数器
@@ -141,15 +134,15 @@
 % 默认字体
 \renewcommand\normalsize{
   \@setfontsize\normalsize{12pt}{12pt}
-  \setlength\abovedisplayskip{12pt}
-  \setlength\abovedisplayshortskip{12pt}
+  \setlength\abovedisplayskip{4pt}
+  \setlength\abovedisplayshortskip{4pt}
   \setlength\belowdisplayskip{\abovedisplayskip}
   \setlength\belowdisplayshortskip{\abovedisplayshortskip}
   \let\@listi\@listI}
-
+  
 % 设置行距和段落间垂直距离
 \def\defaultfont{\renewcommand{\baselinestretch}{1.62}\normalsize\selectfont}
-\renewcommand{\CJKglue}{\hskip 0.56pt plus 0.08\baselineskip}
+\renewcommand{\CJKglue}{\hskip 0.56pt plus 0.08\baselineskip} 
 %加大字间距，使每行34个字，若要使得每行33个字，则将0.56pt替换为0.96pt。
 \predisplaypenalty=0  %公式之前可以换页，公式出现在页面顶部
 
@@ -203,64 +196,49 @@
           \end{tabular}
         }
       \end{minipage}
-
-      \begin{picture}(1,1)(0, 580)
-        \put(60, 292){\line(1,0){360}}
-        \put(60, 246){\line(1,0){360}}
-        \put(170, 178){\line(1,0){120}}
-        \put(130, 88){\line(1,0){250}}
-        \put(130, 48){\line(1,0){250}}
-        \put(130, 8){\line(1,0){250}}
-         %\put(130, 581){\line(1,0){700}}
-        % \put(130, 492){\line(1,0){700}}
-        % \put(340, 355){\line(1,0){220}}
-        % \put(250, 203){\line(1,0){520}}
-        % \put(250, 125){\line(1,0){520}}
-        % \put(250, 50){\line(1,0){520}}
-      \end{picture}
-
+    
       \begin{center}
         \vspace*{8.4cm}
         \begin{tabular}{p{2.1cm}p{12cm}}
-           \yihao\song\bfseries ~\hfill 题目 \hfill~ & \fontsize{22pt}{1.85\baselineskip}\selectfont\hei\@ctitle \\
+           \yihao\hei\bf ~\hfill 题目 \hfill~ & \fontsize{22pt}{1.85\baselineskip}\selectfont\hei\@ctitle \\
         \end{tabular}
 
         \vspace*{1.5cm}
         \begin{tabular}{p{1.3cm}p{3.5cm}}
-          \sanhao\kai\bfseries ~\hfill 作者 \hfill~ & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@cauthor\hfill~ \\
+          \sanhao\hei\bf ~\hfill 作者 \hfill~ & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@cauthor\hfill~ \\
         \end{tabular}
 
         \vspace*{2.3cm}
         \begin{tabular}{p{3.4cm}p{8.7cm}}
-          \xiaosan\fs\bfseries 学\hfill 科、\hfill 专\hfill 业 & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csubject\hfill~ \\
+          \xiaosan\hei\bf 学\hfill 科、\hfill 专\hfill 业 & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csubject\hfill~ \\
         \end{tabular}
 
         \vspace*{0.7cm}
         \begin{tabular}{p{3.4cm}p{8.7cm}}
-          \xiaosan\fs\bfseries 指\hfill 导\hfill 教\hfill 师   & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csupervisor\hfill~ \\
+          \xiaosan\hei\bf 指\hfill 导\hfill 教\hfill 师   & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csupervisor\hfill~ \\
         \end{tabular}
 
         \vspace*{0.7cm}
         \begin{tabular}{p{3.4cm}p{8.7cm}}
-          \xiaosan\fs\bfseries 申\hfill 请\hfill 学\hfill 位\hfill 日\hfill 期 & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@cdate\hfill~ \\
+          \xiaosan\hei\bf 申\hfill 请\hfill 学\hfill 位\hfill 日\hfill 期 & ~\hfill\fontsize{16pt}{1.5\baselineskip}\selectfont\song\@cdate\hfill~ \\
         \end{tabular}
       \end{center}
 
-      %\begin{picture}(1,1)(0, 0)
-%        \put(60, 292){\line(1,0){360}}
-%        \put(60, 246){\line(1,0){360}}
-%        \put(170, 178){\line(1,0){120}}
-%        \put(130, 100){\line(1,0){250}}
-%        \put(130, 60){\line(1,0){250}}
-%        \put(130, 20){\line(1,0){250}}
-         %\put(130, 581){\line(1,0){700}}
+      \begin{picture}(1,1)(0, 0)
+        \put(60, 292){\line(1,0){360}}
+        \put(60, 246){\line(1,0){360}}
+        \put(170, 178){\line(1,0){120}}
+        \put(130, 100){\line(1,0){250}}
+        \put(130, 60){\line(1,0){250}}
+        \put(130, 20){\line(1,0){250}}
+        % \put(130, 581){\line(1,0){700}}
         % \put(130, 492){\line(1,0){700}}
-        % \put(340, 355){\line(1,0){220}}
+        % \put(340, 355){\line(1,0){220}}      
         % \put(250, 203){\line(1,0){520}}
         % \put(250, 125){\line(1,0){520}}
         % \put(250, 50){\line(1,0){520}}
-      %\end{picture}
-
+      \end{picture}
+    
       % 封二 空白页
       \ifxueweidoctor
         \newpage
@@ -274,7 +252,7 @@
       \begin{center}
         \vspace*{1.6cm}
         \sanhao\song 西~~北~~工~~业~~大~~学
-
+      
         \vspace*{0.25cm}
         \yihao\song\xueweishort ~~士~~学~~位~~论~~文
 
@@ -287,18 +265,18 @@
         \end{tabular}
 
         \vspace*{4.0cm}
-        \begin{tabular}{p{2.58cm}p{6.2cm}}
+        \begin{tabular}{p{2.43cm}p{6.2cm}}
           \sanhao\song 作 \hfill 者： & ~\hfill \fontsize{16pt}{1.5\baselineskip}\selectfont\song\@cauthor \hfill~\\
         \end{tabular}
 
         \vspace*{0.4cm}
-        \begin{tabular}{p{2.58cm}p{6.2cm}}
-          \sanhao\song 学科专业： & ~\hfill \fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csubject \hfill~\\
+        \begin{tabular}{p{2.43cm}p{6.2cm}}
+          \sanhao\song 学 \hfill 科 \hfill 专 \hfill 业： & ~\hfill \fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csubject \hfill~\\
         \end{tabular}
 
         \vspace*{0.4cm}
-        \begin{tabular}{p{2.58cm}p{6.2cm}}
-          \sanhao\song 指导教师： & ~\hfill \fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csupervisor \hfill~\\
+        \begin{tabular}{p{2.43cm}p{6.2cm}}
+          \sanhao\song 指 \hfill 导 \hfill 教 \hfill 师： & ~\hfill \fontsize{16pt}{1.5\baselineskip}\selectfont\song\@csupervisor \hfill~\\
         \end{tabular}
 
         \vspace*{1.65cm}
@@ -311,8 +289,8 @@
         \put(180, 123){\line(1,0){180}}
         \put(180, 93){\line(1,0){180}}
         % \put(255, 650){\line(1,0){545}}
-        % \put(255, 580){\line(1,0){545}}
-        % \put(360, 315){\line(1,0){355}}
+        % \put(255, 580){\line(1,0){545}}      
+        % \put(360, 315){\line(1,0){355}}      
         % \put(360, 250){\line(1,0){355}}
         % \put(360, 185){\line(1,0){355}}
       \end{picture}
@@ -324,7 +302,7 @@
     \thispagestyle{empty}
   \fi
 
-    % 英文封面
+    % 英文封面 
     \newpage
     \thispagestyle{empty}
     % {
@@ -340,18 +318,18 @@
       \vspace*{0.70cm} {\xiaosan\bf Under the Supervision of Professor}
 
       \vspace*{0.15cm} {\xiaosan\bf \@esupervisor}
-
+ 
       \vspace*{3.00cm} {\xiaosan A Dissertation Submitted to}
 
-      \vspace*{0.15cm} {\xiaosan Northwestern Polytechnical University}
+      \vspace*{0.15cm} {\xiaosan ~~~~~~~~}      
 
       \vspace*{0.90cm} {\xiaosan In partial fulfillment of the requirement}
 
       \vspace*{0.15cm} {\xiaosan For the degree of}
 
-      \vspace*{0.15cm} {\xiaosan Master of \bf \xueke}
+      \vspace*{0.15cm} {\xiaosan Doctor of \bf \xueke}
 
-      \vspace*{2.90cm} {\xiaosan Xi'an P. R. China}
+      \vspace*{2.90cm} {\xiaosan ~~~~~~~}
 
       \vspace*{0.14cm} {\xiaosan \@edate}
     \end{center}
@@ -382,7 +360,7 @@
 %   ~~~\vspace{1em}
 %   \thispagestyle{empty}
 % \fi
-
+    
 %%%%%%%%%%%%%%%%%%%   English Abstract  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 
@@ -423,4 +401,3 @@
 \renewcommand\endtable{\vspace{-4mm}\end@float}
 
 \makeatother
-

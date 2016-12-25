@@ -16,17 +16,16 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
 
 本章介绍基于HMM-GMM的语音识别的基本原理。
 
-\newtheorem{definition}{\hspace{2em}\textbf{定义}}[section]
+%\newtheorem{definition}{\textbf{定义}}[section]
 %\newtheorem{algorithm}{\hspace{2em}\textbf{算法}}[section]
 %
 \section{隐马尔科夫模型的概念}
 
     \begin{definition}[隐马尔科夫模型]
-    隐马尔科夫模型是关于时序的概率模型，描述由一个隐藏的马尔科夫链随机生成不可观测的状态序列，再由各个状态生成
+    \song 隐马尔科夫模型是关于时序的概率模型，描述由一个隐藏的马尔科夫链随机生成不可观测的状态序列，再由各个状态生成
     一个观测而产生观测序列的过程。隐藏的马尔科夫链随机生成的状态的序列，称为状态序列（State Sequence）；每个状态
     生成一个观测，而由此产生的观测的随机序列，称为观测序列（Observation Sequence）。
     \end{definition}
-
 
     隐马尔科夫模型由初始概率分布，状态转移概率分布以及观测概率分布确定，隐马尔科夫模型的形式定义如下：
 
@@ -78,7 +77,6 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
     综合确定了如何产生观测序列。
 
     从定义可知，隐马尔科夫模型做了两个基本的假设：
-    \vspace{-10pt}
     \begin{enumerate}
     	\item 齐次马尔科夫性假设，即假设隐藏的马尔科夫链在任意时刻$t$的状态只依赖于前一时刻的状态，与其他时刻的状态与观测无关，也与时刻$t$无关。
             \begin{equation}
@@ -89,11 +87,9 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
             P({o_t}|{t_T},{o_{T,}} \cdots ,{i_t},{o_t}, \cdots ,{i_1},{o_1}) = P({o_t}|{i_t})
             \end{equation}
     \end{enumerate}
-    \vspace{-10pt}
 
 \section{HMM的三个基本问题}
     隐马尔科夫模型有3个基本问题：
-    \vspace{-10pt}
     \begin{enumerate}
         \item 概率计算问题。给定模型$\lambda  = \left( {A,B,\pi } \right)$和观测序列$O = ({o_1},{o_2},\cdots,{o_T})$，计算在模型$\lambda$下观测
             序列$O$出现的概率$P(O|\lambda )$。
@@ -102,13 +98,12 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
         \item 预测问题，也称解码问题。已知模型$\lambda  = \left( {A,B,\pi } \right)$和观测序列$O = ({o_1},{o_2},\cdots,{o_T})$，求对给定观测序列
             条件概率$P(I|O)$最大的状态序列$I = ({i_1},{i_2},\cdots,{i_T})$。即给定观测序列，求最有可能的对应状态序列。
     \end{enumerate}
-    \vspace{-10pt}
 
     \subsection{概率问题}\label{section:probability}
     本节介绍计算观测序列概率$P(O|\lambda )$的前向算法与后向算法，为方便后面计算学习问题，结合前向后向算法，本节第三小节定相关数学符号。
         \subsubsection{前向算法}
         \begin{definition}[前向算法]
-            给定隐马尔科夫模型$\lambda$，定义到时刻$t$部分观测序列为$({o_1},{o_2},\cdots,{o_T})$且状态为$q_i$的概率为前向概率，记作
+        \song 给定隐马尔科夫模型$\lambda$，定义到时刻$t$部分观测序列为$({o_1},{o_2},\cdots,{o_T})$且状态为$q_i$的概率为前向概率，记作
             \begin{equation}
             {\alpha _t}(i) = P({o_1},{o_2}, \cdots {o_t},{i_t} = {q_i}|\lambda )
             \end{equation}
@@ -139,7 +134,7 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
 
         \subsubsection{后向算法}
         \begin{definition}[后向算法]
-         给定隐马尔科夫模型$\lambda$，定义在时刻$t$状态为$q_i$的条件下，从$t+1$到$T$的部分观测序列为$({o_{t+1}},{o_{t+2}},\cdots,{o_T})$的概率为后向概率，记作
+        \song 给定隐马尔科夫模型$\lambda$，定义在时刻$t$状态为$q_i$的条件下，从$t+1$到$T$的部分观测序列为$({o_{t+1}},{o_{t+2}},\cdots,{o_T})$的概率为后向概率，记作
              \begin{equation}
                  {\beta _t}(i) = P({o_{t + 1}},{o_{t + 2}}, \cdots ,{o_T}|{i_t} = {q_i},\lambda )
              \end{equation}

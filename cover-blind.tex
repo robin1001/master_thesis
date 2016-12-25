@@ -1,0 +1,68 @@
+% !Mode:: "TeX:UTF-8"
+
+\newcommand{\chinesethesistitle}{ 基于深度学习的运动目标检测与跟踪研究} %授权书用，无需断行
+\newcommand{\englishthesistitle}{\uppercase{Visual Object Detection and Tracking based on Deep Learning Technology}} %\uppercase作用：将英文标题字母全部大写；
+\newcommand{\chinesethesistime}{2016~年~3~月}  %封面底部的日期中文形式
+\newcommand{\englishthesistime}{March 2016}    %封面底部的日期英文形式
+
+\ctitle{基于深度学习的运动目标检测与跟踪研究}  %封面用论文标题，自己可手动断行
+\cdegree{\cxueke\cxuewei}
+\csubject{计算机科学与技术}                 %(~按二级学科填写~)
+\caffil{~~~} %（在校生填所在系名称，同等学力人员填工作单位）
+\cauthor{~~~}
+\studentnum{~~~}
+\csupervisor{~~~} %导师名字
+%\cassosupervisor{谢磊~教授}%若没有，请屏蔽掉此句。
+%\ccosupervisor{联导名}%若没有，请屏蔽掉此句。
+\cdate{\chinesethesistime}
+\etitle{\englishthesistitle}
+\edegree{\exuewei \ of \exueke}
+\esubject{Computer Science and Technology}  %英文二级学科名
+\eaffil{~~~}
+\eauthor{~~~}                   %作者姓名 （英文）
+\esupervisor{~~~}       % 导师姓名 （英文）
+%\eassosupervisor{Prof. Assosuper}%若没有，请屏蔽掉此句。
+%\ecosupervisor{Prof. Cosuper}%若没有，请屏蔽掉此句。
+\edate{\englishthesistime}
+\natclassifiedindex{TM301.2}  %国内图书分类号
+\internatclassifiedindex{62-5}  %国际图书分类号
+\statesecrets{公开} %秘密
+\iffalse
+  \BiAppendixChapter{摘~~~~要}{}  %使用winedt编辑时文档结构图（toc）中为了显示摘要，故增加此句；
+\fi
+
+\cabstract{目标跟踪是机器视觉领域中一项非常传统也是极具挑战性的任务。对于一个具有丰富外观信息的跟踪目标来说，其外观模型的优劣对于目标的准确跟踪具有非常关键的作用。针对于一个非特定目标，由于无法使用一些特定的先验知识，目标的外观建模往往不能准确地刻画目标，并且难以捕捉学习到各种场景下复杂的外观变化。近年来，深度学习技术及其一些相关的神经网络模型在层级特征学习上表现出了强大的学习能力，并且已经在图片分类、目标识别和场景理解等任务中取得了重大成果。考虑到深度网络模型强大的层级特征学习能力，本文主要研究了基于深度学习的运动目标检测与跟踪问题。借助几种深度网络模型的特征学习能力，本文对非特定跟踪目标进行了细致的外观建模，在精确刻画目标外观的同时通过在线更新来捕捉复杂场景下的目标外观变化。此外，针对没有显著外观信息的小目标，本文秉承了深度学习的层级处理思想，综合使用局部和全局的约束信息来对小目标的轨迹进行鲁棒估计。
+
+%在训练学习问题被解决之后，深层神经网络被广泛使用在语音识别、机器视觉等各项任务中，并被证明具有优良的层级特征学习能力。相比于传统手工设计的特征算子，通过无监督预训练得到的层级特征是完全由数据驱动学习得到的，除了具有性质优良的层级抽象性能，并且与特定任务特定目标没有直接依赖关系。有鉴于此，本文提出了一个使用层叠降噪自编码器在大数据上离线无监督地学习到一个通用的层级图像特征表示，并用于粒子滤波器框架下的目标外观模型。通过深层网络结构学习到的层级特征表示的每一层具有不同程度的特征抽象度，而哪一层特征更加适合于不同场景下的目标描述这个问题尚没有确切的答案。为了尽可能的综合使用各层的抽象特征表示，本文采用了基于AdaBoost算法的在线融合深度层级特征的方法用于在线建模目标的外观。本文的方法提供了一种综合使用多级抽象特征的方法，并在各种具有挑战性的跟踪测试集上获得了鲁棒的跟踪性能。
+
+在训练学习问题被解决之后，深层神经网络被广泛使用在语音识别、机器视觉等各项任务中，并被证明具有优良的层级特征学习能力。相比于传统手工设计的特征算子，通过无监督预训练得到的层级特征是完全由数据驱动学习得到的，除了具有性质优良的层级抽象性能，并且与特定任务特定目标没有直接依赖关系。有鉴于此，本文基于深度学习中的迁移学习理论，使用层叠降噪自编码器以无监督方法在大量辅助数据中离线地学习到一个通用的层级图像特征表示，并通过精调训练以建模刻画各类不同跟踪目标的外观特性。通过深层网络结构学习到的层级特征表示的每一层具有不同程度的特征抽象度，而哪一层特征更加适合于不同场景下的目标描述这个问题尚没有确切的答案。为了尽可能的综合运用各层的抽象特征表示，本文提出了基于AdaBoost算法的在线融合深度层级特征的方法用于在线建模目标的外观。本文方法提供了一个综合使用不同层级图像特征的具有良好扩展性的框架，并在各种具有挑战性的公开测试集上获得了较为鲁棒的跟踪性能。
+
+%相比于前馈神经网络，卷积神经网络所具备的卷积和池化操作在处理图像数据方法具有得天独厚的优势。各种基于卷积神经网络的方法已经被应用于图像处理和机器视觉的多个任务中，并取得了优良的性能，证明了卷积神经网络对于图像数据比前馈神经网络具有更好的特征学习能力。因此，本文提出了一个基于多层卷积网络进行外观建模的在线目标跟踪方法。为了解决卷积神经网络在小数据集在线任务中出现的易过拟合以及对噪声训练样本敏感等问题，本文针对粒子后验分布采用了一个基于Metropolis-Hastings算法的粒子重采样方法。该方法不但通过重采样过程获得了更为鲁棒的粒子后验分布，并且据此提取出了一些列具有高可行度和针对性的训练样本以供训练出更鲁棒的卷积神经网络模型。本文方法在各个数据集上相比之前的一些经典目标跟踪方法有较大的性能提升。
+相比于前馈神经网络，卷积神经网络所具备的卷积和池化操作在处理图像数据方法具有得天独厚的优势。各种基于卷积神经网络的方法已经被应用于图像处理和机器视觉的多个任务中，并取得了优良的性能，证明了卷积神经网络对于图像数据比前馈神经网络具有更好的特征学习能力。此外，离线的预学习过程大大限制了在线目标跟踪系统实用性。有鉴于此，本文研究了如何将深层卷积神经网络应用到基于小样本集的在线目标跟踪系统中的外观建模任务。虽然深层卷积神经网络在各种大图片、多数据量的离线任务中取得了巨大成功，但直接将其在应用于在线小训练数据集上的学习任务时，网络很容易出现过拟合，且对低可靠度的训练样本较为敏感。为了解决这些问题，针对于粒子滤波器的粒子演化过程，本文提出了一个基于Metropolis-Hastings算法的粒子重采样方法，并通过一个自顶至底的广度优先分割算法来实现。该重采样不仅可以得到更为鲁棒的粒子后验分布，而且有助于提取一系列具有高可信度和针对性的训练样本，以供训练出更加鲁棒的卷积神经网络模型。本文方法在各种测试数据集上相比之前的一些经典目标跟踪方法有较大的性能提升。
+
+%前馈神经网络和卷积神经网络的主要优势在于层级特征的学习，与其不同的是，递归神经网络的主要优势在于学习上下文依赖关系，是一个强大的序列建模工具。在长短时记忆单元（LSTM）解决了递归神经网络训练过程中的梯度消失问题之后，基于LSTM的递归神经网络在诸如手写识别、语音转换和场景理解等需要建模上下文信息的任务中展现出了巨大的学习潜力。本文提出了借助于一个双向LSTM递归神经网络（BLSTM-RNN）将目标跟踪任务转化为一个序列标注问题。通过将目标区域划分为一系列具有语义的子块序列表示形式，本文明确地建立起子块间的空间上下文关系。通过一个BLSTM-RNN模型对子块序列内潜在的上下文约束关系的学习，本文得到了一个可以输出丰富标注信息的外观模型。通过输出的标注信息，本文分别采用了一个鲁棒的目标位置估计方法和一个启发式的在线模型更新策略。本文方法不仅提供了一种解决目标跟踪任务的新思路，并且在公开测试平台上达到了与当前最新的一些跟踪方法相当的性能。
+就目标外观建模问题而言，同优良的图像特征算子一样，图像的空间上下文依赖关系对于目标外观的刻画理解同样具有重要的作用，不应当在特征提取过程中被轻易丢弃。前馈神经网络和卷积神经网络的主要优势在于层级特征的学习，但对于目标图像区域的空间上下文关系没有给予足够的重视。与其不同的是，递归神经网络作为一个强大的序列建模工具，其主要优势在于能够学习序列中隐含的上下文依赖关系。特别地，在长短时记忆单元（LSTM）解决了递归神经网络训练过程中的梯度消失问题之后，基于LSTM的递归神经网络在如手写识别、语音转换和场景理解等需要建模上下文关系的一系列任务中展现出了巨大的学习能力。有鉴于此，本文研究了如何在提取层级图像特征的同时，使用递归神经网络模型来建模出目标区域的上下文依赖关系。通过将目标矩形边界框区域表示成若干具有方位语义意义的子块组成序列形式，本文提出了一个使用双向长短时记忆单元的递归神经网络模型(BLSTM-RNN)将在线目标跟踪任务转化一个序列标注问题的目标跟踪方法。通过BLSTM-RNN模型对子块序列中潜在的上下文约束关系的学习，本文得到了一个带有丰富标注信息的外观模型。通过这些标注信息，本文分别采用了一个鲁棒的目标位置估计方法和一个启发式的在线模型更新策略。本文方法不仅提供了一种解决目标跟踪任务的不同思路，并且在公开测试平台上达到了与当前最新的一些跟踪方法相当的性能。
+
+在小目标跟踪任务中，由于目标所占据的描述像素数量很少，目标几乎没有丰富的外观信息以供建模使用。在此场景下，以强大特征学习能力见长的各种深度网络模型无法被用于构建外观模型。然而，包括深度学习在内诸多研究所采用的层级处理思想同样可以被应用于无显著外观信息的小目标跟踪任务中。一直以来，小目标跟踪任务都被处理成一个数据关联问题，即从含有真实目标的大量虚假目标中找到一组对应关联关系以作为目标的最终轨迹。针对混乱背景下的小目标跟踪任务，本文提出了一个层级的数据关联方法用于鲁棒估计小目标的运动轨迹，并成功应用在网球比赛中的网球轨迹跟踪。本文提出的层级数据关联方法包含有两个层级处理阶段，分别用于使用局部和全局的轨迹约束关系来获得最终鲁棒的目标轨迹。此外针对小目标跟踪任务中频繁出现的短时和长时失检测问题，本文还分别从局部和全局角度进行了研究和解决。本文方法针对网球轨迹跟踪任务在真实比赛视频上的测试结果要优于一些当前流行的数据关联方法，并且在准确率和召回率之间做出了较好的折中。
+
+%在一些没有丰富外观信息可供利用的小目标跟踪任务中，以特征学习能力出众闻名的各种深度网络模型无法被用于构建外观模型。不过，深度学习所采用的层级处理思想同样可以被应用于无显著外观信息的小目标跟踪任务中。因此，本文针对混乱背景下的小目标跟踪任务提出了一个层级的数据关联方法用于鲁棒估计小目标的运动轨迹。在局部层级阶段，本文采用了一个滑动窗口下的令牌传递算法来提取出一系列符合局部运动模型的优良候选轨迹片段；在全局层级阶段，本文采用了一个基于加权有向无环图所定义的全局约束的轨迹片段拼接方法来得到最终的目标轨迹结果。本文方法对于复杂场景下小目标经常会出现的短时或长时失检测问题具有很好的鲁棒性。该方法针对网球轨迹跟踪在真实比赛视频上的测试结果要优于一些当前流行的数据关联方法，并且在准确率和召回率之间做出了较好的折中。
+}
+\ckeywords{目标跟踪，外观模型，深度学习，深度神经网络，特征学习} %最后一个关键词后面没有标点符号
+
+\eabstract{Online object tracking is a very traditional and challenging task in computer vision field. For a target object with abundant appearance information, a well-leant appearance plays an important role to improve the overall performance of a object tracking method. To a generic object, due to that we can not employ any useful prior knowledge, a general appearance model may not precisely depict the appearance of one specific object, and may not adapt itself to appearance changes very well under various circumstances along time. In recent years, deep learning techniques and many related deep neural networks have been shown attractive ability of hierarchical feature learning, and have obtain grate achievements in computer vision tasks, like image classification, object recognition and scene understanding. Inspired by the powerful ability of feature learning, my work of this dissertation mainly focus on applying deep learning models to handle object tracking task. With the aid of several deep neural networks, we attempt to deal with the appearance modeling problem for a generic object, and learn the appearance variations in different environments as much as possible. Besides, inspired by the idea of hierarchical processing of deep learning, we propose a layered data association method to address the trajectory estimation problem of little objects without significant appearance information. %In this method we jointly exploit the local and global constraints to achieve a robust trajectory.
+
+Since the training problem has been solved, deep neural networks have been widely applied to many machine learning tasks ranging from speech recognition to computer vision. Deep neural networks have been confirmed that they have outstanding feature learning ability. Compared to some traditional handcraft feature descriptors, hierarchical features learned by unsupervised pre-trained deep models are completely data-driven and learnable. Apart of that, these features are almost independent to specific tasks, and can be shared and reused. Given that fact we propose a deep neural network based appearance model which unsupervised learned from a stacked denoising autoencoder (SDAE) over a large amount of auxiliary image data. Each layer of the SDAE represents a kind of feature abstraction and the question of which layer's feature is most suitable for appearance modeling in different environments is still open. Then we propose an AdaBoost based online feature selection framework to fusing features of different layers. Our method provides a feasible way to exploit the hierarchical deep features and gains a promising performance on challenging video sequences.
+
+Contrast to fully connected feed-forward neural networks, convolutional neural networks (CNNs) have more advantages in nature. The great success of CNNs in computer vision tasks turns out to have better feature ability then feed-forward networks on image processing. Then, we propose a multi-layer CNNs based appearance model to facilitate online object tracking. When straightforward applying CNNs to online system with small training set, they are prone to overfitting and sensitive to unreliable training samples. To deal with this problem, we propose a particle posterior re-sampling method based on Metropolis-Hastings algorithm. The proposed method can not only reshape a more robust particle posterior, but also provide a novel sample acquisition to get a set of more reliable training samples. Our tracking method has significantly improved the tracking performance over an open benchmark.
+
+Unlike DNNs and CNNs, recurrent neural network (RNN) shows their superiority on learning contextual dependencies, and is a powerful sequence modeling tool. When the gradient vanishing problem has been solved by long short-term memory (LSTM) cells, LSTM based recurrent neural network has shown great potential in those tasks that contextual information is essential, like handwriting recognition, voice conversion and scene understanding. In our work, we address the object tracking task as a sequence labeling problem via a bidirectional LSTM network (BLSTM-RNN). We represent the target object with a sequence of semantic sub-patches which imply the underlying spatial contextual relationship. The BLSTM-RNN model can produce much informative labeling results, based on which we build a robust object position estimation method and a heuristic model updating strategy. Our method provides a novel way to handle object tracking task with recurrent neural networks, and shows competitive performance against several lasted tracking methods. 
+
+On the tracking of little objects without significant appearance, deep models which are known for their outstanding ability of feature learning can not be straightforward applied to build appearance model. However, we are really inspired by the idea of hierarchical processing from deep learning methods. In our work, we also propose a layered data association method for robust estimating little objects' trajectory in clutter. In the local processing layer, we propose a shift token passing to generate some trajectorylets which well confirm to local motion model constraints. And in the global layer, a weighted direct acyclic graph based trajectorylets splicing algorithm is proposed to search for an optimal splicing path serving as the final trajectory. Our method has been used for tennis ball tracking, and gains the best performance against several state-of-the-art methods over two real tennis game videos. The proposed method makes a better tradeoff between accuracy and recall rate.
+
+}
+%Externally pressurized gas bearing has been widely used in the field of aviation, semiconductor, weave, and measurement apparatus because of its advantage of high accuracy, little friction, low heat distortion, long life-span, and no pollution. In this thesis, based on the domestic and overseas researching.
+
+\ekeywords{object tracking; appearance model; deep learning; deep neural networks; feature learning} %(no punctuation at the end) 英文摘要与中文摘要的内容应一致，在语法、用词上应准确无误
+
+\makecover
+%\clearpage
