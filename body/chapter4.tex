@@ -504,7 +504,7 @@ CD-Phone的个数可以通过阈值调整，本节中最终的CD-Phone的聚类�
 基于Phone的CTC的效果已经与CD-States CLDNN的效果相当（相差0.1个百分点即认为是模型浮动），并且基于Phone的模型中由于输出层更小，
 其参数比CD-State的CLDNN模型也要小一些。
 
- \begin{figure}[htbp]
+ \begin{figure}[t]
   \centering
   \subfigure[CE预测]{
     \label{fig:ce-predict} %% label for first subfigure
@@ -532,7 +532,7 @@ CTC的预测呈尖峰状，并且在大部分时刻上均输出blank，
 使用表\ref{table:ctc}以Phone为建模单元的CTC模型CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)为基础模型进行声学模型权重调节，
 得到表\ref{table:ctc}结果。
 
-\begin{table}[htbp]
+\begin{table}[t]
 \centering
 \caption{CTC声学模型权重调节}
 \fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
@@ -563,7 +563,7 @@ CTC的预测呈尖峰状，并且在大部分时刻上均输出blank，
 同样使用表\ref{table:ctc}以Phone为建模单元的CTC模型CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)为基础模型，
 经过该处理，得到表\ref{table:blank}的结果。
 
-\begin{table}[htbp]
+\begin{table}[t]
 \centering
 \caption{CTC blank打分调节}
 \fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
@@ -621,13 +621,6 @@ blank scale & CER           \\ \midrule
 对比该项，即可说明CTC在解码中的优势，其Peak预测特性可以更早的裁剪竞争路径，在更早的时间减小了搜索空间，
 这是CTC解码相对于CE解码的核心优势。
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.6\textwidth]{figures/chapter4/beam-crop}
-\caption{CTC和CE Beam对RTF影响}
-\label{fig:beam}
-\end{figure}
-
 更进一步，本节给出语音识别解码Beam Search的Beam设定对CE和CTC解码的影响。
 Beam是一个阈值，在语音识别解码中，
 假设某条竞争路径与目前最优路径的打分之差大于该阈值，则该竞争路径即被裁剪，以及时的减小搜索空间。
@@ -656,6 +649,13 @@ System                                                       & 参数量(M)     
 \label{table:ctcbeam}
 \end{table}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.6\textwidth]{figures/chapter4/beam-crop}
+\caption{CTC和CE Beam对RTF影响}
+\label{fig:beam}
+\end{figure}
+
 分析可知，CTC解码实时率受Beam影响较小，而普通CE模型解码实时率RTF则严重依赖于beam大小。
 因此，在CTC解码时，在保证RTF在可接受范围内的情况下，可以通过进一步放大Beam来提升模型精度。
 
@@ -664,9 +664,9 @@ System                                                       & 参数量(M)     
 在上述实验中，以CD-Phone为建模单元的声学模型并未取得理想的效果，期望的CD-Phone的模型效果应该优于Phone。
 根据CD-Phone的聚类原理，经分析可能的原因是数据量少CD-Phone聚类不够准确导致的。
 
-\begin{table}
+\begin{table}[htbp]
 \centering
-\caption{CTC解码实时率}
+\caption{2700h 口语数据集CTC声学模型}
 \fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
 \begin{tabularx}{\textwidth}{Ycc}
 \toprule

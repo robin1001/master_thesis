@@ -5,7 +5,7 @@
 \def \xueke{Engineering} % 定义学科 Engineering, Science, Management, Arts, Philosophy, Economics, Laws, Education, or History
 \def \os{Linux} % Windows
 
-\documentclass[cs4size,openany,twoside,UTF8, nofonts]{ctexbook}
+\documentclass[cs4size,twoside,UTF8,nofonts]{ctexbook}
 \input{setup/setfonts.tex} % 使用ctexbook类的nofonts选项，根据系统设置字体文件，否则会报错
 \input{setup/type.tex}     % 硕博类型
 \input{setup/package.tex}  % 引用的宏包
@@ -42,17 +42,12 @@
 \include{body/chapter3}
 \include{body/chapter4}
 \include{body/chapter5}
+\include{body/conclusion}
 
-%\include{body/equations}
-%\include{body/others}
-%\include{body/simplefigure}
-%\include{body/simpletable}
-%\include{body/simpleequation}
-%\include{body/simplereference}
 
 %% 参考文献
 \defaultfont
-\bibliographystyle{GBT7714-2005NLang-HIT}
+\bibliographystyle{ref/GBT7714-2005}
 \addcontentsline{toc}{chapter}{参考文献}              % 参考文献加入到中文目录
 \addcontentsline{toe}{chapter}{\bfseries References} % 参考文献加入到英文目录
 \addtolength{\bibsep}{-0.8em}
