@@ -303,6 +303,10 @@ batchsize为$128 \times 20 = 2560$。
 
 实验所用环境为刀片式服务器，64位Ubuntu系统，56核CPU，256G内存，该服务器共安装8块GPU卡，所有的GPU型号为GeForce GTX 1080。
 
+并行训练时采用折半学习率调整策略，即使用该学习率训练的模型在CV集上的损失不在下降或者下降不足千分之一时，
+将学习率折半，继续训练模型。当连续两次折半后，CV集上的损失均没有进一步收益时，则停止训练，即提前终止。
+为保证各种并行算法比较的合理性，实验中限定每种方法的最小训练轮数，在本实验中，设定最小训练轮数为15。
+
 \subsection{并行方法比较}
 
 本小节在4块GPU卡上进行实验，比较在4卡并行训练中4并行种方法的性能差异。
@@ -311,12 +315,126 @@ ASGD的全局同步周期为100，即每接收到Worker 100次请求时对所有
 EASGD中Server和Worker的更新步长$\alpha=0.25$；
 BMUF中学习率$\eta=1.0$，冲量$\varepsilon=0.75$。
 
-\subsection{同步周期}
+\begin{figure}[htb]
+  \centering
+  \subfigure[DNN并行CV集上交叉熵损失]{
+    \label{fig:parallel-dnn} %% label for first subfigure
+    \includegraphics[width=0.8\textwidth]{figures/chapter5/dnn-crop}}
+  \hspace{1in}
+  \subfigure[CLDNN并行CV集上交叉熵损失]{
+    \label{fig:parallel-cldnn} %% label for second subfigure
+    \includegraphics[width=0.8\textwidth]{figures/chapter5/cldnn-crop}}
+  \caption{并行算法实验现象对比}
+  \label{fig:parallel-cv} %% label for entire figure
+\end{figure}
 
-5600 12800
+图\ref{fig:parallel-cv}中给出训练时各种并行算法随着训练轮数增加在CV集上的损失变化，如上所述，
+分别给出在DNN和CLDNN两种模型上的损失变化。
+可以看出，在训练初期（特别是第一轮），四种并行算法在CV集上的损失均比单卡的要低，可能是由于多卡训练时多块GPU同时处理
+训练数据，训练数据的随机性更大，所以并行的模型在CV集上的损失要更好，而随着训练的进行，单卡SGD的损失则能持续平稳的下降，
+并最终超过其他并行方法，BSP、ASGD和EASGD在训练后期的收敛性均不及单卡。同时也注意到，BMUF的收敛性和SGD趋势很相近，
+说明BMUF算法更能接近单卡的性质。
 
-\subsection{GPU数目}
+\begin{table}[t]
+\centering
+\caption{aslp688 DNN并行}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{cYcYYc}
+\toprule
+编号 & 并行方式  & GPU数目 & CER           & 训练时间(min) & 加速比           \\ \midrule
+1  & SGD   & 1     & \textbf{9.19} & 280       & —             \\
+2  & BSP   & 4     & 10.09(9.79\%) & 76        & 3.68          \\
+3  & ASGD  & 4     & 9.56(-4.02\%) & 75        & \textbf{3.73} \\
+4  & EASGD & 4     & 9.74(-5.98\%) & 75        & \textbf{3.73} \\
+5  & BMUF  & 4     & 9.24(-0.54\%) & 80        & 3.50          \\ \bottomrule
+\end{tabularx}
+\label{table:parallel-dnn}
+\end{table}
 
-2卡 8卡
 
+\begin{table}[t]
+\centering
+\caption{aslp688 CLDNN并行}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{cYcYYc}
+\toprule
+编号 & 并行方式  & GPU数目 & CER           & 训练时间(min) & 加速比           \\ \midrule
+1  & SGD   & 1     & \textbf{8.14} & 120       & —             \\
+2  & BSP   & 4     & 8.50(-4.42\%) & 34        & 3.52          \\
+3  & ASGD  & 4     & 9.01(-10.6\%) & 32        & \textbf{3.75} \\
+4  & EASGD & 4     & 8.91(-9.45\%) & 33        & 3.63          \\
+5  & BMUF  & 4     & 8.27(-1.59\%) & 34        & 3.52          \\ \bottomrule
+\end{tabularx}
+\label{table:parallel-cldnn}
+\end{table}
+
+表\ref{table:parallel-dnn}和\ref{table:parallel-cldnn}给出各种并行算法在aslp688数据集上最终的实验结果，
+给出各种并行方法相对于单卡的模型精度损失（CER损失）和加速比。
+
+分析加速比可知，四种算法在该数据集上和该硬件环境下，均能取得3.5倍以上的加速比，相差并不是很大。
+主要是因为该环境为单机多卡，多卡之间的模型传输速度很快，主要时间均消耗在神经网络计算而非模型传输上，因此加速比差异并不是很大。
+但同样可以看到，BSP和BMUF的加速比要比ASGD和EASGD要略差一些，因为BSP和BMUP需要所有Worker进行模型同步，
+而在ASGD和EASGD中，每个Worker只需要单独和参数服务器Server进行交互，并不需要等待其他Worker。
+
+分析模型精度可知，BMUF在DNN和CLDNN的模型上均能取得最优的并行模型精度；BSP和EASGD在两中模型上均有较大的模型损失；
+ASGD在DNN上精度损失较小，但在CLDNN上模型损失较大，这与之前的实验结果和其他论文中的结果不相匹配，
+因此，进行需要进行一步调优。
+
+\subsection{ASGD调优}
+
+实验发现，ASGD对模型的初值比较敏感。
+因此使用不同轮数训练的单卡模型作为ASGD的初始模型，
+图\ref{fig:asgd-init}给出了使用不同模型作为初始模型时ASGD在CV集上的收敛性。
+表\ref{table:asgd-init}给出使用不同模型作为初始模型时ASGD最终的识别率实验结果。
+
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/chapter5/asgd-init-crop}
+\caption{初始模型对ASGD的影响}
+\label{fig:asgd-init}
+\end{figure}
+
+
+\begin{table}[t]
+\centering
+\caption{使用不同初始模型时ASGD的最终识别率}
+\fontsize{10.5pt}{10.5pt}\song \vspace{0.5em}
+\begin{tabularx}{\textwidth}{cYcY}
+\toprule
+编号         & 并行方式                  & GPU数目      & CER                    \\ \midrule
+\textbf{1} & \textbf{SGD}          & \textbf{1} & \textbf{8.14}          \\
+2          & ASGD\_iter01          & 4          & 9.01(-10.6\%)          \\
+3          & ASGD\_iter02          & 4          & 8.47(-3.89\%)          \\
+\textbf{4} & \textbf{ASGD\_iter03} & \textbf{4} & \textbf{8.26(-1.41\%)} \\ \bottomrule
+\end{tabularx}
+\label{table:asgd-init}
+\end{table}
+
+其中，ASGD\_iter0x表示使用第x轮单卡训练的模型作为ASGD训练的初始模型。
+
+可以得到，ASGD对初值模型比较敏感，使用不同的初始模型对模型的收敛性和最终效果影响很大。
+使用更好的初始模型（经过更多轮数的单卡训练）时，ASGD并行训练模型的收敛性更好。
+如图\ref{fig:asgd-init}所示，其在CV集上收敛性比使用较差的初始模型（经过较少的轮数的单卡训练），且CV值持续平稳下降，
+并可以训练更多的轮数，最终的模型效果也要更好。
+
+\subsection{并行训练总结}
+
+综合以上实验结果可以得到，在该实验的四种并行方法中，BSP和EASGD模型精度损失都比较大，
+因此不推荐使用这两种算法进行声学模型的并行训练。
+
+BMUF够取得了最优的模型精度。
+BMUF算法训练时的收敛趋势类似单卡SGD，具有较好的收敛性，
+并最终得到更优的模型。BMUF需要Worker之间进行同步，
+在各块GPU卡计算性能差别不大并且网络带宽足够的环境中，BMUF也同样可以取得不错的加速比。
+Worker之间的同步也保证BMUF算法在运行多次时可以得到一致的模型。
+
+同样ASGD也可以取得不错的模型精度，但需要更为精细的模型初始化。
+ASGD中，每个Worker均只单独和Server进行通讯，无需Worker之间进行同步等待，
+因此，ASGD的加速比更好，即使参与训练各块GPU卡性能不一致，也不会影响整体系统的加速性能。
+ASGD Worker无需同步的潜在缺点是该系统运行多次，Worker和Server交互顺序的不一致，
+可能会得到不一致的模型，不利于系统的跟踪、调试和分析。
+
+因此，在实际使用时，应该根据实际的硬件环境和算法需求，选择合适的并行算法。
 
