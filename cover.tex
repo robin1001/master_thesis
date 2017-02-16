@@ -3,7 +3,7 @@
 \newcommand{\chinesethesistitle}{基于CD-Phone和CTC的语音识别技术研究} %授权书用，无需断行
 \newcommand{\englishthesistitle}{\uppercase{CD-Phone and CTC based Speech Recognition}} %\uppercase作用：将英文标题字母全部大写；
 \newcommand{\chinesethesistime}{2017~年~3~月}  %封面底部的日期中文形式
-\newcommand{\englishthesistime}{March 2016}    %封面底部的日期英文形式
+\newcommand{\englishthesistime}{March 2017}    %封面底部的日期英文形式
 
 \ctitle{基于CD-Phone和CTC的语音识别技术研究}  %封面用论文标题，自己可手动断行
 \cdegree{\cxueke\cxuewei}
@@ -19,7 +19,7 @@
 \edegree{\exuewei \ of \exueke}
 \esubject{Computer Science and Technology}  %英文二级学科名
 \eaffil{School of Computer Science}
-\eauthor{Zhang Binbin}                   %作者姓名 （英文）
+\eauthor{Binbin Zhang}                   %作者姓名 （英文）
 \esupervisor{Prof. Lei Xie}       % 导师姓名 （英文）
 %\eassosupervisor{Prof. Assosuper}%若没有，请屏蔽掉此句。
 %\ecosupervisor{Prof. Cosuper}%若没有，请屏蔽掉此句。
@@ -58,28 +58,28 @@ BMUF算法更为稳定；ASGD加速比更好，但需要更为精细的初始化
 \ckeywords{CLDNN, CD-Phone, CTC, 并行训练} %最后一个关键词后面没有标点符号
 
 \eabstract{
-Speech is the most natural and convenient way for human-computer interaction, 
+Speech is the most natural and convenient way for human-computer interaction,
 and speech recognition is one of the core technology for speech interaction.
 Now deep learning based speech recognition get the state of art performance.
-In this paper, we study deep learning and classic model unit CD-State based acoustic modeling, 
+In this paper, we study deep learning and classic model unit CD-State based acoustic modeling,
 CD-Phone and CTC based end-to-end acoustic modeling,
 and parallel training algorithms for deep learning based speech recognition.
 
 First, we study CD-State based model unit, apply DNN, CNN, LSTM and CLDNN to the acoustic model step by step.
-Compared with simple DNN, we get 3\% \textasciitilde 5\%, 5\% \textasciitilde 20\%, 10\% \textasciitilde 23\% 
-CER reduction by using CNN, LSTM, CLDNN respectively. Also, we study skip training on CLDNN, 
+Compared with simple DNN, we get 3\% \textasciitilde 5\%, 5\% \textasciitilde 20\%, 10\% \textasciitilde 23\%
+CER reduction by using CNN, LSTM, CLDNN respectively. Also, we study skip training on CLDNN,
 successfully improve the training speed by 3 times without CER reduction.
 
-Then, we study CD-Phone and CTC based end-to-end speech recognition. 
-We use Phone, CD-Phone and Syllable as model unit, combined with CTC optimization criteria， 
+Then, we study CD-Phone and CTC based end-to-end speech recognition.
+We use Phone, CD-Phone and Syllable as model unit, combined with CTC optimization criteria，
 get comparable speech recognition result to CD-State and CLDNN based acoustic modeling.
 Further, decoding speed for CTC based speech recognition system is more than 3 times faster.
 
-Last, several parallel training algorithms for deep learning based acoustic model are studied. 
-we implement 4 parallel training algorithms(BSP, ASGD, EASGD and BMUF) in this paper, 
+Last, several parallel training algorithms for deep learning based acoustic model are studied.
+we implement 4 parallel training algorithms(BSP, ASGD, EASGD and BMUF) in this paper,
 and apply these parallel training algorithms on DNN and CLDNN based acoustic modeling respectively.
-Finally, we find that BMUF and ASGD based parallel training get the best results, 
-BMUF is rather stable and converges faster, ASGD is more fast but requires more careful initialization. 
+Finally, we find that BMUF and ASGD based parallel training get the best results,
+BMUF is rather stable and converges faster, ASGD is more fast but requires more careful initialization.
 BMUF and ASGD based parallel training achieve more than 3.5 times speedup by using 4 GPU, without loss precision of the acoustic model.
 }
 %Externally pressurized gas bearing has been widely used in the field of aviation, semiconductor, weave, and measurement apparatus because of its advantage of high accuracy, little friction, low heat distortion, long life-span, and no pollution. In this thesis, based on the domestic and overseas researching.

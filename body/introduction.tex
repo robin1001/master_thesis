@@ -1,60 +1,71 @@
 % !Mode:: "TeX:UTF-8"
 \chapter{绪论}
 
-语音是人类最自然最便捷的交互方式，语音识别（Automatic Speech Recognition）则是语音交互中最为核心的技术，它将用户语音输入识别为文字，从而让计算机“理解”用户需求，
-声学建模又是语音识别中的核心技术。本文研究基于CD-Phone\ucite{senior2015context, sak2015fast, sak2015learning}（Context Dependent Phone）和CTC\ucite{graves2012neural, graves2006connectionist}（Connectionist  Temporal Classification）的声学建模技术。
+语音是人类最自然最便捷的交互方式，语音识别（Automatic Speech Recognition）则是语音交互中最为核心的技术，它将用户语音输入识别为文字，从而让计算机进一步“理解”用户需求。
+声学建模（Acoustic Model）是语音识别中的核心技术之一，
+近年来基于深度学习声学建模成为语音识别技术的主流，大大提高了语音识别系统的性能。
+在深度学习背景下，本文研究基于CD-Phone\ucite{senior2015context, sak2015fast, sak2015learning}（Context Dependent Phone）和CTC\ucite{graves2012neural, graves2006connectionist}（Connectionist  Temporal Classification）的声学建模技术。
 本章首先介绍了本文的研究背景及意义；然后介绍了语音识别技术的研究现状；接着介绍了本文的主要工作；最后给出本文的章节安排。
-
+本文的部分工作是与百度语音技术部和地平线机器人科技进行合作研究完成的。
 
 \section{研究背景及意义}
 
-随着移动互联网和智能可穿戴设备的蓬勃发展，作为人类最自然最便捷的交互方式的语音在人机交互中扮演越来越重要的角色。对于智能移动终端和可穿戴设备，由于其便携性高，体积小，
-用户的交互和输入方式及其有限。智能手机中人们尚可以通过屏幕进行输入和交互，但对于智能手表，智能手环，智能眼镜等的可穿戴设备，其屏幕很小或者不存在屏幕，语音甚至是唯一的交互方式。
+随着移动互联网和智能可穿戴设备的蓬勃发展，语音作为人类最自然最便捷的交互方式在人机交互中扮演越来越重要的角色。对于智能移动终端和可穿戴设备，由于其便携性高、体积小，
+用户的交互和输入方式及其有限。智能手机中人们尚可以通过屏幕进行交互，但对于智能手表，智能手环、智能眼镜等的可穿戴设备，其屏幕很小或者根本不具备屏幕，语音甚至变成了唯一的交互方式。
 同样在工业、家电，通信，汽车电子，医疗，智能家居等行业中，语音也扮演了越来越重要的角色。语音识别技术则是语音交互中最核心最复杂的技术之一。
 
-近年以来，作为移动互联网的重要入口，语音发挥着越来越重要的作用。互联网巨头纷纷在语音识别领域纷纷投入巨资，并推出一系列产品。国外苹果公司在其众多移动终端设备（iphone，ipad，apple watch）中推出个人语音助手Siri；微软在其Windows设备中推出个人语音助理Contana；Google在Google Search, Android设备中推出了Google Now， 语音科技公司Nuance推出智能听写助手Dragon Assistant。而国内竞争更是日益激烈，百度、讯飞、阿里巴巴、搜狗等纷纷推出其语音产品，如讯飞语音助手，百度语音搜索和输入法，出门问问在其智能手表ticwear同样搭载了语音交互系统。
+近年以来，作为移动互联网和智能家居的重要入口，语音发挥着越来越重要的作用。
+互联网巨头纷纷在语音识别领域纷纷投入巨资，并推出一系列产品。苹
+果公司在其众多移动终端设备（iphone，ipad，apple watch）中深度嵌入了个人语音助手Siri；
+微软在其Windows设备中推出个人语音助理Contana；
+Google在Google Search, Android设备中推出了Google Now，近期又推出了Google Assist；
+语音科技公司Nuance推出智能听写助手Dragon Assistant；
+亚马逊的智能语音音箱Echo成为有史以来最畅销的电子产品之一。
+而国内竞争更是日益激烈，百度、讯飞、阿里巴巴、搜狗等纷纷推出其语音产品，如讯飞语音助手，百度语音搜索和输入法，
+出门问问在其智能手表ticwear中同样搭载了语音交互系统。
 语音识别在我们的日常生活中扮演了越来越重要的角色。
 
-声学建模是语音识别系统的核心的技术之一。传统的语音识别使用基于HMM-GMM\ucite{rabiner1993fundamentals}（Hidden Markov Model-Gaussion Mixture Model）的方法进行声学建模，GMM方法在本质上是一种浅层模型，其建模能力有限。2010年以后，深度神经网络DNN\ucite{hinton2012deep, dahl2012context}（Deep Neural Network）的深层模型的应用，大幅度提高了声学建模的精度，使得语音识别系统的性能出现质的飞跃。近来以RNN（Recurrent Neural Network）和LSTM（Long Short-Term Memory）
+声学建模是语音识别系统的核心的技术之一，它对发音单元进行建模。传统的语音识别使用基于HMM-GMM\ucite{rabiner1993fundamentals}（Hidden Markov Model-Gaussion Mixture Model）的方法进行声学建模，GMM方法在本质上是一种浅层模型，其建模能力有限。2010年以后，深度神经网络DNN\ucite{hinton2012deep, dahl2012context}（Deep Neural Network）的深层模型的应用，大幅度提高了声学建模的精度，使得语音识别系统的性能出现飞跃。近来以RNN（Recurrent Neural Network）和LSTM（Long Short-Term Memory）
 \ucite{hochreiter1997long, graves2012supervised, sak2014long, sak2014long_lvsr}
 为代表的循环神经网络的应用，使得神经网络拥有了记忆功能和时序建模能力，进一步提高了神经网络声学建模的精度。
 
-传统的声学建模以HMM状态CD-State(Context Dependency State)作为基本建模单元，HMM-GMM系统中使用GMM拟合状态的概率密度分布；
+传统的声学建模以HMM状态CD-State(Context Dependent State)作为基本建模单元，HMM-GMM系统中使用GMM拟合状态的概率密度分布；
 HMM-DNN（Hidden Markov Model-Deep Neural Network）系统中使用DNN对状态进行建模，通过状态间的跳转来描述不同音素（Phone）的发音过程。
 基于RNN和LSTM的神经网络通过引入Recurrent层，使得神经网络具有了时序建模能力和记忆功能。
 时序建模和记忆功能的引入，通过RNN直接对音素发音的过程进行建模，使得以更大的单元（Phone）作为基础建模单元成为可能。
 2015年，Google首次\ucite{senior2015context, sak2015fast, sak2015learning}提出以循环神经网络作为基本网络结构，以Phone和CD-Phone（Context Dependent Phone）为建模单元的声学建模技术，
-并且超越了传统的基于CD-State的语音识别系统。
+并且超越了传统的基于CD-State的语音识别系统的性能。
 
 传统的分类任务的神经网络使用交叉熵CE（Cross Entropy）作为基本的训练准则。
 以交叉熵为优化准则，使用神经网络建模的声学模型需要依赖传统的HMM-GMM系统产生训练所需的状态对齐和决策树。
-基于CTC的优化准则通过引入Blank，在整个序列上进行迭代优化，使得深度神经网络具有了end-to-end的建模能力。
-同时，基于CTC优化准则的分类预测具有尖峰（Peak）预测特性，可以使分类更加精准鲁棒，因而可以得到声学建模精度的进一步提升。
+基于CTC的优化准则通过引入空白（Blank），在整个序列上进行迭代优化，使得深度神经网络具有了端到端（End-to-End）的建模能力。
+同时，基于CTC优化准则的分类预测具有尖峰（Peak）预测特性，可以使分类更加精准鲁棒，因而声学建模精度进一步提升。
 2015年，Google、百度的研究\ucite{senior2015context, sak2015fast, sak2015learning, hannun2014deep, amodei2015deep}表明，
 CTC不仅可以进一步提升声学建模的精度；而且由于尖峰预测的特性，基于CTC的语音识别解码器具有非常快的解码速度。
 
 综上所述，基于CD-Phone和CTC的声学建模技术有如下优点：
-第一，基于CD-Phone和CTC的识别系统，均可进一步提升了声学建模的精度；
+第一，基于CD-Phone和CTC的识别系统，进一步提升了声学建模的精度；
 第二，CTC的end-to-end建模能力无需依赖传统HMM-GMM系统，可以大大简化语音识别系统的流程；
 第三，更大的单元CD-Phone的引入减小了解码网络，基于CTC的语音识别解码器具有非常快的解码速度，两者的共同作用，
 可以大幅度提升语音识别系统的响应速度和吞吐量。
-因此，基于CD-Phone和CTC的语音识别技术研究具有非常重要的意义。
+因此，研究基于CD-Phone和CTC的语音识别技术具有非常重要的意义。
 
 \section{研究现状}
 
 语音识别技术起步于上世纪50 年代，1960 年英国Denes等人研究成功了第一个计算机语音识别系统。
 在70 年代时，使用标准模板匹配的方法，语音识别小词汇量、孤立词的识别上取得重大进展。
 进入80 年代以后，语音识别研究重点逐渐转向大词汇量、非特定人的连续语音识别，
-研究方法也由传统的标准模板匹配转向基于统计的隐马尔科夫（HMM）模型，HMM 的提出和应用是语音识别技术的重大突破和转折。
+研究方法也由传统的标准模板匹配转向基于统计的隐马尔科夫模型（HMM），HMM 的提出和应用是语音识别技术的重大突破和转折。
 HMM因其对音素的有效建模便一直作为语音识别系统中的核心方法之一沿用至今。
 
-经过几十年的发展，HMM-GMM的语音识别系统已经取得了长足进展，HMM-GMM应用于语音识别的理论和实践逐渐完善，并诞生了一系列语音识别的新技术。
-如基于最大后验概率准则估计（Maximum A-Posteriori Estimation, MAP Estimation）和
-基于最大似然线性回归（Maximum Likelihood Linear Regression, MLLR）自适应技术；
-基于状态态绑定的决策树技术；基于最大互信息MMI（Maximum Mutual Information）和MCE（Minimum Classification Error）等准则的区分度训练技术等等。
+经过几十年的发展，HMM-GMM的语音识别系统已经取得了长足发展，HMM-GMM应用于语音识别的理论和实践逐渐完善，并诞生了一系列语音识别的新技术。
+如基于最大后验概率准则估计（Maximum A-Posteriori Estimation, MAP Estimation）\ucite{bahl1983maximum}和
+基于最大似然线性回归（Maximum Likelihood Linear Regression, MLLR）\ucite{leggetter1995maximum}的自适应技术；
+基于状态态绑定的决策树技术；基于最大互信息MMI（Maximum Mutual Information）\ucite{leggetter1995maximum}和
+MCE（Minimum Classification Error）\ucite{juang1997minimum}等准则的区分度训练技术等等。
 此时，基于HMM-GMM的传统语音识别系统已经能够在特定任务上取得理想的识别精度。
 移动互联网的到来，为语音识别技术带来新的挑战。
-在移动互联网和智能可穿戴设备应用中，由于不同的环境噪声、不同信道、口音、录音设备等差异性，对语音识别的精度和性能提出更高的要求。
+在移动互联网和智能可穿戴设备应用中，由于不同的环境噪声、不同信道、口音、录音设备等差异性，对语音识别的鲁棒性提出更高的要求。
 
 20世纪80年代末至90年代初，研究人员已经探索ANN（Artificial Neural Network）和HMM在语音识别中的应用，但由于当时硬件计算能力、数据和训练方法的限制，
 研究者基本均使用两个隐层以下的神经网络，表达能力有限，而深层的神经网络又难以训练，
@@ -76,7 +87,7 @@ CNN由卷积层（Convolution Layer）和池化层（Pooling Layer）组成，�
 2012到2013年，IBM和微软研究人员尝试在语音识别任务上使用CNN\ucite{abdel2012applying, abdel2013exploring, sainath2013improvements}，相对DNN取得进一步的收益。
 
 循环神经网络RNN含有循环层，相对于DNN，其对序列数据建模能力更强，在序列标注和预测任务上效果更好，例如手写体识别，机器翻译，语言模型等。
-近两年，RNN语音识别任务也取得了目前最好的效果。2014年，Google首次成功将LSTM\ucite{sak2014long, sak2014long_lvsr}应用到语音识别任务；
+近两年，基于RNN语音识别任务也取得了目前最好的效果。2014年，Google首次成功将LSTM\ucite{sak2014long, sak2014long_lvsr}应用到语音识别任务；
 百度Deep Speech 1\ucite{hannun2014deep}中使用Simple RNN，Deep Speech 2\ucite{amodei2015deep}使用GRU（Gated RNN Unit）进行序列建模。
 相对于DNN，RNN能普遍降低识别错误率10\% \textasciitilde 20\%，是语音识别中的又一个里程碑。
 
@@ -88,29 +99,31 @@ Alex Graves在2006年使用CTC\ucite{graves2006connectionist}和BLSTM（Bidirect
 在当时TIMIT的音素识别任务上取得最好的效果。深度神经网络的成功应用，进一步挖掘了CTC的建模能力。
 2015年，Google研究人员成功结合CD-Phone和CTC\ucite{sak2015learning}进行声学建模，并超越基于交叉熵CE的识别系统；
 百度Deep Speech 2\ucite{amodei2015deep}直接以CTC作为训练准则，并结合多种深度学习技术，
-成功将自己系统的语音识别率提升至90\%，并被MIT科技评论评为“2016年十大突破技术“之一。
+成功将百度自己系统的语音识别率提升至90\%，并被MIT科技评论评为“2016年十大突破技术“之一。
 
 大数据、计算能力的提高是深度学习获得巨大成功的最主要的原因之一，数据对人工智能公司的重要性不言而喻。
-今天，几乎所有的语音公司Google，微软，百度，搜狗等都拥有数十万小时的语音训练数据。
-一方面，更大的数据造就了更优更鲁棒的模型，另一方便，数十万小时的神经网络的训练又是个极富挑战性的任务。
-目前，各大公司均使用基于多级多卡的GPU（Graphics Processing Unit）集群进行声学模型的训练工作。
+今天，从事语音技术的公司，例如Google、微软、百度、搜狗等都拥有数十万小时的数据。
+一方面，更大的数据造就了更优更鲁棒的模型，另一方面，数十万小时的神经网络的训练又是个极富挑战性的任务。
+目前，各大公司均使用基于多机多卡的GPU（Graphics Processing Unit）集群进行声学模型的训练工作。
 2012年，Google即提出神经网络的分布式解决方案Downpour SGD\ucite{dean2012large}，
 并在新一代深度学习平台TensorFlow\ucite{abadi2015tensorflow}中直接集成了分布式训练；
 开源深度学习工具Mxnet\ucite{chen2015mxnet}提供基于Parameter Server\ucite{li2013parameter}的
 ASGD（Asynchronous Stochastic Gradient Descent）分布式训练方案；
 微软的CNTK\ucite{yu2014introduction}实现了基于1-Bit SGD\ucite{seide20141}和
 BMUF\ucite{chen2016scalable}（Blockwise Model-Update Filtering）的训练方法，并在语音识别任务上得到不错的训练效果。
-此外，Facebook的Torch，语音识别工具Kaldi\ucite{povey2011kaldi}等深度学习平台中均实现一定的并行训练功能。
+此外，Facebook的Torch\ucite{torch}，语音识别工具Kaldi\ucite{povey2011kaldi}等深度学习平台中均实现一定的并行训练功能。
 同深度学习一样，深度学习的并行训练和优化，工业级的大规模的应用，也成为当下研究的热点之一。
-
 
 \section{本文工作}
 
-本文的主要工作如下:
+基于以上研究背景和意义，及目前的研究现状，本文“基于CD-Phone和CTC的语音识别技术研究”的主要工作如下:
 \begin{enumerate}
-\item 在声学模型上分别应用DNN，CNN、LSTM和CLDNN（CNN-LSTM-DNN）等深度神经网络进行实验，并进行调优和性能对比。
-\item 研究和开发基于CD-Phone和CTC的声学模型，并与上述基于交叉熵准则训练的深度神经网络进行对比。
-\item 开发和研究基于BSP（Bulk Synchronize Parallel）、ASGD、EASGD（Elastic Averaging SGD）、BMUF四种方法的神经网络的分布式训练，
+\item \textbf{基于深度学习和CD-States的声学建模技术}。
+    在声学模型上分别应用DNN，CNN、LSTM和CLDNN（CNN-LSTM-DNN）等深度神经网络进行实验，并进行调优和性能对比。
+\item \textbf{基于CD-Phone和CTC的语音识别}。
+    研究和开发基于CD-Phone和CTC的声学模型，并与上述基于交叉熵准则训练的深度神经网络进行对比。
+\item \textbf{基于MPI的声学模型的并行训练}。
+    开发和研究基于BSP（Bulk Synchronize Parallel）、ASGD、EASGD（Elastic Averaging SGD）、BMUF四种方法的神经网络的分布式训练，
 并在声学模型上进行对比其加速性能和模型损失。
 \end{enumerate}
 
