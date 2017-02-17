@@ -14,13 +14,13 @@
 数据并行则是将数据分成多份，分别在不同Worker上处理不同的数据，适于大量数据和较小模型的训练方式。
 
 另外一个分类方法是根据模型更新方法可以分为两类，基于梯度的模型更新和直接基于模型的更新。
-基于梯度的模型更新，Server的模型更新依赖于梯度计算，如DownpourSGD\ucite{dean2012large}（既DistBelief）和ASGD。
+基于梯度的模型更新，Server的模型更新依赖于梯度计算，如DownpourSGD\ucite{dean2012large}（即DistBelief）和ASGD。
 基于模型的更新，Server和Worker的模型更新直接基于模型，通过模型之间的计算更新，如 BSP(Model Average)、EASGD和BMUF等。
 
 本文实现基于MPI（Message Passing Interface） 的BSP、ASGD，EASGD，BMUF四种并行方法。
 四种方法均是基于数据并行的方法。
 BSP，EASGD和BMUF是基于模型的方法，ASGD是基于梯度的方法。
-本章介绍MPI及这四种并行基本原理和实现。
+本章介绍MPI及这四种并行基本原理和实现以及相关实验结果。
 
 \section{MPI并行计算}
 
@@ -275,15 +275,15 @@ BSP中直接取模型平均作为新的模型，而BMUF中则根据梯度进行�
 
 \section{实验}
 
-本文在Kaldi基础上使用OpenMPI实现BSP、ASGD、EASGD、BMUF四种并行方法，
+本文在Kaldi工具包基础上使用OpenMPI实现BSP、ASGD、EASGD、BMUF四种并行方法，
 并分别在基于DNN和CLDNN的声学模型上实验验证四种并行训练方法的效果，
 分别验证其加速比和相对单卡的模型损失。
 
 \subsection{数据和模型}
 
 类似第四章的实验，本实验同样使用大数据集aslp688，如\ref{data:aslp688}所述。
-aslp688共688小时，语料类型为中文普通话朗读数据，共402838句，平均时长为6.20s，其中3484句作为交叉验证集，剩余部分全部作为训练集。
-测试集同样使用西北工业大学音频语音与语言处理研究组ASLP标准测试集test3000，共3063句。
+aslp688共688小时，语料类型为中文普通话朗读数据，共402838句，单句平均时长为6.20s，其中3484句作为交叉验证集，剩余部分全部作为训练集。
+测试集同样使用西北工业大学音频语音与语言处理研究组标准测试集test3000，共3063句。
 
 本实验同样使用语音识别工具Kaldi\ucite{povey2011kaldi}，深度神经网络使用的对齐由aslp688数据集的GMM-HMM系统产生，共有CD-State状态5389个。
 GMM-HMM系统使用39维的MFCC特征，所有深度神经网络均使用40维FBank（Filter Bank）特征。
@@ -328,7 +328,7 @@ BMUF中学习率$\eta=1.0$，冲量$\varepsilon=0.75$。
   \label{fig:parallel-cv} %% label for entire figure
 \end{figure}
 
-图\ref{fig:parallel-cv}中给出训练时各种并行算法随着训练轮数增加在CV集上的损失变化，如上所述，
+图\ref{fig:parallel-cv}中给出训练时各种并行算法随着训练轮数增加在CV集上的损失变化。如上所述，
 分别给出在DNN和CLDNN两种模型上的损失变化。
 可以看出，在训练初期（特别是第一轮），四种并行算法在CV集上的损失均比单卡的要低，可能是由于多卡训练时多块GPU同时处理
 训练数据，训练数据的随机性更大，所以并行的模型在CV集上的损失要更好，而随着训练的进行，单卡SGD的损失则能持续平稳的下降，
@@ -376,7 +376,7 @@ BMUF中学习率$\eta=1.0$，冲量$\varepsilon=0.75$。
 但同样可以看到，BSP和BMUF的加速比要比ASGD和EASGD要略差一些，因为BSP和BMUP需要所有Worker进行模型同步，
 而在ASGD和EASGD中，每个Worker只需要单独和参数服务器Server进行交互，并不需要等待其他Worker。
 
-分析模型精度可知，BMUF在DNN和CLDNN的模型上均能取得最优的并行模型精度；BSP和EASGD在两中模型上均有较大的模型损失；
+分析模型精度可知，BMUF在DNN和CLDNN的模型上均能取得最优的并行模型精度；BSP和EASGD在两种模型上均有较大的模型损失；
 ASGD在DNN上精度损失较小，但在CLDNN上模型损失较大，这与之前的实验结果和其他论文中的结果不相匹配，
 因此，进行需要进行一步调优。
 
@@ -436,5 +436,5 @@ ASGD中，每个Worker均只单独和Server进行通讯，无需Worker之间进�
 ASGD Worker无需同步的潜在缺点是该系统运行多次，Worker和Server交互顺序的不一致，
 可能会得到不一致的模型，不利于系统的跟踪、调试和分析。
 
-因此，在实际使用时，应该根据实际的硬件环境和算法需求，选择合适的并行算法。
+综上，在实际使用时，应该根据实际的硬件环境和算法需求，选择合适的并行算法。
 

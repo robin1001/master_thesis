@@ -6,12 +6,12 @@
 RNN的强大的时序序列建模能力在一定程度上可以学习HMM框架中的状态变化和跳转，
 因此识别任务中RNN的引入，逐步淡化了HMM框架的作用。
 HMM框架经过几十年的发展，已经非常的完善，
-并且庞杂，深度学习引入识别任务后，
+深度学习引入识别任务后，
 识别系统的结构进一步复杂，进行识别任务所需的步骤流程也越来越长。
 
 因此，如何打破HMM框架，简化识别系统的流程，
 进一步挖掘深度学习在语音识别任务上的能力成为目前语音识别研究的新热点之一\ucite{hannun2014deep, amodei2015deep, miao2015eesen}。
-基于CD-Phone和CTC的语音识别是这些研究中的代表。
+基于CD-Phone和CTC的语音识别是这些研究中的典型代表。
 Phone和CD-Phone建模打破了经典的基于HMM状态CD-State建模的方法；
 CTC的end-to-end的建模能力可以使基于深度学习的语音识别系统无需依赖经典的HMM-GMM框架，可以大幅度简化现有识别系统的流程。
 
@@ -33,7 +33,7 @@ CTC的end-to-end的建模能力可以使基于深度学习的语音识别系统�
 第二，有一些三音素可能未在训练数据中出现，例如在汉语语料中，一般不会出现连续三个辅音的三音素，例如b-b+b,
 z-z+z等。
 
-\subsubsection{状态绑定Tied-State}
+\subsubsection{状态绑定}
 
 在经典的语音识别系统中，使用决策树和状态绑定（Tied-State）来解决这个问题。
 状态绑定是指对于一个单音素的任意一个状态，该状态的一些三音素可以共享一个概率密度分布，即共享一个状态号，
@@ -51,7 +51,7 @@ z-z+z等。
 \label{fig:cdstate}
 \end{figure}
 
-HMM系统中CD-Stae的建立过程如图\ref{fig:cdstate}所示：
+HMM系统中CD-Stae的建立过程如图\ref{fig:cdstate}所示，流程如下
     \begin{enumerate}
         \item 首先建立和训练三状态的单音素的HMM模型。
         \item 使用已有单音素或三音素的模型得到三音素对齐，通过决策树建立状态绑定的三音素模型，迭代训练该模型。
@@ -177,7 +177,7 @@ CD-State聚类时，直接使用帧级状态对齐特征进行聚类。然而，
 
 \section{CTC}
 
-如前文所述，基于深度神经网络的语音识别系统需要依赖HMM-GMM系统生成的状态对齐，复杂化了语音识别系统的流程。
+如前文所述，基于深度神经网络的语音识别系统需要依赖HMM-GMM系统生成的状态对齐。
 语音识别本质上也是个序列标注任务，HMM方法是解决序列标注任务的一种经典方法之一。
 CTC（Connectionist Temporal Classificatio）\ucite{graves2006connectionist, graves2012neural}，
 于2006年由Alex Graves提出，则是解决序列标注任务的另一种经典方法。
@@ -363,9 +363,9 @@ p({\textbf{z}}|{\textbf{x}}) = \sum\limits_{s = 1}^{|{\textbf{z'}}|} {{\alpha _{
 
 经过上面的讨论，可以总结出CTC的三点特性：
 \begin{enumerate}
-\item blank，CTC在建模中引入辅助建模单元blank，表示不作任何输出；
-\item 序列等价性，连续的相同的字符可以归约为单个字符，归约后blank被消除；
-\item 尖峰（Peak）预测特性，这是CTC在预测时的现象，其在大多数时刻上输出为blank，并且预测时输出呈尖峰状，如图\ref{fig:peak}。
+\item \textbf{Blank}；CTC在建模中引入辅助建模单元blank，表示不作任何输出；
+\item \textbf{序列等价性}；连续的相同的字符可以归约为单个字符，归约后blank被消除；
+\item \textbf{尖峰（Peak）预测特性}；这是CTC在预测时的现象，其在大多数时刻上输出为blank，并且预测时输出呈尖峰状，如图\ref{fig:peak}。
 \end{enumerate}
 
 \begin{figure}
@@ -385,7 +385,7 @@ Alex Graves在2008年已经将CTC应用在TIMIT的音素识别任务上\ucite{gr
 在这些任务中，建模单元各有不同。
 EESEN中使用Phone或者Character作为建模单元，
 Google的工作中使用Phone或CD-Phone作为作为建模单元，
-百度的Deep Speech 2系统在中文中使用字，英文中使用Character作为建模单元。
+百度的Deep Speech 2系统在中文中使用汉字，英文中使用字母Character作为建模单元。
 本文主要研究使用Phone和CD-Phone作为建模单元的CTC。
 
 在传统的HMM语音系统中，一般使用基于WFST\ucite{mohri2004weighted}的解码器。
@@ -435,11 +435,11 @@ CTC解码中的竞争路径会被更快的裁剪，因此基于CTC的语音识�
 
 \subsection{数据和模型}
 
-以Phone、Syllable和CD-Phone为建模单元的声学模型和CTC都依赖于大量的数据。所以
+以Phone、Syllable和CD-Phone为建模单元的声学模型和CTC都依赖于大量的数据，所以
 本实验使用数据量更大的数据集aslp688。
-aslp688\label{data:aslp688}数据集为西北工业大学音频语音与语言处理研究组ASLP（Audio Speech and Language Processing, ASLP）标准数据集，
-共688小时，语料类型为中文普通话朗读数据，共402838句，平均时长为6.20s，其中3484句作为交叉验证集，剩余部分全部作为训练集。
-测试集使用西北工业大学音频语音与语言处理研究组ASLP标准测试集test3000，共3063句。
+aslp688\label{data:aslp688}数据集为西北工业大学音频语音与语言处理研究组标准数据集，
+共688小时，语料类型为中文普通话朗读数据，共402838句，每句平均时长为6.20s，其中3484句作为交叉验证集，剩余部分全部作为训练集。
+测试集使用西北工业大学音频语音与语言处理研究组标准测试集test3000，共3063句。
 
 本实验使用语音识别工具Kaldi\ucite{povey2011kaldi}，深度神经网络使用的对齐由aslp688数据集的GMM-HMM系统产生，共有CD-State状态5389个。
 GMM-HMM系统使用39维的MFCC特征，所有深度神经网络均使用40维FBank（Filter Bank）特征。
@@ -550,12 +550,12 @@ CTC的预测呈尖峰状，并且在大部分时刻上均输出blank，
 \label{table:ctc}
 \end{table}
 
-在\ref{table:ctc}中，当声学模型权重为0.65时，基于Phone的CTC声学模型取得最佳识别结果。
+在表\ref{table:ctc}中，当声学模型权重为0.65时，基于Phone的CTC声学模型取得最佳识别结果。
 而在CD-State的语音识别解码中，最佳模型的声学模型权重仅为0.06667。
 可以看出，基于Phone和CTC的声学模型权重相比CD-State的模型提高了近10倍。
 这得益于CTC的Peak预测特性，提高了声学模型在识别系统中的比重。
 
-\subsection{blank打分调节}
+\subsection{Blank打分调节}
 
 基于CTC的声学模型在预测时，blank的打分很强，所以要对blank打分进行预处理，然后进一步进行识别解码。
 本实验中先统计插入blank后的训练数据标注的先验，在得到CTC的打分之后，先减去各个字符的先验（log域），
@@ -617,7 +617,7 @@ blank scale & CER           \\ \midrule
 第二部分为识别中的Viterbi Search和Beam Search的时间。
 如表\label{table:ctcrtf}所示，基于CTC的解码仅为CE模型CLDNN\_CdState5389的三分之一左右，解码速度非常快。
 表中同样列出CLDNN\_CE\_Phone216模型的解码时间，其与CLDNN\_CTC\_Phone216(1CNN+2DNN+2LSTMP)模型的前向计算时间相同，
-但其解码速度更慢（可能原因是其输出单元少，预测更为平滑，区分性不强）。
+但其解码速度更慢。可能原因是其输出单元少，预测更为平滑，区分性不强。
 对比该项，即可说明CTC在解码中的优势，其Peak预测特性可以更早的裁剪竞争路径，在更早的时间减小了搜索空间，
 这是CTC解码相对于CE解码的核心优势。
 
@@ -659,7 +659,7 @@ System                                                       & 参数量(M)     
 分析可知，CTC解码实时率受Beam影响较小，而普通CE模型解码实时率RTF则严重依赖于beam大小。
 因此，在CTC解码时，在保证RTF在可接受范围内的情况下，可以通过进一步放大Beam来提升模型精度。
 
-\subsection{更大的数据}
+\subsection{更大的数据量}
 
 在上述实验中，以CD-Phone为建模单元的声学模型并未取得理想的效果，期望的CD-Phone的模型效果应该优于Phone。
 根据CD-Phone的聚类原理，经分析可能的原因是数据量少CD-Phone聚类不够准确导致的。
@@ -679,7 +679,8 @@ System                                                       & 参数量(M)     
 \end{table}
 
 因此在更大的数据集上，进行以CD-Phone为建模单元的实验。
-本实验中使用百度（实习工作）2700小时的口语数据集，测试集为1500句。
+本实验中使用百度2700小时的口语数据集，测试集为1500句。
+与之前的朗读数据不同，在口语数据中，说话人说话方式更为随意、自然，因此更具挑战性。
 其中CD-States共21046个，CD-Phone共12167个。
 CD-State和CD-Phone均使用近万小时的数据聚类得到。
 在该数据集上，得到表\ref{table:bdctc}的结果。
@@ -688,5 +689,5 @@ CD-State和CD-Phone均使用近万小时的数据聚类得到。
 在该口语数据集上，CD-State的CLDNN效果并没有CNN基线系统的效果好，因此表\ref{table:bdctc}中没有给出CD-State的CLDNN的结果。
 分析可知，基于CD-Phone的CE建模比基线CNN系统提升8.18\%，之后继续CTC训练，
 最终比基线系统提升22.06\%，一方面说明了以CD-Phone作为基本建模单元的有效性，
-另一方面说明CTC训练可以带来进一步的模型提升。
+另一方面说明CTC训练可以带来进一步的模型性能提升。
 
