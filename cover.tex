@@ -69,17 +69,17 @@ BMUF算法更为稳定；ASGD加速比更好，但需要更为精细的初始化
 Speech is the most natural and convenient way for human-computer interaction,
 and speech recognition is one of the core technology for speech interaction.
 Now deep learning based speech recognition get the state of art performance.
-We study deep neural network based acoustic modeling in this paper, 
+We study deep neural network based acoustic modeling in this paper,
 conventional HMM(Hidden Markov Model) based speech recognition use CD-State(Context Dependent State) as the basic model unit,
-GMM(Gaussion Mixture Model) is used for probability modeling, 
+GMM(Gaussion Mixture Model) is used for probability modeling,
 by contrast, deep neural network is used for probability modeling in deep learning based acoustic modeling.
 In fact, deep Learning has more strong modeling capabilities, we can select bigger model unit, carry on end-to-end learning which simplify the pipeline of speech recognition,
 so we also study the CD-Phone(Context Dependent Phone) and CTC(Connectionist  Temporal Classification) based speech recognition.
-In addition, deep learning rely on huge amount of data, which ensures the model capabilities, but it is rather slow to train a lot of data, 
+In addition, deep learning rely on huge amount of data, which ensures the model capabilities, but it is rather slow to train a lot of data,
 so we study several parallel training algorithms for deep learning based acoustic model further.
 
-\textbf{First, we study CD-State and deep neural network based acoustic model.} 
-We apply DNN(Deep Neural Network), CNN(Convolution Neural Network), 
+\textbf{First, we study CD-State and deep neural network based acoustic model.}
+We apply DNN(Deep Neural Network), CNN(Convolution Neural Network),
 LSTM(Long Short Term Memory) and CLDNN(CNN+LSTM+DNN) to the acoustic model step by step.
 Compared with simple DNN, we get 3\% \textasciitilde 5\%, 5\% \textasciitilde 20\%, 10\% \textasciitilde 23\%
 CER reduction by using CNN, LSTM, CLDNN respectively. Also, we study skip training on CLDNN,
@@ -91,7 +91,7 @@ get comparable speech recognition result to CD-State and CLDNN based acoustic mo
 Further, decoding speed for CTC based speech recognition system is more than 3 times faster.
 
 \textbf{Last, several parallel training algorithms for deep learning based acoustic model are studied.}
-we implement BSP(Bulk Synchronize Parallel), ASGD(Asynchronous Stochastic Gradient Descent), 
+we implement BSP(Bulk Synchronize Parallel), ASGD(Asynchronous Stochastic Gradient Descent),
 EASGD(Elastic Averaging SGD) and BMUF() parallel training algorithms in this paper,
 and apply these parallel training algorithms on DNN and CLDNN based acoustic modeling respectively.
 Finally, we find that BMUF and ASGD based parallel training get the best results,

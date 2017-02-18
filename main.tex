@@ -28,12 +28,12 @@
 \clearpage{\pagestyle{empty}\cleardoublepage}
 \pdfbookmark[0]{目~~~~录}{mulu}
 \tableofcontents
-%\clearpage{\pagestyle{empty}\cleardoublepage}
-%% 英文目录
-% \ifxueweidoctor
-% \tableofengcontents
-% \fi
-% \clearpage{\pagestyle{empty}\cleardoublepage}     % 清除目录后面空页的页眉和页脚
+\clearpage{\pagestyle{empty}\cleardoublepage}
+% 英文目录
+ \ifxueweidoctor
+ \tableofengcontents
+ \fi
+ \clearpage{\pagestyle{empty}\cleardoublepage}     % 清除目录后面空页的页眉和页脚
 
 \mainmatter\defaultfont\sloppy\raggedbottom
 
@@ -45,7 +45,7 @@
 \include{body/conclusion}
 
 
-%% 参考文献
+% 参考文献
 \defaultfont
 \bibliographystyle{ref/GBT7714-2005}
 \addcontentsline{toc}{chapter}{参考文献}              % 参考文献加入到中文目录
