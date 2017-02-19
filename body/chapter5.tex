@@ -82,7 +82,6 @@ $\tilde w $表示同步后的模型，$N$为Worker总数。则：
 基于BSP的并行训练的算法描述如算法\ref{alg:bsp}所示。
 
 \begin{algorithm} \song
-\label{alg:bsp}
 \caption{BSP模型平均}
 \begin{algorithmic}
 \REQUIRE 同步周期$\tau$，学习率$\eta$
@@ -99,6 +98,7 @@ $\tilde w $表示同步后的模型，$N$为Worker总数。则：
 \STATE ${t_i} = {t_i} + 1$
 \UNTIL{(所有样本被处理完)}
 \end{algorithmic}
+\label{alg:bsp}
 \end{algorithm}
 
 基于MPI的BSP算法实现如图\ref{fig:bsp}所示，使用MPI\_Allreduce函数进行Worker间的同步通信。
@@ -193,7 +193,6 @@ $\alpha$控制模型的更新步长。
 
 本文实现并使用异步的EASGD，该算法描述如算法\ref{alg:easgd}所示：
 \begin{algorithm} \song
-\label{alg:easgd}
 \caption{异步EASGD}
 \begin{algorithmic}
 \REQUIRE 同步周期$\tau$，学习率$\alpha$ \\
@@ -210,6 +209,7 @@ $\alpha$控制模型的更新步长。
 \STATE ${t_i} = {t_i} + 1$
 \UNTIL{(所有样本被处理完)}
 \end{algorithmic}
+\label{alg:easgd}
 \end{algorithm}
 
 \section{BMUF}
@@ -241,7 +241,6 @@ w_i = \tilde w
 \end{equation}
 
 \begin{algorithm} \song
-\label{alg:bmuf}
 \caption{BMUF}
 \begin{algorithmic}
 \REQUIRE 同步周期$\tau$，学习率$\eta$，冲量$\varepsilon$ \\
@@ -259,6 +258,7 @@ w_i = \tilde w
 \STATE 更新全局模型: $\tilde w = \tilde w - \eta \nabla {{\tilde w}_t}$
 \UNTIL{(所有样本被处理完)}
 \end{algorithmic}
+\label{alg:bmuf}
 \end{algorithm}
 
 BMUF的算法描述如算法\ref{alg:bmuf}所示。

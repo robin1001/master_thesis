@@ -70,14 +70,15 @@
 \renewcommand{\p@subfigure}{\thefigure~} %使子图引用为 7-1 a) 的格式，母图编号和子图编号之间用~加一个空格
 \renewcommand{\thetable}{\arabic{chapter}-\arabic{table}}%使表编号为 7-1 的格式
 \renewcommand{\theequation}{\arabic{chapter}-\arabic{equation}}%使公式编号为 7-1 的格式
+\renewcommand\thealgorithm{\arabic{chapter}-\arabic{algorithm}}
 
 \def\BibTeX{\textsc{Bib}\kern-.08em\TeX}
 
-\newcommand{\algoenname}{Algo.} %算法英文标题
-\newfloatlist[chapter]{algoen}{aen}{\listalgoenname}{\algoenname}
-\newfixedcaption{\algoencaption}{algoen}
-\renewcommand{\thealgoen}{\thechapter-\arabic{algocf}}
-\renewcommand{\@cftmakeaentitle}{\chapter*{\listalgoenname\@mkboth{\bfseries\listalgoenname}{\bfseries\listalgoenname}}}
+%\newcommand{\algoenname}{Algo.} %算法英文标题
+%\newfloatlist[chapter]{algoen}{aen}{\listalgoenname}{\algoenname}
+%\newfixedcaption{\algoencaption}{algoen}
+%\renewcommand{\thealgoen}{\thechapter-\arabic{algocf}}
+%\renewcommand{\@cftmakeaentitle}{\chapter*{\listalgoenname\@mkboth{\bfseries\listalgoenname}{\bfseries\listalgoenname}}}
 
 \renewcommand{\algorithmcfname}{\hei 算法}
 \setlength\AlCapSkip{1.2ex}
@@ -169,7 +170,7 @@
 
 
 %\renewcommand{\ALG@name}{算法}
-\renewcommand\thealgorithm{\arabic{chapter}-\arabic{algorithm}}
+
 %%\renewcommand{\algorithmicrequire}{\textbf{输入:}}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
