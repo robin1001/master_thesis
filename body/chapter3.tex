@@ -131,7 +131,7 @@ E(w) =  - \sum\limits_{n = 1}^N {\sum\limits_{k = 1}^K {{t_{kn}}\ln {y_k}} }
 根据\ref{section:hmmdl}，基于深度神经网络的声学建模为典型的分类任务，
 在输出层使用$softmax$函数做概率归一，使用交叉熵作为损失函数。
 
-\section{卷积神经网络CNN}
+\section{卷积神经网络}
 
 CNN最早应用在图像领域，在基础DNN的结构上，CNN引进了局部滤波器，池化层和权值共享三个新思想。
 深度学习在语音识别领域获得成功后，研究人员开始探索CNN在语音识别任务上的应用。
@@ -186,7 +186,7 @@ Fbank（Filter bank）特征是目前最为常用的频谱特征。
 \label{fig:cnnasr}
 \end{figure}
 
-\section{循环神经网络RNN}
+\section{循环神经网络}
 
 循环神经网络RNN是一种带有Recurrent层的神经网络，循环Recurrent层中的神经元通过连接组成了一个有向环，
 有向环使得循环神经网络有了内部状态和记忆单元的结构，从而赋予了循环神经网络记忆功能和对时序动态建模的能力。
@@ -206,7 +206,7 @@ RNN有许多变种的结构，这里我们介绍简单循环神经网络（记�
 \label{fig:rnn}
 \end{figure}
 
-\subsection{简单循环神经网络RNN}
+\subsection{简单循环神经网络}
 
 简单循环神经网络RNN的结构和图\ref{fig:rnn}所示相同。
 在任意时刻$t$，使用$\textbf{x}_t$表示前一层的$M$维输出，$\textbf{h}_t$是$N$维的隐状态向量，
@@ -218,7 +218,7 @@ RNN有许多变种的结构，这里我们介绍简单循环神经网络（记�
 $\textbf{W}_{hh}$是$N \times N$的连接$t-1$时刻该循环层输出$\textbf{h}_{t-1}$的权值矩阵，
 $\textbf{h}_{t-1}$即是RNN的内部状态。
 
-\subsection{LSTM}
+\subsection{长短时记忆}
 
 RNN的结构相对简单，具有一定的对序列、时间轨迹建模能力，但在序列长度更大、问题更为复杂的任务中，
 其建模能力则十分有限；此外，简单RNN的训练容易出现梯度爆炸或者弥散的问题，训练不够稳定。
@@ -281,7 +281,7 @@ LSTMP的数据流向如下：
 其中，$W_m$为Projection层的变换矩阵。由式\ref{equation:lstmp}可以看出，在LSTMP中Memory Block的输出$m_t$并不直接回连到自身，
 而是先通过Projection层的$W_m$做矩阵变化后，再回连到Memory Block。
 
-\section{混合神经网络CLDNN}
+\section{混合神经网络}
 
 目前，在大多数语音识别任务上，基于CNN和LSTM的声学模型均能取得比基于DNN的声学模型更好的效果。
 那么一个很自然的想法就是，能否将三者结合使用，各取所长，相互补充。
@@ -486,7 +486,7 @@ CLDNN结合了CNN、DNN和LSTM的优点，帧识别率比LSTM的效果更好。
 
 \subsection{实验结果与分析}
 
-表\ref{table:aslp128-cldnn}给出aslp128数据集上aslp128数据集DNN、CNN、LSTM和CLDNN识别结果，
+表\ref{table:aslp128-cldnn}给出aslp128数据集上DNN、CNN、LSTM和CLDNN识别结果，
 其中CER为中文语音识别字错误率（Character Error Rate），CER列中括号内的数值表示错误率相对DNN的下降百分比。
 参数量为该深度神经网络所含参数量，以M（百万）为单位。
 

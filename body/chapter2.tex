@@ -2,17 +2,13 @@
 
 \chapter{语音识别的基本原理}\label{intro_hmm}
 
-传统语音识别系统的基本原理是隐马尔可夫模型HMM\ucite{rabiner1989tutorial,huang2001spoken,bishop2006pattern, rabiner1993fundamentals}，
-基础系统为HMM-GMM系统。
-
-隐马尔科夫模型（HMM）是一种统计模型，已广泛应用于语音识别、语音合成、文字识别等序列任务中。
+HMM-GMM是传统语音识别系统的基本原理。
+其中，隐马尔科夫模型（HMM\ucite{rabiner1989tutorial,huang2001spoken,bishop2006pattern, rabiner1993fundamentals}）是一种统计模型，已广泛应用于语音识别、语音合成、文字识别等序列标注任务中。
 二十世纪七十年代Baum等人建立了HMM的理论基础，
 随后，Baker和Jelinek等人将其成功应用在语音识别任务中。
 混合高斯模型GMM使用多个高斯概率密度函数描述概率分布，可以对连续概率密度分布进行建模。
 HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM表述不同状态的概率密度分布，
 两者结合实现大词汇量连续语音识别。
-
-
 本章介绍基于HMM-GMM的语音识别的基本原理。
 
 %\newtheorem{definition}{\textbf{定义}}[section]
@@ -284,7 +280,7 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
 
     以上讨论中，我们都假定观测输出概率，也就是$B$参数的分布是离散的，本节介绍连续密度的隐马尔科夫模型（Continuous HMM CHMM)。
     在连续密度隐马尔科夫模型中，可以使用概率密度函数来表示观测输出概率。
-    
+
     假设$\bm{X}$为观测向量，使用$b_{j}(\bm{X})$表示观测的输出概率。
     在传统HMM-GMM语音识别系统中，使用高斯概率密度函数对$b_{j}(\bm{X})$进行建模，
     语音识别中，观测特征一般为多维特征，
@@ -298,7 +294,6 @@ HMM-GMM系统中，使用HMM描述语音发音的状态变化过程，使用GMM�
     \begin{equation}\label{equation:gmm}
        {b_j}(\bm{X}) = \sum\limits_{m = 1}^M {{\omega _{jm}}} \frac{1}{{{{(2\pi )}^{p/2}}|{\bm{\Sigma}} |_{jm}^{ - 1}}}\exp \left\{ { - \frac{1}{2}(\bm{X} - {{\bm{\mu}} _{jm}}){\bm{\Sigma}}_{jm}^{ - 1}{{(\bm{X} - {{\bm{\mu}} _{jm}})}^T}} \right\}
     \end{equation}
-
     其中$M$表示混合高斯数，即使用$M$个高斯叠加组合描述输出概率密度函数，${\omega_{jm}}$是混合系数，表示第$m$个高斯所占权重。混合高斯的引入，极大的增强了模型
     的描述能力。
 

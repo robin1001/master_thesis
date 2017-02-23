@@ -32,32 +32,32 @@
 \fi
 
 \cabstract{
-语音是人类最为自然、最为便捷的人机交互方式，语音识别则是语音交互技术的核心技术之一。
-目前，基于深度学习的语音识别技术取得了巨大成功。
-本文研究基于深度学习的声学建模技术，
-传统的基于隐马尔可夫模型HMM（Hidden Markov Model）的语音识别系统以CD-State（Context Dependent State）作为建模单元。
-使用混合高斯模型GMM（Gaussion Mixture Model）对该单元的概率状态分布进行建模，
-基于深度学习的声学建模则使用深度神经网络对该单元的概率状态分布进行建模。
+语音是最为自然、便捷的人机交互方式，语音识别则是语音交互的核心技术之一。
+目前，基于深度学习的语音识别技术取得了巨大成功,其中声学建模技术功不可没。
+本文研究基于深度学习的声学建模技术。
+传统的基于隐马尔可夫模型（Hidden Markov Model）HMM的声学建模以CD-State（Context Dependent State）作为建模单元，
+使用混合高斯模型GMM（Gaussion Mixture Model）对建模单元的概率状态分布进行建模，
+基于深度学习的声学建模则使用深度神经网络（Deep Neural Network）DNN对建模单元的概率状态分布进行建模。
 其次，深度学习的引入使选择更大的建模单元成为可能，并可以直接进行端到端（End to End）的学习，简化语音识别的流程，
-所以，本文进一步研究基于CD-Phone（Context Dependent Phone）和CTC（Connectionist  Temporal Classification）的语音识别技术。
-此外，深度学习依赖于大量的训练数据，大量的数据确保了基于深度学习的声学模型的有效性，然而训练数据的增加使训练速度变慢，
-为此，本文还进一步研究了基于深度学习的声学模型的并行训练技术。
+因此，本文进一步研究基于CD-Phone（Context Dependent Phone）和CTC（Connectionist  Temporal Classification）的语音识别技术。
+此外，深度学习的应用依赖于大量的训练数据，大数据确保了基于深度学习的声学模型的有效性。然而，训练数据的增加使训练速度成为瓶颈，
+为此，本文还研究了基于深度学习的声学模型的并行训练技术。具体研究工作总结如下：
 
-\textbf{首先，本文以传统CD-States作为建模单元，使用深度学习进行声学建模。}分别研究使用DNN（Deep Neural Network）、
-CNN（Convolution Neural Network）、LSTM（Long Short Term Memory）和混合神经网络CLDNN（CNN+LSTM+DNN）的声学建模技术。
-在本文试验中，相对于简单的DNN，CNN、LSTM和CLDNN能够分别使得语音识别错误率普遍降低3\% \textasciitilde 5\%、
+\textbf{第一，研究了以CD-State作为建模单元，基于深度学习的声学建模技术。}本文分别使用、
+CNN（Convolution Neural Network）、LSTM（Long Short Term Memory）和混合神经网络CLDNN（CNN+LSTM+DNN）进行声学建模。
+实验表明，相对于DNN，CNN、LSTM和CLDNN能够分别使得语音识别错误率普遍降低3\% \textasciitilde 5\%、
 5\% \textasciitilde 20\%和10\% \textasciitilde 23\%。在CLDNN基础上进一步使用跳帧训练技术，
 在保证声学模型精度的前提下，成功将训练速度提升3倍。
 
-\textbf{其次，研究基于CD-Phone和CTC语音识别技术。}
-文中分别以音素Phone、CD-Phone、音节Syllable作为建模单元，并结合CTC准则进行优化，
-最终基于Phone和CTC的系统取得了与基于CD-State和CLDNN的系统相当的识别结果。
-并且，通过使用CTC将识别系统的解码速度提升3倍以上。
+\textbf{第二，研究了基于CD-Phone和CTC的语音识别技术。}
+文中分别以音素（Phone）、CD-Phone、音节（Syllable）作为建模单元，并结合CTC准则进行优化，
+最终基于Phone和CTC的系统取得了与基于CD-State和CLDNN的系统相当的识别精度。
+并且，CTC准则的应用将识别系统的解码速度提升3倍以上。
 
-\textbf{最后，本文研究基于深度学习的声学模型的并行训练技术。}
-本文实现基于BSP（Bulk Synchronize Parallel）、ASGD（Asynchronous Stochastic Gradient Descent）、
-EASGD（Elastic Averaging SGD）和BMUF（Block Momentum Update Filtering）四种并行训练算法，并在DNN和CLDNN模型上进行实验比较其性能。
-最终，基于BMUF和ASGD的并行算法取可以取得了较优的模型结果。
+\textbf{第三，研究了基于深度学习的声学模型的并行训练技术。}
+本文实现了基于BSP（Bulk Synchronize Parallel）、ASGD（Asynchronous Stochastic Gradient Descent）、
+EASGD（Elastic Averaging SGD）和BMUF（Block Momentum Update Filtering）四种并行训练算法，并在DNN和CLDNN模型上进行实验比较。
+实验表明，
 BMUF算法更为稳定；ASGD加速比更好，但需要更为精细的初始化。
 使用4卡、基于BMUF和ASGD的的并行方法能在基本不损失模型精度的情况下，
 相对单卡取得3.5倍以上的加速比。
@@ -68,7 +68,7 @@ BMUF算法更为稳定；ASGD加速比更好，但需要更为精细的初始化
 \eabstract{
 Speech is the most natural and convenient way for human-computer interaction,
 and speech recognition is one of the core technology for speech interaction.
-Now deep learning based speech recognition get the state of art performance.
+Now deep learning based speech recognition get the state of art performance because of the deep learning based acoustic modeling.
 We study deep neural network based acoustic modeling in this paper,
 conventional HMM(Hidden Markov Model) based speech recognition use CD-State(Context Dependent State) as the basic model unit,
 GMM(Gaussion Mixture Model) is used for probability modeling,
@@ -77,25 +77,26 @@ In fact, deep Learning has more strong modeling capabilities, we can select bigg
 so we also study the CD-Phone(Context Dependent Phone) and CTC(Connectionist  Temporal Classification) based speech recognition.
 In addition, deep learning rely on huge amount of data, which ensures the model capabilities, but it is rather slow to train a lot of data,
 so we study several parallel training algorithms for deep learning based acoustic model further.
+The details are as follows。
 
 \textbf{First, we study CD-State and deep neural network based acoustic model.}
 We apply DNN(Deep Neural Network), CNN(Convolution Neural Network),
 LSTM(Long Short Term Memory) and CLDNN(CNN+LSTM+DNN) to the acoustic model step by step.
-Compared with simple DNN, we get 3\% \textasciitilde 5\%, 5\% \textasciitilde 20\%, 10\% \textasciitilde 23\%
+The experiment result shows that compared with DNN, we get 3\% \textasciitilde 5\%, 5\% \textasciitilde 20\%, 10\% \textasciitilde 23\%
 CER reduction by using CNN, LSTM, CLDNN respectively. Also, we study skip training on CLDNN,
 successfully improve the training speed by 3 times without CER reduction.
 
 \textbf{Then, we study CD-Phone and CTC based end-to-end speech recognition.}
 We use Phone, CD-Phone and Syllable as model unit, combined with CTC optimization criteria，
 get comparable speech recognition result to CD-State and CLDNN based acoustic modeling.
-Further, decoding speed for CTC based speech recognition system is more than 3 times faster.
+Further, decoding speed of CTC based speech recognition system is more than 3 times faster.
 
 \textbf{Last, several parallel training algorithms for deep learning based acoustic model are studied.}
 we implement BSP(Bulk Synchronize Parallel), ASGD(Asynchronous Stochastic Gradient Descent),
 EASGD(Elastic Averaging SGD) and BMUF() parallel training algorithms in this paper,
 and apply these parallel training algorithms on DNN and CLDNN based acoustic modeling respectively.
-Finally, we find that BMUF and ASGD based parallel training get the best results,
-BMUF is rather stable and converges faster, ASGD is more fast but requires more careful initialization.
+The experiment result shows that 
+BMUF is rather stable and converges faster, ASGD is faster but requires more careful initialization.
 BMUF and ASGD based parallel training achieve more than 3.5 times speedup by using 4 GPU, without loss precision of the acoustic model.
 }
 %Externally pressurized gas bearing has been widely used in the field of aviation, semiconductor, weave, and measurement apparatus because of its advantage of high accuracy, little friction, low heat distortion, long life-span, and no pollution. In this thesis, based on the domestic and overseas researching.

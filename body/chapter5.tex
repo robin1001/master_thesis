@@ -15,7 +15,7 @@
 
 另外一个分类方法是根据模型更新方法可以分为两类，基于梯度的模型更新和直接基于模型的更新。
 基于梯度的模型更新，Server的模型更新依赖于梯度计算，如DownpourSGD\ucite{dean2012large}（即DistBelief）和ASGD。
-基于模型的更新，Server和Worker的模型更新直接基于模型，通过模型之间的计算更新，如 BSP(Model Average)、EASGD和BMUF等。
+基于模型的更新，Server和Worker的模型更新直接基于模型，通过模型之间的计算更新，如 BSP（Model Average）、EASGD和BMUF等。
 
 本文实现基于MPI（Message Passing Interface） 的BSP、ASGD，EASGD，BMUF四种并行方法。
 四种方法均是基于数据并行的方法。
@@ -71,7 +71,7 @@ MPI有多种实现，例如MPICH，OpenMPI等。
 
 \section{模型平均BSP}
 
-BSP(Bulk Synchronize Parallel)，或者称之为模型平均。
+BSP（Bulk Synchronize Parallel），或者称之为模型平均。
 其基本思路十分简单，在训练过程中，每隔一段时间对所有Worker上的模型进行同步，
 同步的模型是取所有Worker上的模型平均作为更新后的新模型。
 假设$w_i$表示同步前每个Worker上的模型，
@@ -191,7 +191,7 @@ $\lambda$比较小时，正则因子越小，Worker倾向于在当前Server模�
 \end{equation}
 $\alpha$控制模型的更新步长。
 
-本文实现并使用异步的EASGD，该算法描述如算法\ref{alg:easgd}所示：
+本文实现并使用异步的EASGD，该算法描述如算法\ref{alg:easgd}所示。
 \begin{algorithm} \song
 \caption{异步EASGD}
 \begin{algorithmic}

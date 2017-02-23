@@ -44,8 +44,8 @@
 \newcommand\CJKthepart{\CJKnumber{\@arabic\c@part}}
 
 \@ifundefined{chapter}{}{
-  \newcommand\CJKprechaptername{第}
-  \newcommand\CJKchaptername{章}
+  \newcommand\CJKprechaptername{}
+  \newcommand\CJKchaptername{}
   \newcommand\CJKthechapter{{\@arabic\c@chapter}}}
 
 \renewcommand\appendixname{附录~\@Alph\c@chapter}
